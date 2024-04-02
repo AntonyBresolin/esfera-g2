@@ -1,0 +1,11 @@
+.active {
+  display: block;
+}
+
+.perguntas-frequentes h1 {
+  padding: 16px;
+  font-size: 32px;
+  font-weight: 600;
+  background-color: red;
+
+}
