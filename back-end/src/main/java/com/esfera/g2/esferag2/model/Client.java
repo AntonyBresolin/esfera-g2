@@ -1,0 +1,110 @@
+package com.esfera.g2.esferag2.model;
+
+import jakarta.persistence.*;
+
+import java.util.List;
+import java.util.Objects;
+
+@Entity
+public class Client {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idClient;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false, name = "cpf-cnpj")
+    private String cpfCnpj;
+
+    private String company;
+
+    private String role;
+
+    @OneToMany(mappedBy = "idClient", cascade = CascadeType.ALL)
+    private List<Contact> contacts;
+
+    @OneToMany(mappedBy = "idClient", cascade = CascadeType.ALL)
+    private List<Address> addresses;
+
+    @OneToMany(mappedBy = "idClient", cascade = CascadeType.ALL)
+    private List<Lead> leads;
+
+    public Long getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(Long idClient) {
+        this.idClient = idClient;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCpfCnpj() {
+        return cpfCnpj;
+    }
+
+    public void setCpfCnpj(String cpfCnpj) {
+        this.cpfCnpj = cpfCnpj;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
+
+    public List<Lead> getLeads() {
+        return leads;
+    }
+
+    public void setLeads(List<Lead> leads) {
+        this.leads = leads;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return Objects.equals(idClient, client.idClient);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idClient);
+    }
+}
