@@ -27,20 +27,17 @@ public class Proposal {
     private byte[] file;
 
     @ManyToOne
-    @JoinColumn(name = "Lead_idLead")
-    private Lead idLead;
-
-    @ManyToOne
-    @JoinColumn(name = "Lead_Client_idClient")
-    private Client idClient;
-
-    @ManyToOne
     @JoinColumn(name = "User_idUser")
     private User idUser;
 
     @ManyToOne
     @JoinColumn(name = "Statusproposal_idStatusproposal")
     private StatusProposal idStatusProposal;
+
+
+    @ManyToOne
+    @JoinColumn(name = "Lead_idLead")
+    private Lead idLead;
 
     public Long getIdProposal() {
         return idProposal;
@@ -96,14 +93,6 @@ public class Proposal {
 
     public void setIdLead(Lead idLead) {
         this.idLead = idLead;
-    }
-
-    public Client getIdClient() {
-        return idClient;
-    }
-
-    public void setIdClient(Client idClient) {
-        this.idClient = idClient;
     }
 
     public User getIdUser() {

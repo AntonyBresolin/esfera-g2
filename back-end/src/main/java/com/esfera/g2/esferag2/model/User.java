@@ -29,12 +29,6 @@ public class User {
     @Column(nullable = false)
     private java.sql.Timestamp createTime;
 
-    @ManyToOne
-    @JoinColumn(name = "Team_idTeam")
-    private Team idTeam;
-
-    @OneToMany(mappedBy = "idUser", cascade = CascadeType.ALL)
-    private List<Proposal> proposals;
 
     public Long getIdUser() {
         return idUser;
@@ -90,22 +84,6 @@ public class User {
 
     public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
-    }
-
-    public Team getIdTeam() {
-        return idTeam;
-    }
-
-    public void setIdTeam(Team idTeam) {
-        this.idTeam = idTeam;
-    }
-
-    public List<Proposal> getProposals() {
-        return proposals;
-    }
-
-    public void setProposals(List<Proposal> proposals) {
-        this.proposals = proposals;
     }
 
     @Override

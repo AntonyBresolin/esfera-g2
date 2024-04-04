@@ -6,7 +6,6 @@ import java.util.Objects;
 
 @Entity
 public class Contact {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idContact;

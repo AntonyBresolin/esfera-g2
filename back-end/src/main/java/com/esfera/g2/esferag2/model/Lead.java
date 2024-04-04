@@ -3,19 +3,11 @@ package com.esfera.g2.esferag2.model;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "leads")
 public class Lead {
-
-    public enum LeadResult {
-        OCUPADO,
-        DESLIGADO,
-        ATENDIDO,
-        CAIXA_POSTAL
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idLead;
@@ -26,8 +18,8 @@ public class Lead {
     @Column(nullable = false)
     private java.sql.Timestamp date;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @OneToOne
+    @JoinColumn(nullable = false)
     private LeadResult result;
 
     @Column(nullable = false)
@@ -39,9 +31,6 @@ public class Lead {
     @ManyToOne
     @JoinColumn(name = "Client_idClient")
     private Client idClient;
-
-    @OneToMany(mappedBy = "idLead", cascade = CascadeType.ALL)
-    private List<Proposal> proposals;
 
     public Long getIdLead() {
         return idLead;
@@ -65,14 +54,6 @@ public class Lead {
 
     public void setDate(Timestamp date) {
         this.date = date;
-    }
-
-    public LeadResult getResult() {
-        return result;
-    }
-
-    public void setResult(LeadResult result) {
-        this.result = result;
     }
 
     public double getDuration() {
@@ -99,12 +80,12 @@ public class Lead {
         this.idClient = idClient;
     }
 
-    public List<Proposal> getProposals() {
-        return proposals;
+    public LeadResult getResult() {
+        return result;
     }
 
-    public void setProposals(List<Proposal> proposals) {
-        this.proposals = proposals;
+    public void setResult(LeadResult result) {
+        this.result = result;
     }
 
     @Override

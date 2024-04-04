@@ -22,22 +22,6 @@ public class Client {
 
     private String role;
 
-    @OneToMany(mappedBy = "idClient", cascade = CascadeType.ALL)
-    private List<Contact> contacts;
-
-    @OneToMany(mappedBy = "idClient", cascade = CascadeType.ALL)
-    private List<Address> addresses;
-
-    @OneToMany(mappedBy = "idClient", cascade = CascadeType.ALL)
-    private List<Lead> leads;
-
-    public Long getIdClient() {
-        return idClient;
-    }
-
-    public void setIdClient(Long idClient) {
-        this.idClient = idClient;
-    }
 
     public String getName() {
         return name;
@@ -45,6 +29,14 @@ public class Client {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(Long idClient) {
+        this.idClient = idClient;
     }
 
     public String getCpfCnpj() {
@@ -69,30 +61,6 @@ public class Client {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public List<Contact> getContacts() {
-        return contacts;
-    }
-
-    public void setContacts(List<Contact> contacts) {
-        this.contacts = contacts;
-    }
-
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
-
-    public List<Lead> getLeads() {
-        return leads;
-    }
-
-    public void setLeads(List<Lead> leads) {
-        this.leads = leads;
     }
 
     @Override

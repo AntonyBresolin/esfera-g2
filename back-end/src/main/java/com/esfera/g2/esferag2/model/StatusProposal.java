@@ -15,8 +15,6 @@ public class StatusProposal {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "idStatusProposal", cascade = CascadeType.ALL)
-    private List<Proposal> proposals;
 
     public Long getIdStatusProposal() {
         return idStatusProposal;
@@ -34,13 +32,6 @@ public class StatusProposal {
         this.name = name;
     }
 
-    public List<Proposal> getProposals() {
-        return proposals;
-    }
-
-    public void setProposals(List<Proposal> proposals) {
-        this.proposals = proposals;
-    }
 
     @Override
     public boolean equals(Object o) {
