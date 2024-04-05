@@ -9,12 +9,12 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idContact;
+    private String data;
 
-    @Column(nullable = false)
-    private int type;
+    @ManyToOne
+    @JoinColumn (name = "TypeContact_idTypeContact")
+    private TypeContact idTypeContact;
 
-    @Column(nullable = false)
-    private String content;
 
     @ManyToOne
     @JoinColumn(name = "Client_idClient")
@@ -28,20 +28,20 @@ public class Contact {
         this.idContact = idContact;
     }
 
-    public int getType() {
-        return type;
+    public String getData() {
+        return data;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setData(String data) {
+        this.data = data;
     }
 
-    public String getContent() {
-        return content;
+    public TypeContact getIdTypeContact() {
+        return idTypeContact;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setIdTypeContact(TypeContact idTypeContact) {
+        this.idTypeContact = idTypeContact;
     }
 
     public Client getIdClient() {
