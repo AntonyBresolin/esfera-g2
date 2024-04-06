@@ -3,7 +3,6 @@ package com.esfera.g2.esferag2.model;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -28,7 +27,6 @@ public class User {
 
     @Column(nullable = false)
     private java.sql.Timestamp createTime;
-
 
     public Long getIdUser() {
         return idUser;

@@ -34,7 +34,6 @@ public class Proposal {
     @JoinColumn(name = "Statusproposal_idStatusproposal")
     private StatusProposal idStatusProposal;
 
-
     @ManyToOne
     @JoinColumn(name = "Lead_idLead")
     private Lead idLead;

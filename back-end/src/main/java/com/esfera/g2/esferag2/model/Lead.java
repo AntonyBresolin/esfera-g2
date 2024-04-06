@@ -18,15 +18,15 @@ public class Lead {
     @Column(nullable = false)
     private java.sql.Timestamp date;
 
-    @OneToOne
-    @JoinColumn(nullable = false)
-    private LeadResult result;
-
     @Column(nullable = false)
     private double duration;
 
     @Column(nullable = false)
     private String description;
+
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private LeadResult result;
 
     @ManyToOne
     @JoinColumn(name = "Client_idClient")

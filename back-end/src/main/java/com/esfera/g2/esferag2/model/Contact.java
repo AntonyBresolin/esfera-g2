@@ -9,12 +9,12 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idContact;
+
     private String data;
 
     @ManyToOne
     @JoinColumn (name = "TypeContact_idTypeContact")
     private TypeContact idTypeContact;
-
 
     @ManyToOne
     @JoinColumn(name = "Client_idClient")

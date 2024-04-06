@@ -2,7 +2,6 @@ package com.esfera.g2.esferag2.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,7 +20,6 @@ public class Client {
     private String company;
 
     private String role;
-
 
     public String getName() {
         return name;

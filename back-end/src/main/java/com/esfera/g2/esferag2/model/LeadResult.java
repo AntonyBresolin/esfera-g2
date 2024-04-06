@@ -2,8 +2,11 @@ package com.esfera.g2.esferag2.model;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 public class LeadResult {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idLeadResult;
@@ -25,5 +28,18 @@ public class LeadResult {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LeadResult that = (LeadResult) o;
+        return Objects.equals(idLeadResult, that.idLeadResult);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idLeadResult);
     }
 }
