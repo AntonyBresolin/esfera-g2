@@ -25,8 +25,7 @@ public class User {
 
     private String role;
 
-    @Column(nullable = false)
-    private java.sql.Timestamp createTime;
+
 
     public Long getIdUser() {
         return idUser;
@@ -74,14 +73,6 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public Timestamp getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
     }
 
     @Override
