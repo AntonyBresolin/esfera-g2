@@ -79,23 +79,23 @@
       <nav class='flex flex-col pt-[61px] justify-between h-full'>
         <div class='flex flex-col items-center px-2 py-2'>
           <a href="./home.html"
-            class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out bg-purple-contrast text-white'>
-            <ion-icon name="home" fontSize='' class='text-3xl text-amber'> </ion-icon>
+            class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out '>
+            <ion-icon name="home" fontSize='' class='text-3xl'> </ion-icon>
             <span class='ml-3'>Dashboard</span>
           </a>
           <a href="./client.html"
-            class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out'>
+            class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out '>
             <ion-icon name="people" fontSize='' class='text-3xl'> </ion-icon>
             <span class='ml-3'>Clientes</span>
           </a>
-          <a href="./proposal.html"
+          <a to='/user/proposals'
             class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out'>
             <ion-icon name="stats-chart" fontSize='' class='text-3xl'> </ion-icon>
             <span class='ml-3'>Propostas</span>
           </a>
           <a href="./lead.html"
-            class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out'>
-            <ion-icon name="call" fontSize='' class='text-3xl'></ion-icon>
+            class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out bg-purple-contrast text-white'>
+            <ion-icon name="call" fontSize='' class='text-3xl text-amber'></ion-icon>
             <span class='ml-3'>Ligações</span>
           </a>
           <a href='./configuration.html'
@@ -114,21 +114,45 @@
         </div>
       </nav>
     </div>
-    <div class="w-full h-full pt-[60px]">
-      <p class="bg-[#ff0000] w-full text-white">Clientes</p>
-    </div>
-    <button class="fixed bottom-10 right-10 ">
-      <svg xmlns="http://www.w3.org/2000/svg"
-        class="h-16 w-16 text-white bg-purple-highlight p-2 rounded-2xl hover:bg-[#5f04c4] duration-150 ease-in-out"
-        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-      </svg>
-    </button>
-  </div>
 
+    <div class="w-full h-16 pt-16 table-auto text-left text-gray-500">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+          <thead class="text-xs text-primary uppercase bg-[#F9FAFB]">
+            <tr>
+              <th scope="col" class="p-4">
+                <input id="checkbox-table-search-1" type="checkbox"
+                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+              </th>
+              <th scope="col" class="px-6 py-3">
+                ID
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Nome
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Resultado
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Descrição
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Data
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Hora
+              </th>
+              <th scope="col" class="px-6 py-3">
+               Duração
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Contato
+              </th>
+            </tr>
+          </thead>
+          
+  
+          <tbody>
+        </table>
+      </div>
 
-  </button>
-
-</body>
-
-</html>
