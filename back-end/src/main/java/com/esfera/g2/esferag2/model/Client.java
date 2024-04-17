@@ -2,6 +2,7 @@ package com.esfera.g2.esferag2.model;
 
 import jakarta.persistence.*;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -20,6 +21,8 @@ public class Client {
     private String company;
 
     private String role;
+
+    private Timestamp date;
 
     public String getName() {
         return name;
