@@ -288,11 +288,13 @@
         </tr>
         <tbody>
       </table>
-      <div id="cadClient" class="w-screen h-screen">
+      <div id="cadClient" class="w-screen h-screen hidden absolute top-0 left-0">
         <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
         <form action="" method="post"
           class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg px-2">
           <h1 class="text-lg px-4 py-2 font-semibold"> Cadastro de Cliente</h1>
+          <ion-icon name="close" fontSize=''
+            class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-gray-600 duration-150 ease-in-out" onClick="handleCloseAddCliente()"></ion-icon>
           <div class="flex flex-col">
             <div class="flex justify-between py-2">
               <div class="w-full mx-2">
@@ -354,15 +356,14 @@
           <div class="float-right py-2">
             <button type="submit"
               class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold">Cadastrar</button>
-            <button class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold">Cancelar</button>
+            <button class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold" onClick="handleCloseAddCliente()">Cancelar</button>
           </div>
         </form>
       </div>
     </div>
 
   </div>
-
-  <button class="fixed bottom-10 right-10 ">
+  <button class="fixed bottom-10 right-10" onClick="handleCloseAddCliente()">
     <svg xmlns="http://www.w3.org/2000/svg"
       class="h-16 w-16 text-white bg-purple-highlight p-2 rounded-2xl hover:bg-[#5f04c4] duration-150 ease-in-out"
       fill="none" viewBox="0 0 24 24" stroke="currentColor">

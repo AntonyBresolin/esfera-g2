@@ -4,3 +4,8 @@ function selectAllCheckboxes(source) {
     checkbox.checked = source.checked;
   }
 }
+
+function handleCloseAddCliente() {
+  let addCliente = document.getElementById('cadClient');
+  addCliente.classList.toggle('hidden');
+}
