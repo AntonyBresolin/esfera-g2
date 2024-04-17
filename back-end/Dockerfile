@@ -4,6 +4,6 @@ COPY pom.xml /home/app
 RUN mvn -f /home/app/pom.xml clean package -DskipTests
 
  FROM openjdk:17-jdk-slim
- COPY --from=build /home/app/target/backend-0.0.1-SNAPSHOT.jar /usr/local/lib/backend-0.0.1-SNAPSHOT.jar
+ COPY --from=build /home/app/target/esfera-g2-0.0.1-SNAPSHOT.jar /usr/local/lib/esfera-g2-0.0.1-SNAPSHOT.jar
  EXPOSE 8080
  ENTRYPOINT ["java","-jar","/usr/local/lib/esfera-g2-0.0.1-SNAPSHOT.jar"]
