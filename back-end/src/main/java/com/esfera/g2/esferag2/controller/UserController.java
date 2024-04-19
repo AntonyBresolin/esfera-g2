@@ -40,7 +40,6 @@ public class UserController {
                     user.setPasswordHash(userDetails.getPasswordHash());
                     user.setPhone(userDetails.getPhone());
                     user.setRole((userDetails.getRole()));
-                    user.setCreateTime(userDetails.getCreateTime());
                     return userRepository.save(user);
                 })
                 .orElseThrow();
