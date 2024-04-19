@@ -10,6 +10,7 @@ function handleCloseAddCliente() {
   addCliente.classList.toggle('hidden');
 }
 
+
 function fetchAddClient() {
   fetch('http://localhost:3000/client-address-contact/add', {
     method: 'POST',
@@ -41,3 +42,4 @@ function fetchAddClient() {
 
   })
 }
+
