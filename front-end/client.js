@@ -37,10 +37,13 @@ function listClients(clients) {
       <td class="px-6">${data.client.cpfCnpj}</td>
       <td class="px-6">${data.contact[3].data}</td>
       <td class="px-6">
-        <div class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center w-full cursor-pointer hover:bg-gray-300">
+        <a class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center w-full cursor-pointer hover:bg-gray-300"
+        href="https://wa.me/${data.contact[2].data}"
+        target="_blank"
+        >
           <ion-icon name="call" fontSize='' class='text-lg mx-2'></ion-icon>
           <span class="text-sm">Enviar Mensagem</span>
-        </div>
+        </a>
       </td>
       <td>
         <div class="flex items-center">
