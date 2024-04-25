@@ -10,36 +10,63 @@ function handleCloseAddCliente() {
   addCliente.classList.toggle('hidden');
 }
 
+async function fetchAddClient(event) {
+  event.preventDefault();
+  const data = {
+    client: {
+      name: document.getElementById('name').value,
+      cpfCnpj: document.getElementById('cpf').value,
+      company: document.getElementById('company').value,
+      role: document.getElementById('role').value,
+      date: 33333333,
+    },
+    contact: [
+      {
+        "data": document.getElementById('celular').value,
+        idTypeContact: {
+          "idTypeContact": 1,
+          type: "celular"
+        }
+      },
+      {
+        "data": document.getElementById('telefone').value,
+        idTypeContact: {
+          "idTypeContact": 2,
+          type: "telefone"
+        }
+      },
+      {
+        "data": document.getElementById('whatsapp').value,
+        idTypeContact: {
+          "idTypeContact": 3,
+          type: "whatsapp"
+        }
+      },
+      {
+        "data": document.getElementById('email').value,
+        idTypeContact: {
+          "idTypeContact": 4,
+          type: "email"
+        }
+      }
+    ],
+    address: {
+      zipCode: document.getElementById('zipCode').value,
+      street: document.getElementById('street').value,
+      number: document.getElementById('number').value,
+      state: document.getElementById('state').value,
+      city: document.getElementById('city').value,
+      country: document.getElementById('country').value
+    }
+  };
 
-function fetchAddClient() {
-  fetch('http://localhost:3000/client-address-contact/add', {
+  await fetch('http://localhost:8080/client-address-contact/add', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(
-    {
-      name: document.getElementById('nome').value,
-      company: document.getElementById('empresa').value,
-      cpfCnpj: document.getElementById('cpf').value,
-      role: document.getElementById('cargo').value,
-      date: document.getElementById('data').value,
-    },
-    {
-      email: document.getElementById('email').value,
-      telefone: document.getElementById('telefone').value,
-      whatsapp: document.getElementById('whatsapp').value,
-      celular: document.getElementById('celular').value,
-    },
-    {
-      cep: document.getElementById('cep').value,
-      rua: document.getElementById('rua').value,
-      numero: document.getElementById('numero').value,
-      bairro: document.getElementById('bairro').value,
-      cidade: document.getElementById('cidade').value,
-      estado: document.getElementById('estado').value,
-    }),
-
+    body: JSON.stringify(data)
   })
+    .then(response => console.log('Success:', response)) // Log the success 
+    .catch(error => console.error('Error:', error)); // Log errors if any
 }
-
