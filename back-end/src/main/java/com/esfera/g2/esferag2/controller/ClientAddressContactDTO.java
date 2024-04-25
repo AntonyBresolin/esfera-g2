@@ -44,7 +44,7 @@ public class ClientAddressContactDTO {
         }
     }
 
-    @GetMapping("/get")
+    @GetMapping("/all")
     public List<ClientAddressContact> listAllClientAddressContact() {
         List<Client> clients = clientRepository.findAll();
         List<Address> addresses = addressRepository.findAll();
