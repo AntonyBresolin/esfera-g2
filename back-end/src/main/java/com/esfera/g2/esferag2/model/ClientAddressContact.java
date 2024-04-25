@@ -1,9 +1,11 @@
 package com.esfera.g2.esferag2.model;
 
+import java.util.List;
+
 public class ClientAddressContact {
     Client client;
     Address address;
-    Contact contact;
+    List<Contact> contact;
 
     public Client getClient() {
         return client;
@@ -21,11 +23,11 @@ public class ClientAddressContact {
         this.address = address;
     }
 
-    public Contact getContact() {
+    public List<Contact> getContact() {
         return contact;
     }
 
-    public void setContact(Contact contact) {
+    public void setContact(List<Contact> contact) {
         this.contact = contact;
     }
 }
