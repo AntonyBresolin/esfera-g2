@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Esfera pró soluções</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./style/nav.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script th:src="@{/js/main.js}" type="text/javascript"></script>
+    <script th:src="@{/js/client.js}" type="text/javascript"></script>
+</head>
+
+<body class="bg-[#DCDCDC] flex overflow-y-hidden h-screen">
+<div th:replace="~{menu-component :: navbar-component}"></div>
+<div th:replace="~{menu-component :: sidebar-component(selectedScreen=${selectedScreen})}"></div>
+
+<div class="w-full h-full pt-[60px] overscroll-contain overflow-auto">
+    <div class="flex justify-between items-center px-8 py-4 bg-white overscroll-contain">
+        <h1 class="text-xl font-bold text-primary">Clientes</h1>
+        <div class="flex items-center w-[540px]">
+            <input type="text" placeholder="Pesquisar"
+                   class="w-full bg-[#F0F0F7] px-3 py-2 rounded-full focus:outline-none mr-[-30px] focus:bg-gray-200">
+            <ion-icon name="search-outline" fontSize=''
+                      class='text-lg text-black cursor-pointer hover:text-gray-600 duration-150 ease-in-out'></ion-icon>
+        </div>
+        <button
+                class="bg-gray-100 text-black px-4 py-1 rounded-lg flex items-center font-semibold border hover:bg-gray-200 duration-150"
+                onclick="handleCloseImportClientData()">
+            <ion-icon name="download" fontSize='' class="text-lg text-black cursor-pointer pr-2"></ion-icon>
+            Importar
+        </button>
+    </div>
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 overscroll-contain" id="tableClients">
+        <thead class="text-xs text-primary uppercase bg-[#F9FAFB]">
+        <tr>
+            <th scope="col" class="p-4">
+                <input id="checkbox-table-search-1" type="checkbox"
+                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                       onClick="selectAllCheckboxes(this)"/>
+                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Nome
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Endereço
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Telefone
+            </th>
+            <th scope="col" class="px-6 py-3">
+                CPF / CNPJ
+            </th>
+            <th scope="col" class="px-6 py-3">
+                E-mail
+            </th>
+            <th scope="col" class="px-6 py-3">
+                WhatsApp
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Ações
+            </th>
+        </tr>
+        </thead>
+        <tbody class="overscroll-contain">
+        </tbody>
+    </table>
+    <div id="cadClient" class="w-screen h-screen hidden absolute top-0 left-0">
+        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <form action="" method="post"
+              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg px-2"
+              onSubmit="fetchAddClient(event)">
+            <h1 class="text-lg px-4 py-2 font-semibold"> Cadastro de Cliente</h1>
+            <ion-icon name="close" fontSize=''
+                      class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-gray-600 duration-150 ease-in-out"
+                      onClick="handleCloseAddCliente()"></ion-icon>
+            <div class="flex flex-col">
+                <div class="flex justify-between py-2">
+                    <div class="w-full mx-2">
+                        <label for="name" class="text-sm font-semibold">Nome</label> <br>
+                        <input type="text" name="name" id="name" placeholder="Nome do cliente"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="cpf" class="text-sm font-semibold uppercase">CPF</label><br>
+                        <input type="number" name="cpf" id="cpf" placeholder="CPF do cliente"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+                <div class="flex justify-between py-2">
+                    <div class="w-full mx-2">
+                        <label for="company" class="text-sm font-semibold">Empresa</label> <br>
+                        <input type="text" name="company" id="company" placeholder="Nome da empresa"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="role" class="text-sm font-semibold uppercase">Cargo</label><br>
+                        <input type="text" name="role" id="role" placeholder="Cargo do cliente"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+                <div class="flex justify-between py-2">
+                    <div class="w-1/2 mx-2">
+                        <label for="date" class="text-sm font-semibold">Data de Nascimento</label> <br>
+                        <input type="date" name="date" id="date" placeholder="Data de nascimento do cliente"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+                <h2>Informações para contato</h2>
+                <div class="flex justify-between py-2">
+                    <div class="w-full">
+                        <label for="email" class="text-sm font-semibold">Email</label> <br>
+                        <input type="email" name="email" id="email" placeholder="exemplo@email.com"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="whatsapp" class="text-sm font-semibold uppercase">Whatsapp</label><br>
+                        <input type="number" name="whatsapp" id="whatsapp" placeholder="(99) 99999-9999"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+                <div class="flex justify-between py-2">
+                    <div class="w-full">
+                        <label for="telefone" class="text-sm font-semibold">Telefone</label> <br>
+                        <input type="number" name="telefone" id="telefone" placeholder="(99) 99999-9999"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="celular" class="text-sm font-semibold uppercase">Celular</label><br>
+                        <input type="number" name="celular" id="celular" placeholder="(99) 99999-9999"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+            </div>
+            <h2>Endereço</h2>
+            <div class="flex justify-between py-2">
+                <div class="w-full">
+                    <label for="zipCode" class="text-sm font-semibold">Cep</label> <br>
+                    <input type="text" name="zipCode" id="zipCode" placeholder="99999-999"
+                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                </div>
+                <div class="w-full m-2">
+                    <label for="country" class="text-sm font-semibold uppercase">Pais</label><br>
+                    <input type="text" name="country" id="country" placeholder="Brasil"
+                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                </div>
+                <div class="w-full">
+                    <label for="state" class="text-sm font-semibold">Estado</label> <br>
+                    <select name="state" id="state">
+                        <option value="none">SELECIONE UMA OPÇAO</option>
+                        <option value="Brasil">Brasil</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-between py-2">
+                <div class="w-full">
+                    <label for="city" class="text-sm font-semibold uppercase">Cidade</label><br>
+                    <input type="text" name="city" id="city" placeholder="Cidade x"
+                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                </div>
+                <div class="w-full">
+                    <label for="street" class="text-sm font-semibold">Rua</label> <br>
+                    <input type="text" name="street" id="street" placeholder="Rua x"
+                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                </div>
+                <div class="w-full m-2">
+                    <label for="number" class="text-sm font-semibold uppercase">Numero</label><br>
+                    <input type="number" name="number" id="number" placeholder="00"
+                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                </div>
+            </div>
+            <div class="float-right py-2">
+                <button type="submit"
+                        class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold">Cadastrar
+                </button>
+                <button type="button"
+                        class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold"
+                        onClick="handleCloseAddCliente()">Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+    <div id="importClientData" class="w-screen h-screen  absolute top-0 left-0 hidden ">
+        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <form action="" method="post"
+              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg px-2"
+              onSubmit="fetchImportClientData(event)">
+            <h1 class="text-lg px-4 py-2 font-semibold"> Importar Dados</h1>
+            <ion-icon name="close" fontSize=''
+                      class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-gray-600 duration-150 ease-in-out"
+                      onClick="handleCloseImportClientData()"></ion-icon>
+            <div class="flex flex-col">
+                <input type="file" id="fileInput" accept=".csv" class="">
+            </div>
+            <div class="float-right py-2">
+                <button type="submit"
+                        class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold">Importar
+                </button>
+                <button class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold"
+                        onClick="handleCloseImportClientData()">Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<button class="fixed bottom-10 right-10" onClick="handleCloseAddCliente()">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="h-16 w-16 text-white bg-purple-highlight p-2 rounded-2xl hover:bg-[#5f04c4] duration-150 ease-in-out"
+         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+    </svg>
+</button>
+<script src="/js/main.js" type="text/javascript"></script>
+<script src="/js/client.js" type="text/javascript"></script>
+</body>
+
+</html>

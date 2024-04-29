@@ -64,4 +64,13 @@ public class Contact {
     public int hashCode() {
         return Objects.hash(idContact);
     }
+
+    public Contact() {
+    }
+
+    public Contact(String data, TypeContact idTypeContact, Client idClient) {
+        this.data = data;
+        this.idTypeContact = idTypeContact;
+        this.idClient = idClient;
+    }
 }

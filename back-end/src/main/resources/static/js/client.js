@@ -2,10 +2,6 @@ window.onload = async function () {
   await fetchAllClients();
 }
 
-function handleCloseImportClientData() {
-  let importClientData = document.getElementById('importClientData');
-  importClientData.classList.toggle('hidden');
-}
 
 
 function selectAllCheckboxes(source) {
@@ -131,8 +127,22 @@ async function fetchAddClient(event) {
     },
     body: JSON.stringify(data)
   })
-    .then(response => console.log('Success:', response)) // Log the success 
-    .catch(error => console.error('Error:', error)); // Log errors if any
+    .then(() => {
+        alert('Cliente cadastrado com sucesso!');
+        handleCloseAddCliente();
+        fetchAllClients();
+    })
+    .catch((error) => {
+        alert('Erro ao cadastrar cliente!');
+        console.error('Error:', error);
+    });
+}
+
+// IMPORT CLIENTS
+
+function handleCloseImportClientData() {
+  let importClientData = document.getElementById('importClientData');
+  importClientData.classList.toggle('hidden');
 }
 
 
@@ -141,12 +151,26 @@ async function fetchImportClientData() {
 
   const formData = new FormData();
   const fileInput = document.getElementById('fileInput');
+  if (!fileInput.files[0]) {
+    alert('Selecione um arquivo para importar!');
+    return;
+  }
+
   formData.append('file', fileInput.files[0]);
 
   await fetch('http://localhost:8080/client-address-contact/import', {
     method: 'POST',
     body: formData
   })
-    .then(response => console.log('Success:', response))
-    .catch(error => console.error('Error:', error));
+      .then(response => alert("Dados importados com sucesso!"))
+      .catch(error => {
+        alert("Erro ao importar dados!");
+        console.error('Error:', error)
+      })
+      .finally(() => {
+        document.getElementById('fileInput').value = '';
+        handleCloseImportClientData();
+        fetchAllClients();
+          }
+      );
 }

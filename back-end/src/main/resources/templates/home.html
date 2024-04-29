@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Esfera pró soluções</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./style/nav.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script th:src="@{/js/main.js}" type="text/javascript"></script>
+    <script th:src="@{/style/nav.css}" type="text/css"></script>
+</head>
+
+<body class="bg-[#DCDCDC] flex overflow-hidden h-screen w-screen">
+    <div th:replace="~{menu-component :: navbar-component}"></div>
+    <div th:replace="~{menu-component :: sidebar-component(selectedScreen=${selectedScreen})}"></div>
+
+
+<div class="w-full h-full pt-[60px]">
+    <p class="bg-[#ff0000] w-full text-white">Clientes</p>
+</div>
+<button class="fixed bottom-10 right-10 ">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="h-16 w-16 text-white bg-purple-highlight p-2 rounded-2xl hover:bg-[#5f04c4] duration-150 ease-in-out"
+         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+    </svg>
+</button>
+    <script src="/js/main.js" type="text/javascript"></script>
+</body>
+
+</html>

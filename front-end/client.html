@@ -126,7 +126,8 @@
             class='text-lg text-black cursor-pointer hover:text-gray-600 duration-150 ease-in-out'></ion-icon>
         </div>
         <button
-          class="bg-gray-100 text-black px-4 py-1 rounded-lg flex items-center font-semibold border hover:bg-gray-200 duration-150">
+          class="bg-gray-100 text-black px-4 py-1 rounded-lg flex items-center font-semibold border hover:bg-gray-200 duration-150"
+          onclick="handleCloseImportClientData()">
           <ion-icon name="download" fontSize='' class="text-lg text-black cursor-pointer pr-2"></ion-icon>
           Exportar</button>
       </div>
@@ -274,6 +275,26 @@
               class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold">Cadastrar</button>
             <button class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold"
               onClick="handleCloseAddCliente()">Cancelar</button>
+          </div>
+        </form>
+      </div>
+      <div id="importClientData" class="w-screen h-screen  absolute top-0 left-0">
+        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <form action="" method="post"
+          class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg px-2"
+          onSubmit="fetchImportClientData(event)">
+          <h1 class="text-lg px-4 py-2 font-semibold"> Exportar Dados</h1>
+          <ion-icon name="close" fontSize=''
+            class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-gray-600 duration-150 ease-in-out"
+            onClick="handleCloseImportClientData()"></ion-icon>
+          <div class="flex flex-col">
+            <input type="file" id="fileInput" accept=".csv" class="">
+          </div>
+          <div class="float-right py-2">
+            <button type="submit"
+              class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold">Exportar</button>
+            <button class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold"
+              onClick="handleCloseImportClientData()">Cancelar</button>
           </div>
         </form>
       </div>
