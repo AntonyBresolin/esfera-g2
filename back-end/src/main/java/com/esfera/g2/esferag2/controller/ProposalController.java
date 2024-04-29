@@ -5,11 +5,13 @@ import com.esfera.g2.esferag2.repository.ProposalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/proposal")
 public class ProposalController {
 
@@ -17,6 +19,12 @@ public class ProposalController {
     private ProposalRepository proposalRepository;
 
     @GetMapping
+    public String proposal(Model model) {
+        model.addAttribute("selectedScreen", "proposal");
+        return "proposal";
+    }
+
+    @GetMapping("/all")
     public List<Proposal> getAllProposals() {
         return proposalRepository.findAll();
     }

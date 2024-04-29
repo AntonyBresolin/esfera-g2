@@ -3,11 +3,13 @@ package com.esfera.g2.esferag2.controller;
 import com.esfera.g2.esferag2.model.Client;
 import com.esfera.g2.esferag2.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/client")
 public class ClientController {
 
@@ -15,6 +17,12 @@ public class ClientController {
     private ClientRepository clientRepository;
 
     @GetMapping
+    public String client(Model model) {
+        model.addAttribute("selectedScreen", "client");
+        return "client";
+    }
+
+    @GetMapping("/all")
     public List<Client> getAllClients() {
         return clientRepository.findAll();
     }
@@ -24,7 +32,7 @@ public class ClientController {
         return clientRepository.findById(id).orElseThrow();
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public Client createClient(@RequestBody Client client) {
         return clientRepository.save(client);
     }
