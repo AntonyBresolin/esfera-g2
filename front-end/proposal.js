@@ -2,6 +2,7 @@ function handleCloseAddProposal() {
     let addProposal = document.getElementById('cadProposal');
     addProposal.classList.toggle('hidden');
   }
+  
 
 
 function fetchAddProposal() {
