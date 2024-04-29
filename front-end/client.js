@@ -2,6 +2,10 @@ window.onload = async function () {
   await fetchAllClients();
 }
 
+function handleCloseImportClientData() {
+  let importClientData = document.getElementById('importClientData');
+  importClientData.classList.toggle('hidden');
+}
 
 
 function selectAllCheckboxes(source) {
@@ -129,4 +133,20 @@ async function fetchAddClient(event) {
   })
     .then(response => console.log('Success:', response)) // Log the success 
     .catch(error => console.error('Error:', error)); // Log errors if any
+}
+
+
+async function fetchImportClientData() {
+  event.preventDefault();
+
+  const formData = new FormData();
+  const fileInput = document.getElementById('fileInput');
+  formData.append('file', fileInput.files[0]);
+
+  await fetch('http://localhost:8080/client-address-contact/import', {
+    method: 'POST',
+    body: formData
+  })
+    .then(response => console.log('Success:', response))
+    .catch(error => console.error('Error:', error));
 }

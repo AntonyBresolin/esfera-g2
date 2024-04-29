@@ -103,4 +103,16 @@ public class Address {
     public int hashCode() {
         return Objects.hash(idAddress);
     }
+
+    public Address() {
+    }
+
+    public Address(String zipCode, String country, String state, String city, String street, String number) {
+        this.zipCode = zipCode;
+        this.country = country;
+        this.state = state;
+        this.city = city;
+        this.street = street;
+        this.number = number;
+    }
 }

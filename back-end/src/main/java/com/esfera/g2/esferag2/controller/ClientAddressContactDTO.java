@@ -7,14 +7,23 @@ import com.esfera.g2.esferag2.model.Contact;
 import com.esfera.g2.esferag2.repository.AddressRepository;
 import com.esfera.g2.esferag2.repository.ClientRepository;
 import com.esfera.g2.esferag2.repository.ContactRepository;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.sql.Timestamp;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/client-address-contact")
@@ -26,10 +35,12 @@ public class ClientAddressContactDTO {
     private ClientRepository clientRepository;
     @Autowired
     private ContactRepository contactRepository;
+    @Autowired
+    private TypeContactController typeContactController;
 
     @PostMapping("/add")
     public ResponseEntity<?> addClientAddressContact(@RequestBody ClientAddressContact clientAddressContact) {
-        try{
+        try {
             clientRepository.save(clientAddressContact.getClient());
             Address address = clientAddressContact.getAddress();
             address.setIdClient(clientAddressContact.getClient());
@@ -74,4 +85,51 @@ public class ClientAddressContactDTO {
         return clientAddressContacts;
     }
 
+    @PostMapping("/import")
+    public ResponseEntity<?> addClientAddressContact(@RequestParam("file") MultipartFile file) {
+        try {
+            Reader reader = new InputStreamReader(file.getInputStream());
+            CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
+
+            for (CSVRecord record : csvParser) {
+                String name = record.get("Nome");
+                String cpf = record.get("cpf");
+                String company = record.get("empresa");
+                String role = record.get("cargo");
+
+                //TODO - Implementar isso isso
+                String date = record.get("data");
+                String email = record.get("email");
+                String phone = record.get("telefone");
+                String cellphone = record.get("celular");
+                String whatsapp = record.get("whatsapp");
+                String zipCode = record.get("cep");
+                String country = record.get("pais");
+                String state = record.get("estado");
+                String city = record.get("cidade");
+                String street = record.get("rua");
+                String number = record.get("numero");
+
+                System.out.println(name + " " + cpf + " " + company + " " + role + " " + date + " " + email + " " + phone + " " + cellphone + " " + whatsapp + " " + zipCode + " " + country + " " + state + " " + city + " " + street + " " + number);
+
+                Client client = new Client(name, cpf, company, role, new Timestamp(System.currentTimeMillis()));
+                clientRepository.save(client);
+
+                Address address = new Address(zipCode, country, state, city, street, number);
+                address.setIdClient(client);
+                addressRepository.save(address);
+
+                List<Contact> contacts = new ArrayList<>();
+                contacts.add(new Contact(cellphone, typeContactController.getTypeContactById(1L), client));
+                contacts.add(new Contact(phone, typeContactController.getTypeContactById(2L), client));
+                contacts.add(new Contact(whatsapp, typeContactController.getTypeContactById(3L), client));
+                contacts.add(new Contact(email, typeContactController.getTypeContactById(4L), client));
+
+                contactRepository.saveAll(contacts);
+            }
+            return ResponseEntity.status(201).body("Arquivo CSV processado com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao processar o arquivo CSV!");
+        }
+    }
 }
