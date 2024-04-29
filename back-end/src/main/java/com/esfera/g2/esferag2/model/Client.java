@@ -76,4 +76,15 @@ public class Client {
     public int hashCode() {
         return Objects.hash(idClient);
     }
+
+    public Client() {
+    }
+
+    public Client(String name, String cpfCnpj, String company, String role, Timestamp date) {
+        this.name = name;
+        this.cpfCnpj = cpfCnpj;
+        this.company = company;
+        this.role = role;
+        this.date = date;
+    }
 }
