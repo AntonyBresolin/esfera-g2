@@ -3,11 +3,13 @@ package com.esfera.g2.esferag2.controller;
 import com.esfera.g2.esferag2.model.Lead;
 import com.esfera.g2.esferag2.repository.LeadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/lead")
 public class LeadController {
 
@@ -15,6 +17,12 @@ public class LeadController {
     private LeadRepository leadRepository;
 
     @GetMapping
+    public String lead(Model model) {
+        model.addAttribute("selectedScreen", "lead");
+        return "lead";
+    }
+
+    @GetMapping("/all")
     public List<Lead> getAllLeads() {
         return leadRepository.findAll();
     }

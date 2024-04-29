@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html ang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Esfera pró soluções</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./main.js"></script>
+    <link rel="stylesheet" href="./nav.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="/front-end/lead.js"></script>
+    <script th:src="@{/main.js}" type="text/javascript"></script>
+    <script th:src="@{/lead.js}" type="text/javascript"></script>
+</head>
+
+<body class="bg-[#DCDCDC] flex overflow-hidden h-screen w-scren">
+<div th:replace="~{menu-component :: navbar-component}"></div>
+<div th:replace="~{menu-component :: sidebar-component(selectedScreen=${selectedScreen})}"></div>
+<div class="w-full h-full pt-[60px]">
+    <div class="flex justify-between items-center px-8 py-4 bg-white">
+        <h1 class="text-xl font-bold text-primary">Ligações</h1>
+        <div class="flex items-center w-[540px]">
+            <input type="text" placeholder="Pesquisar"
+                   class="w-full bg-[#F0F0F7] px-3 py-2 rounded-full focus:outline-none mr-[-30px] focus:bg-gray-200">
+            <ion-icon name="search-outline" fontSize=''
+                      class='text-lg text-black cursor-pointer hover:text-gray-600 duration-150 ease-in-out'></ion-icon>
+        </div>
+        <button
+                class="bg-gray-100 text-black px-4 py-1 rounded-lg flex items-center font-semibold border hover:bg-gray-200 duration-150">
+            <ion-icon name="download" fontSize='' class="text-lg text-black cursor-pointer pr-2"></ion-icon>
+            Exportar
+        </button>
+    </div>
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+        <thead class="text-xs text-primary uppercase bg-[#F9FAFB]">
+        <tr class="w-full">
+            <th scope="col" class="p-4">
+                <input id="checkbox-table-search-1" type="checkbox"
+                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                       onClick="selectAllCheckboxes(this)"/>
+                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+            </th>
+            <th scope="col" class="px-6 py-3">
+                ID
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Nome
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Resultado
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Descrição
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Data
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Hora
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Duração
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Contato
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Ações
+            </th>
+        </tr>
+        </thead>
+        <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-4 py-4">
+                <input id="checkbox-table-search-1" type="checkbox"
+                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                       name="foo"/>
+                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+            </td>
+            <td class="px-6">
+                <span class='align-middle inline-block text-primary font-bold'> 01 </span>
+            </td>
+            <td class="px-6">
+                <span class='align-middle inline-block text-primary font-bold'> Antony </span>
+            </td>
+            <td class="px-6">
+                <div class="flex items-center">
+                    <ion-icon name="remove-circle-outline" class="text-orange-500 text-2xl"></ion-icon>
+                    <span class='ml-2 text-primary font-bold'>Ocupado</span>
+                </div>
+            </td>
+            <td class="px-6">
+                <span class='align-middle inline-block text-primary font-bold'> A linha estava ocupada </span>
+            </td>
+            <td class="px-6">
+                <p>06/10/1999</p>
+            </td>
+            <td class="px-6">
+                <p>20:20</p>
+            </td>
+            <td class="px-7">
+                <p>05:05</p>
+            </td>
+            <td class="px-6">
+                <p>44998254639</p>
+            </td>
+            <td>
+                <div class="flex items-center">
+                    <div
+                            class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                        <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
+                    </div>
+                    <div
+                            class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                        <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
+                    </div>
+                </div>
+            </td>
+        <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-4 py-4">
+                <input id="checkbox-table-search-1" type="checkbox"
+                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                       name="foo"/>
+                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+            </td>
+            <td class="px-6">
+                <span class='align-middle inline-block text-primary font-bold'> 01 </span>
+            </td>
+            <td class="px-6">
+                <span class='align-middle inline-block text-primary font-bold'> Antony </span>
+            </td>
+            <td class="px-6">
+                <div class="flex items-center">
+                    <ion-icon name="checkmark-circle" class="text-green-500 text-2xl"></ion-icon>
+                    <span class='ml-2 text-primary font-bold'>Atendida</span>
+                </div>
+            </td>
+            <td class="px-6">
+                <span class='align-middle inline-block text-primary font-bold'> Não é para retornar </span>
+            </td>
+            <td class="px-6">
+                <p>06/10/1999</p>
+            </td>
+            <td class="px-6">
+                <p>20:20</p>
+            </td>
+            <td class="px-7">
+                <p>05:05</p>
+            </td>
+            <td class="px-6">
+                <p>44998254639</p>
+            </td>
+
+            <td>
+                <div class="flex items-center">
+                    <div
+                            class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                        <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
+                    </div>
+                    <div
+                            class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                        <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
+                    </div>
+                </div>
+        <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-4 py-4">
+                <input id="checkbox-table-search-1" type="checkbox"
+                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                       name="foo"/>
+                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+            </td>
+            <td class="px-6">
+                <span class='align-middle inline-block text-primary font-bold'> 01 </span>
+            </td>
+            <td class="px-6">
+                <span class='align-middle inline-block text-primary font-bold'> Antony </span>
+            </td>
+            <td class="px-6">
+                <div class="flex items-center">
+                    <ion-icon name="close-circle" class="text-red-500 text-2xl"></ion-icon>
+                    <span class='ml-2 text-primary font-bold'>Desligou</span>
+                </div>
+            </td>
+            <td class="px-6">
+                <span class='align-middle inline-block text-primary font-bold'> Não é para retornar </span>
+            </td>
+            <td class="px-6">
+                <p>06/10/1999</p>
+            </td>
+            <td class="px-6">
+                <p>20:20</p>
+            </td>
+            <td class="px-7">
+                <p>05:05</p>
+            </td>
+            <td class="px-6">
+                <p>44998254639</p>
+            </td>
+
+            <td>
+                <div class="flex items-center">
+                    <div
+                            class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                        <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
+                    </div>
+                    <div
+                            class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                        <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
+                    </div>
+                </div>
+            </td>
+
+        <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-4 py-4">
+                <input id="checkbox-table-search-1" type="checkbox"
+                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                       name="foo"/>
+                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+            </td>
+            <td class="px-6">
+                <span class='align-middle inline-block text-primary font-bold'> 01 </span>
+            </td>
+            <td class="px-6">
+                <span class='align-middle inline-block text-primary font-bold'> Antony </span>
+            </td>
+            <td class="px-6">
+                <div class="flex items-center">
+                    <ion-icon name="help-circle" class="text-blue-500 text-2xl"></ion-icon>
+                    <span class='ml-2 text-primary font-bold'>CX.Postal</span>
+                </div>
+            </td>
+            <td class="px-6">
+                <span class='align-middle inline-block text-primary font-bold'> Não é para retornar </span>
+            </td>
+            <td class="px-6">
+                <p>06/10/1999</p>
+            </td>
+            <td class="px-6">
+                <p>20:20</p>
+            </td>
+            <td class="px-7">
+                <p>05:05</p>
+            </td>
+            <td class="px-6">
+                <p>44998254639</p>
+            </td>
+
+            <td>
+                <div class="flex items-center">
+                    <div
+                            class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                        <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
+                    </div>
+                    <div
+                            class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                        <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tbody>
+    </table>
+    <div id="cadLead" class="w-screen h-screen hidden absolute top-0 left-0">
+        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <form action="" method="post"
+              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg ">
+            <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Cadastro de Ligações</h1>
+            <ion-icon name="close" fontSize=''
+                      class="text-2xl absolute top-2 right-2 cursor-pointer hover:text-gray-600 duration-150 ease-in-out text-white"
+                      onClick="handleCloseAddLead()"></ion-icon>
+            <div class="flex flex-col">
+                <div class="flex justify-between py-2">
+                    <div class="w-full mx-2">
+                        <label for="name" class="text-sm font-semibold">Nome do Cliente</label> <br>
+                        <input type="text" name="name" id="name" placeholder="Nome do cliente"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="soluction" class="text-sm font-semibold">Resultado</label><br>
+                        <select name="soluction" id="soluction" placeholder="Escolha a solução"
+                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                            <option value="1">Atendeu</option>
+                            <option value="2">Desligou</option>
+                            <option value="3">Caixa Postal</option>
+                            <option value="4">Ocupado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-between py-2">
+                    <div class="w-full mx-2">
+                        <label for="date" class="text-sm font-semibold">Data da Ligação</label> <br>
+                        <input type="date" name="date" id="date" placeholder="Data da Ligacao"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="contact" class="text-sm font-semibold">Contato</label> <br>
+                        <input type="tel" name="contact" id="contact" placeholder="(xx) xxxxx-xxxx"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+                <div class="flex justify-between py-2">
+                    <div class="w-full mx-2">
+                        <label for="callTime" class="text-sm font-semibold">Horário da Ligação</label> <br>
+                        <input type="time" name="callTime" id="callTime" placeholder="00:00"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="callTimecr" class="text-sm font-semibold">Duração da Ligação</label> <br>
+                        <input type="time" name="callTimecr" id="callTimecr" placeholder="00:00"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-between py-2">
+                <div class="w-full">
+                    <label for="description" class="text-sm font-semibold px-2">Descrição</label> <br>
+                    <textarea name="description" id="description" placeholder="Informações da Ligação"
+                              class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full
+                resize-none h-32" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="float-right py-2 flex">
+                <input type="submit"
+                       class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold cursor-pointer"
+                       value="Salvar">
+                <div class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold cursor-pointer select-none ml-2"
+                     onClick="handleCloseAddLead()">Cancelar
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<button class="fixed bottom-10 right-10 " onClick="handleCloseAddLead()">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="h-16 w-16 text-white bg-purple-highlight p-2 rounded-2xl hover:bg-[#5f04c4] duration-150 ease-in-out"
+         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+    </svg>
+</button>
+<script src="/main.js" type="text/javascript"></script>
+<script src="/lead.js" type="text/javascript"></script>
+
+</body>
+</html>
