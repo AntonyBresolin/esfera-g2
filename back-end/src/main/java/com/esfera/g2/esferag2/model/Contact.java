@@ -18,7 +18,7 @@ public class Contact {
 
     @ManyToOne
     @JoinColumn(name = "Client_idClient")
-    private Client idClient;
+    private Client client;
 
     public Long getIdContact() {
         return idContact;
@@ -44,12 +44,12 @@ public class Contact {
         this.idTypeContact = idTypeContact;
     }
 
-    public Client getIdClient() {
-        return idClient;
+    public Client getClient() {
+        return client;
     }
 
-    public void setIdClient(Client idClient) {
-        this.idClient = idClient;
+    public void setClient(Client idClient) {
+        this.client = idClient;
     }
 
     @Override
@@ -68,9 +68,9 @@ public class Contact {
     public Contact() {
     }
 
-    public Contact(String data, TypeContact idTypeContact, Client idClient) {
+    public Contact(String data, TypeContact idTypeContact, Client client) {
         this.data = data;
         this.idTypeContact = idTypeContact;
-        this.idClient = idClient;
+        this.client = client;
     }
 }

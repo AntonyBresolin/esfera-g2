@@ -25,7 +25,7 @@ public class Address {
 
     @ManyToOne
     @JoinColumn(name = "Client_idClient")
-    private Client idClient;
+    private Client client;
 
     public Long getIdAddress() {
         return idAddress;
@@ -83,12 +83,12 @@ public class Address {
         this.country = country;
     }
 
-    public Client getIdClient() {
-        return idClient;
+    public Client getClient() {
+        return client;
     }
 
-    public void setIdClient(Client idClient) {
-        this.idClient = idClient;
+    public void setClient(Client idClient) {
+        this.client = idClient;
     }
 
     @Override

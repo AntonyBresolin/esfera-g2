@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
-    List<Contact> findByIdClient(Client idClient);
+    List<Contact> findByClient(Client idClient);
+    List<Contact> findAllByClientIn(List<Client> clients);
 }
