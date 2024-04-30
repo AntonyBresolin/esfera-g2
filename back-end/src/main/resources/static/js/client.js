@@ -1,3 +1,5 @@
+let idGeralClient;
+
 window.onload = async function () {
     await fetchAllClients();
 }
@@ -260,6 +262,7 @@ function getElementsEditClient(idClient) {
         })
         .then(data => {
             if (data && data.client && data.contact && data.address) {
+                idGeralClient = data.client.idClient;
                 document.getElementById('nameEdit').value = data.client.name;
                 document.getElementById('cpfEdit').value = data.client.cpfCnpj;
                 document.getElementById('companyEdit').value = data.client.company;
@@ -284,7 +287,7 @@ function getElementsEditClient(idClient) {
 
 function fetchEditClient(event) {
     event.preventDefault();
-    const idClient = document.getElementById('idClient').value;
+    const idClient = idGeralClient;
     const data = {
         client: {
             name: document.getElementById('nameEdit').value,
@@ -342,6 +345,7 @@ function fetchEditClient(event) {
     })
         .then(() => {
             alert('Cliente atualizado com sucesso!');
+            idGeralClient = null;
             handleCloseEditClient();
             fetchAllClients();
         })
@@ -349,4 +353,20 @@ function fetchEditClient(event) {
             alert('Erro ao atualizar cliente!');
             console.error('Error:', error);
         });
+}
+
+async function fetchSearchClientByName() {
+    const name = document.getElementById('searchClient').value;
+    await fetch(`http://localhost:8080/client-address-contact/name/${name}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            listClients(data);
+            console.log(data);
+        })
+        .catch(error => console.error('Error:', error));
 }
