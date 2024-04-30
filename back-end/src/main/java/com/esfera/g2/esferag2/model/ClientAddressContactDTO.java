@@ -2,7 +2,7 @@ package com.esfera.g2.esferag2.model;
 
 import java.util.List;
 
-public class ClientAddressContact {
+public class ClientAddressContactDTO {
     Client client;
     Address address;
     List<Contact> contact;
