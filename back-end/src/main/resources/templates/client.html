@@ -60,7 +60,11 @@
                 WhatsApp
             </th>
             <th scope="col" class="px-6 py-3">
-                Ações
+                <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
+                     onClick="deleteSelectedClients()"
+                >
+                    <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
+                </div>
             </th>
         </tr>
         </thead>
@@ -181,6 +185,121 @@
                 </button>
             </div>
         </form>
+    </div>
+    <div id="editClient" class="w-screen h-screen hidden absolute top-0 left-0">
+        <form action="" method="put"
+              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg px-2"
+              onSubmit="fetchEditClient(event)">
+            <h1 class="text-lg px-4 py-2 font-semibold"> Editar Cliente</h1>
+            <ion-icon name="close" fontSize=''
+                      class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-gray-600 duration-150 ease-in-out"
+                      onClick="handleCloseEditClient()"></ion-icon>
+            <div class="flex flex-col">
+                <div class="flex justify-between py-2">
+                    <div class="w-full mx-2">
+                        <label for="name" class="text-sm font-semibold">Nome</label> <br>
+                        <input type="text" name="name" id="nameEdit" placeholder="Nome do cliente"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="cpf" class="text-sm font-semibold uppercase">CPF</label><br>
+                        <input type="number" name="cpf" id="cpfEdit" placeholder="CPF do cliente"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+                <div class="flex justify-between py-2">
+                    <div class="w-full mx-2">
+                        <label for="company" class="text-sm font-semibold">Empresa</label> <br>
+                        <input type="text" name="company" id="companyEdit" placeholder="Nome da empresa"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="role" class="text-sm font-semibold uppercase">Cargo</label><br>
+                        <input type="text" name="role" id="roleEdit" placeholder="Cargo do cliente"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+                <div class="flex justify-between py-2">
+                    <div class="w-1/2 mx-2">
+                        <label for="date" class="text-sm font-semibold">Data de Nascimento</label> <br>
+                        <input type="date" name="date" id="dateEdit" placeholder="Data de nascimento do cliente"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+                <h2>Informações para contato</h2>
+                <div class="flex justify-between py-2">
+                    <div class="w-full">
+                        <label for="email" class="text-sm font-semibold">Email</label> <br>
+                        <input type="email" name="email" id="emailEdit" placeholder="exemplo@email.com"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="whatsapp" class="text-sm font-semibold uppercase">Whatsapp</label><br>
+                        <input type="number" name="whatsapp" id="whatsappEdit" placeholder="(99) 99999-9999"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+                <div class="flex justify-between py-2">
+                    <div class="w-full">
+                        <label for="telefone" class="text-sm font-semibold">Telefone</label> <br>
+                        <input type="number" name="telefone" id="telefoneEdit" placeholder="(99) 99999-9999"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="celular" class="text-sm font-semibold uppercase">Celular</label><br>
+                        <input type="number" name="celular" id="celularEdit" placeholder="(99) 99999-9999"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+            </div>
+            <h2>Endereço</h2>
+            <div class="flex justify-between py-2">
+                <div class="w-full">
+                    <label for="zipCode" class="text-sm font-semibold">Cep</label> <br>
+                    <input type="text" name="zipCode" id="zipCodeEdit" placeholder="99999-999"
+                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                </div>
+                <div class="w-full m-2">
+                    <label for="country" class="text-sm font-semibold uppercase">Pais</label><br>
+                    <input type="text" name="country" id="countryEdit" placeholder="Brasil"
+                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                </div>
+                <div class="w-full">
+                    <label for="state" class="text-sm font-semibold">Estado</label> <br>
+                    <select name="state" id="stateEdit">
+                        <option value="none">SELECIONE UMA OPÇAO</option>
+                        <option value="Brasil">Brasil</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-between py-2">
+                <div class="w-full">
+                    <label for="city" class="text-sm font-semibold uppercase">Cidade</label><br>
+                    <input type="text" name="city" id="cityEdit" placeholder="Cidade x"
+                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                </div>
+                <div class="w-full">
+                    <label for="street" class="text-sm font-semibold">Rua</label> <br>
+                    <input type="text" name="street" id="streetEdit" placeholder="Rua x"
+                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                </div>
+                <div class="w-full m-2">
+                    <label for="number" class="text-sm font-semibold uppercase">Numero</label><br>
+                    <input type="number" name="number" id="numberEdit" placeholder="00"
+                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                </div>
+            </div>
+            <div class="float-right py-2">
+                <button type="submit"
+                        class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold">Cadastrar
+                </button>
+                <button type="button"
+                        class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold"
+                        onClick="handleCloseEditClient()">Cancelar
+                </button>
+            </div>
+        </form>
+        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
     </div>
     <div id="importClientData" class="w-screen h-screen  absolute top-0 left-0 hidden ">
         <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
