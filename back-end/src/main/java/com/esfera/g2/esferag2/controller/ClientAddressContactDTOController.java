@@ -42,10 +42,10 @@ public class ClientAddressContactDTOController {
         try {
             clientRepository.save(clientAddressContactDTO.getClient());
             Address address = clientAddressContactDTO.getAddress();
-            address.setIdClient(clientAddressContactDTO.getClient());
+            address.setClient(clientAddressContactDTO.getClient());
             addressRepository.save(address);
             for (Contact contact : clientAddressContactDTO.getContact()) {
-                contact.setIdClient(clientAddressContactDTO.getClient());
+                contact.setClient(clientAddressContactDTO.getClient());
                 contactRepository.save(contact);
             }
             return ResponseEntity.status(201).body("Adicionado com sucesso!");
@@ -63,9 +63,9 @@ public class ClientAddressContactDTOController {
 
         // Mapear endereços e contatos por id do cliente para evitar loops aninhados excessivos
         Map<Long, List<Address>> addressMap = addresses.stream()
-                .collect(Collectors.groupingBy(a -> a.getIdClient().getIdClient()));
+                .collect(Collectors.groupingBy(a -> a.getClient().getIdClient()));
         Map<Long, List<Contact>> contactMap = contacts.stream()
-                .collect(Collectors.groupingBy(c -> c.getIdClient().getIdClient()));
+                .collect(Collectors.groupingBy(c -> c.getClient().getIdClient()));
 
         for (Client client : clients) {
             List<Address> clientAddresses = addressMap.getOrDefault(client.getIdClient(), new ArrayList<>());
@@ -114,7 +114,7 @@ public class ClientAddressContactDTOController {
                 clientRepository.save(client);
 
                 Address address = new Address(zipCode, country, state, city, street, number);
-                address.setIdClient(client);
+                address.setClient(client);
                 addressRepository.save(address);
 
                 List<Contact> contacts = new ArrayList<>();
@@ -136,10 +136,10 @@ public class ClientAddressContactDTOController {
         try {
             Client c = clientRepository.findById(id).orElseThrow();
 
-            for (Address address : addressRepository.findByIdClient(c)) {
+            for (Address address : addressRepository.findByClient(c)) {
                 addressRepository.deleteById(address.getIdAddress());
             }
-            for (Contact contact : contactRepository.findByIdClient(c)) {
+            for (Contact contact : contactRepository.findByClient(c)) {
                     contactRepository.deleteById(contact.getIdContact());
             }
 
@@ -156,10 +156,10 @@ public class ClientAddressContactDTOController {
             for (Long id : ids) {
                 Client c = clientRepository.findById(id).orElseThrow();
 
-                for (Address address : addressRepository.findByIdClient(c)) {
+                for (Address address : addressRepository.findByClient(c)) {
                     addressRepository.deleteById(address.getIdAddress());
                 }
-                for (Contact contact : contactRepository.findByIdClient(c)) {
+                for (Contact contact : contactRepository.findByClient(c)) {
                     contactRepository.deleteById(contact.getIdContact());
                 }
 
@@ -180,7 +180,7 @@ public class ClientAddressContactDTOController {
         client.setRole(clientAddressContactDTO.getClient().getRole());
         clientRepository.save(client);
 
-        Address address = addressRepository.findByIdClient(client).get(0);
+        Address address = addressRepository.findByClient(client).get(0);
         address.setZipCode(clientAddressContactDTO.getAddress().getZipCode());
         address.setCountry(clientAddressContactDTO.getAddress().getCountry());
         address.setState(clientAddressContactDTO.getAddress().getState());
@@ -189,7 +189,7 @@ public class ClientAddressContactDTOController {
         address.setNumber(clientAddressContactDTO.getAddress().getNumber());
         addressRepository.save(address);
 
-        List<Contact> contacts = contactRepository.findByIdClient(client);
+        List<Contact> contacts = contactRepository.findByClient(client);
 
         for(Contact contact : contacts) {
             if(contact.getIdTypeContact().getIdTypeContact() == 1) {
@@ -209,12 +209,41 @@ public class ClientAddressContactDTOController {
     @GetMapping("/{id}")
     public ClientAddressContactDTO getClientAddressContactById(@PathVariable Long id) {
         Client client = clientRepository.findById(id).orElseThrow();
-        Address address = addressRepository.findByIdClient(client).get(0);
-        List<Contact> contacts = contactRepository.findByIdClient(client);
+        Address address = addressRepository.findByClient(client).get(0);
+        List<Contact> contacts = contactRepository.findByClient(client);
         ClientAddressContactDTO clientAddressContactDTO = new ClientAddressContactDTO();
         clientAddressContactDTO.setClient(client);
         clientAddressContactDTO.setAddress(address);
         clientAddressContactDTO.setContact(contacts);
         return clientAddressContactDTO;
+    }
+
+    @GetMapping("/name/{name}")
+    public List<ClientAddressContactDTO> getClientAddressContactByName(@PathVariable String name) {
+        List<Client> clients = clientRepository.findByNameContainingIgnoreCase(name);
+        List<Address> addresses = addressRepository.findAllByClientIn(clients);
+        List<Contact> contacts = contactRepository.findAllByClientIn(clients);
+        List<ClientAddressContactDTO> clientAddressContactDTOS = new ArrayList<>();
+
+        // Mapear endereços e contatos por id do cliente para evitar loops aninhados excessivos
+        Map<Long, List<Address>> addressMap = addresses.stream()
+                .collect(Collectors.groupingBy(a -> a.getClient().getIdClient()));
+        Map<Long, List<Contact>> contactMap = contacts.stream()
+                .collect(Collectors.groupingBy(c -> c.getClient().getIdClient()));
+
+        for (Client client : clients) {
+            List<Address> clientAddresses = addressMap.getOrDefault(client.getIdClient(), new ArrayList<>());
+            List<Contact> clientContacts = contactMap.getOrDefault(client.getIdClient(), new ArrayList<>());
+
+            for (Address address : clientAddresses) {
+                ClientAddressContactDTO clientAddressContactDTO = new ClientAddressContactDTO();
+                clientAddressContactDTO.setClient(client);
+                clientAddressContactDTO.setAddress(address);
+                clientAddressContactDTO.setContact(clientContacts);
+                clientAddressContactDTOS.add(clientAddressContactDTO);
+            }
+        }
+
+        return clientAddressContactDTOS;
     }
 }

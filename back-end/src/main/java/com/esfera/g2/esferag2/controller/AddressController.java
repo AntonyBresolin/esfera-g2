@@ -1,6 +1,7 @@
 package com.esfera.g2.esferag2.controller;
 
 import com.esfera.g2.esferag2.model.Address;
+import com.esfera.g2.esferag2.model.Client;
 import com.esfera.g2.esferag2.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,5 +55,10 @@ public class AddressController {
         } catch (Exception e) {
             return new ResponseEntity<>("ID não encontrado!", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/client/{id}")
+    public List<Address> getAddressByClient(@RequestBody Client client) {
+        return addressRepository.findByClient(client);
     }
 }
