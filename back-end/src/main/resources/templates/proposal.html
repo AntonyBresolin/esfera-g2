@@ -311,70 +311,73 @@
         <div id="cadProposal" class="w-screen h-screen hidden absolute top-0 left-0">
             <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
             <form action="" method="post"
-                class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg">
+                class="bg-white w-[1000px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg">
                 <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Cadastro de Proposta</h1>
                 <ion-icon name="close" fontSize=''
                     class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-white-600 duration-150 ease-in-out text-white"
                     onClick="handleCloseAddProposal()"></ion-icon>
-                <div class="flex flex-col">
-                    <div class="flex justify-between py-2">
-                        <div class="w-full mx-2">
-                            <label for="name" class="text-sm font-semibold">Nome</label> <br>
-                            <input type="text" name="name" id="name" placeholder="Nome do cliente"
-                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
-                        </div>
-                        <div class="w-full mx-2">
-                            <label for="soluction" class="text-sm font-semibold">Tipo de Solução</label><br>
-                            <select name="soluction" id="soluction" placeholder="Escolha a solução"
-                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
-                                <option value="1">Acompanhamento</option>
-                                <option value="2">Acompanhamento</option>
-                                <option value="3">Consultoria</option>
-                                <option value="4">Treinamento</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="flex justify-between py-2">
-                        <div class="w-full mx-2">
-                            <label for="date" class="text-sm font-semibold">Data de Conclusão</label> <br>
-                            <input type="date" name="date" id="date" placeholder="Data da proposta"
-                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
-                        </div>
-                        <div class="w-full mx-2">
-                            <label for="status" class="text-sm font-semibold">Status da Proposta</label><br>
-                            <select name="status" id="status" placeholder="Escolha o Status"
-                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
-                                <option value="1">Negociação</option>
-                                <option value="2">Parado</option>
-                                <option value="3">Fechado</option>
-                                <option value="4">Acompanhar</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="flex justify-between py-2">
-                        <div class="w-full">
-                            <label for="value" class="text-sm font-semibold">Valores</label> <br>
-                            <input type="text" name="value" id="value" placeholder="R$ 9.999,99"
-                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
-                        </div>
-                    </div>
-                </div>
+
                 <div class="flex justify-between py-2">
-                    <div class="w-full">
+                    <div class="w-full mx-2 h-[100px]">
+                        <label for="name" class="text-sm font-semibold">Nome</label> <br>
+                        <input type="text" name="name" id="name" placeholder="Nome do cliente"
+                            class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                        <label for="date" class="text-sm font-semibold">Data de Conclusão</label> <br>
+                        <input type="date" name="date" id="date" placeholder="Data da proposta"
+                            class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                        <label for="value" class="text-sm font-semibold">Valores</label> <br>
+                        <input type="text" name="value" id="value" placeholder="R$ 9.999,99"
+                            class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                        <label for="value" class="text-sm font-semibold">Anexar Arquivo</label> <br>
+                        <input type="file" name="profilePicture" id="profilePicture" class="w-full border-2 py-12 cursor-pointer 
+                        file:block file:text-center 
+                        file:justify-center file:hover:bg-defaultBg 
+                        file:duration-300 file:ease-in-out 
+                        file:mx-auto file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-violet-50 file:text-violet-700
+                        hover:file:bg-violet-100" />
+                    </div>
+                    <div class="w-full mx-2 h-[100px]">
+                        <label for="soluction" class="text-sm font-semibold">Tipo de Solução</label><br>
+                        <select name="soluction" id="soluction" placeholder="Escolha a solução"
+                            class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                            <option value="1">Acompanhamento</option>
+                            <option value="2">Acompanhamento</option>
+                            <option value="3">Consultoria</option>
+                            <option value="4">Treinamento</option>
+                        </select>
+                        <label for="status" class="text-sm font-semibold">Status da Proposta</label><br>
+                        <select name="status" id="status" placeholder="Escolha o Status"
+                            class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                            <option value="1">Negociação</option>
+                            <option value="2">Parado</option>
+                            <option value="3">Fechado</option>
+                            <option value="4">Acompanhar</option>
+                        </select>
+                    </div>
+                    <div class="w-full mx-2">
                         <label for="description" class="text-sm font-semibold">Descrição da Proposta</label> <br>
-                        <input type="text" name="description" id="description" placeholder="Informações da proposta"
-                            class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                        <textarea placeholder="Informações da proposta" name="description" id="description"
+                            class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[450px] h-[400px]">
+                </textarea>
                     </div>
                 </div>
-                <div class="float-right py-2 flex">
-                    <input type="submit"
-                        class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold cursor-pointer mr-2"
-                        value="Salvar">
-                    <div class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold cursor-pointer"
-                        onClick="handleCloseAddProposal()">Cancelar</div>
+
+                <div class="flex justify-between py-2">
+                    <div class="float-right py-2 flex mx-2 ml-auto">
+                        <input type="submit"
+                            class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold cursor-pointer mr-2"
+                            value="Salvar">
+                        <div class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold cursor-pointer"
+                            onClick="handleCloseAddProposal()">Cancelar</div>
+                    </div>
                 </div>
             </form>
         </div>
+    </div>
+
     </div>
 
 
