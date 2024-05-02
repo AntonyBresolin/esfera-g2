@@ -70,53 +70,53 @@
 <div class='bg-[#fff] sticky left-0 top-0 h-screen w-1/5 shadow-md ease-in-out duration-150 select-none sidebar' th:fragment="sidebar-component">
     <nav class='flex flex-col pt-[61px] justify-between h-full'>
         <div class='flex flex-col items-center px-2 py-2'>
-            <a href="/dashboard"
+            <a href="/nav/dashboard"
                class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out bg-purple-contrast text-white' th:if="${selectedScreen == 'dashboard'}">
                 <ion-icon name="home" fontSize='' class='text-3xl text-amber'></ion-icon>
                 <span class='ml-3'>Dashboard</span>
             </a>
-            <a href="/dashboard"
+            <a href="/nav/dashboard"
                class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out' th:unless="${selectedScreen == 'dashboard'}">
                 <ion-icon name="home" fontSize='' class='text-3xl'></ion-icon>
                 <span class='ml-3'>Dashboard</span>
             </a>
 
-            <a href="/client"
+            <a href="/nav/client"
                class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out bg-purple-contrast text-white' th:if="${selectedScreen == 'client'}">
                 <ion-icon name="people" fontSize='' class='text-3xl text-amber'></ion-icon>
                 <span class='ml-3'>Clientes</span>
             </a>
-            <a href="/client"
+            <a href="/nav/client"
                class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out' th:unless="${selectedScreen == 'client'}">
                 <ion-icon name="people" fontSize='' class='text-3xl'></ion-icon>
                 <span class='ml-3'>Clientes</span>
             </a>
-            <a href="/proposal"
+            <a href="/nav/proposal"
                class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out bg-purple-contrast text-white' th:if="${selectedScreen == 'proposal'}">
                 <ion-icon name="stats-chart" fontSize='' class='text-3xl text-amber'></ion-icon>
                 <span class='ml-3'>Propostas</span>
             </a>
-            <a href="/proposal"
+            <a href="/nav/proposal"
                class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out' th:unless="${selectedScreen == 'proposal'}">
                 <ion-icon name="stats-chart" fontSize='' class='text-3xl'></ion-icon>
                 <span class='ml-3'>Propostas</span>
             </a>
-            <a href="/lead"
+            <a href="/nav/lead"
                class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out bg-purple-contrast text-white' th:if="${selectedScreen == 'lead'}">
                 <ion-icon name="call" fontSize='' class='text-3xl text-amber'></ion-icon>
                 <span class='ml-3'>Ligações</span>
             </a>
-            <a href="/lead"
+            <a href="/nav/lead"
                class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out' th:unless="${selectedScreen == 'lead'}">
                 <ion-icon name="call" fontSize='' class='text-3xl'></ion-icon>
                 <span class='ml-3'>Ligações</span>
             </a>
-            <a href='/configuration'
+            <a href='/nav/configuration'
                class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out bg-purple-contrast text-white' th:if="${selectedScreen == 'configuration'}">
                 <ion-icon name="settings" fontSize='' class='text-3xl text-amber'></ion-icon>
                 <span class='ml-3'>Configurações</span>
             </a>
-            <a href='/configuration'
+            <a href='/nav/configuration'
                class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out' th:unless="${selectedScreen == 'configuration'}">
                 <ion-icon name="settings" fontSize='' class='text-3xl'></ion-icon>
                 <span class='ml-3'>Configurações</span>

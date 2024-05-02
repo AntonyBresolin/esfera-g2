@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <title>Esfera pró soluções</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="./style/nav.css">
+    <link rel="stylesheet" href="../style/nav.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script th:src="@{/js/main.js}" type="text/javascript"></script>
     <script th:src="@{/js/lead.js}" type="text/javascript"></script>
 </head>
 
-<body class="bg-[#DCDCDC] flex overflow-hidden h-screen w-scren">
+<body class="bg-[#DCDCDC] flex overflow-hidden h-screen w-screen">
 <div th:replace="~{menu-component :: navbar-component}"></div>
 <div th:replace="~{menu-component :: sidebar-component(selectedScreen=${selectedScreen})}"></div>
 <div class="w-full h-full pt-[60px]">
