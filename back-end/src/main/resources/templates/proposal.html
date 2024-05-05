@@ -421,9 +421,13 @@
             <div class="flex flex-col justify-between">
                 <div class="flex justify-between">
                     <div class="w-full mx-2 h-full">
-                        <label for="idLigacaoEdit" class="text-sm font-semibold">ID LIGAÇÃO</label> <br>
-                        <input type="number" name="cpfCnpj" id="idLigacaoEdit" placeholder="Digite o ID da Ligação"
-                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                        <label for="idLeadEdit" class="text-sm font-semibold">ID LIGAÇÃO</label> <br>
+                        <input type="number" name="idLeadEdit" id="idLeadEdit" placeholder="ID da ligação"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[160px]">
+                        <button type="button"
+                                class="bg-gray-200 text-black px-2 py-1 rounded-lg font-semibold ml-2"
+                                onClick="fetchSearchProposalByNameEdit()">Enviar
+                        </button>
 
                         <label for="date" class="text-sm font-semibold">Data de Conclusão</label> <br>
                         <input type="date" name="date" id="dateEdit" placeholder="Data da proposta"
