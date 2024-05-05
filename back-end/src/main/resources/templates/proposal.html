@@ -353,19 +353,14 @@
                             <label for="service" class="text-sm font-semibold">Tipo de Solução</label><br>
                             <select name="service" id="service" placeholder="Escolha a solução"
                                     class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
-                                <option value="1">Acompanhamento</option>
-                                <option value="2">Acompanhamento</option>
-                                <option value="3">Consultoria</option>
-                                <option value="4">Treinamento</option>
+                                <option value="Acompanhamento">Acompanhamento</option>
+                                <option value="Consultoria">Consultoria</option>
+                                <option value="Treinamento">Treinamento</option>
                             </select>
 
                             <label for="status" class="text-sm font-semibold">Status da Proposta</label><br>
                             <select name="status" id="status" placeholder="Escolha o Status"
                                     class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
-                                <option value="1">Negociação</option>
-                                <option value="2">Parado</option>
-                                <option value="3">Fechado</option>
-                                <option value="4">Acompanhar</option>
                             </select>
 
                         </div>
@@ -411,7 +406,7 @@
 
     <form action="" method="post"
           class="bg-white w-[1000px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
-          onSubmit="fetchEditProposal(event)">
+          onSubmit="fetchAddEditProposal(event)">
         <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Editar Proposta</h1>
         <ion-icon name="close" fontSize=''
                   class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-white-600 duration-150 ease-in-out text-white"
@@ -447,22 +442,17 @@
                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[160px]" readonly> <br>
 
 
-                        <label for="soluctionEdit" class="text-sm font-semibold">Tipo de Solução</label><br>
-                        <select name="soluction" id="soluctionEdit" placeholder="Escolha a solução"
+                        <label for="serviceEdit" class="text-sm font-semibold">Tipo de Solução</label><br>
+                        <select name="serviceEdit" id="serviceEdit" placeholder="Escolha a solução"
                                 class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
-                            <option value="1">Acompanhamento</option>
-                            <option value="2">Acompanhamento</option>
-                            <option value="3">Consultoria</option>
-                            <option value="4">Treinamento</option>
+                            <option value="Acompanhamento">Acompanhamento</option>
+                            <option value="Consultoria">Consultoria</option>
+                            <option value="Treinamento">Treinamento</option>
                         </select>
 
                         <label for="statusEdit" class="text-sm font-semibold">Status da Proposta</label><br>
-                        <select name="status" id="statusEdit" placeholder="Escolha o Status"
+                        <select name="statusEdit" id="statusEdit" placeholder="Escolha o Status"
                                 class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
-                            <option value="1">Negociação</option>
-                            <option value="2">Parado</option>
-                            <option value="3">Fechado</option>
-                            <option value="4">Acompanhar</option>
                         </select>
 
                     </div>
