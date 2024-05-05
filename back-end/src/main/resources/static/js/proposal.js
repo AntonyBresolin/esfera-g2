@@ -8,7 +8,7 @@ window.onload = async function () {
 function handleCloseAddProposal() {
     let addProposal = document.getElementById('cadProposal');
     addProposal.classList.toggle('hidden');
-  }
+}
 
 
 async function fetchAllProposals() {
@@ -20,44 +20,90 @@ async function fetchAllProposals() {
         .catch(error => console.error('Error:', error));
 }
 
+function listProposals(proposals) {
+    let table = document.getElementById('tableProposals');
+    let tbody = table.getElementsByTagName('tbody')[0];
+    tbody.innerHTML = '';
+    proposals.forEach(data => {
+        let tr = document.createElement('tr');
+        tr.className = 'bg-white border-b hover:bg-gray-50'
+        tr.innerHTML = `
+        <td class="px-6">
+        <span class='align-middle inline-block text-primary font-bold'></span>
+      </td>
+      <td class="px-6">${data.client.name}</td>
+      <td class="px-6">${data.client.cpfCnpj}</td>
+      <td class="px-6">${data.proposal.service}</td>
+      <td class="px-6">${data.proposal.description}</td>
+      <td class="px-6">${data.proposal.date}</td>
+      <td class="px-6">${data.proposal.value}</td>
+      <td class="px-6">
+        <a class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center w-full cursor-pointer hover:bg-gray-300"
+        href="https://wa.me/${data.proposal.file}"
+        target="_blank"
+        >
+          <ion-icon name="call" fontSize='' class='text-lg mx-2'></ion-icon>
+          <span class="text-sm">Ver Anexo</span>
+        </a>
+      </td>
+      <td>
+        <div class="flex items-center">
+          <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
+          onClick="handleCloseEditProposal(${data.proposal.idProposal})"
+          >
+            <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
+          </div>
+          <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
+          onClick="deleteProposal(${data.proposal.idProposal})"
+          >
+            <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
+          </div>
+        </div>
+      </td>
+    `;
+        tbody.appendChild(tr);
 
-
-    async function fetchAddProposal(event) {
-        event.preventDefault();
-        const data = {
-                lead:{
-                    idLead: document.getElementById('idLead').value,
-                    client: {
-                      name: document.getElementById('name').value,
-                },
-                },
-                service: document.getElementById('service').value,
-                proposalDate: document.getElementById('date').value,
-                value: document.getElementById('value').value,
-                description: document.getElementById('description').value,
-                file: document.getElementById('file').value,
-        }
-        console.log(data)
-
-        await fetch('http://localhost:8080/proposal', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(() => {
-                alert('Proposta cadastrada com sucesso!');
-                handleCloseAddProposal();
-                fetchAllProposals();
-            })
-            .catch((error) => {
-                alert('Erro ao cadastrar proposta!');
-                console.error('Error:', error);
-            });
+    })
 }
 
-async function fetchSearchClientByName() {
+
+async function fetchAddProposal(event) {
+    event.preventDefault();
+    const data = {
+        lead: {
+            idLead: document.getElementById('idLead').value,
+            client: {
+                idClient: document.getElementById('idClient').value,
+                name: document.getElementById('name').value,
+            },
+        },
+
+            service: document.getElementById('service').value,
+            proposalDate: document.getElementById('date').value,
+            value: document.getElementById('value').value,
+            description: document.getElementById('description').value,
+            file: document.getElementById('file').value,
+    }
+
+    await fetch(`http://localhost:8080/proposal`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(() => {
+            alert('Proposta cadastrada com sucesso!');
+            handleCloseAddProposal();
+            fetchAllProposals();
+        })
+        .catch((error) => {
+            alert('Erro ao cadastrar proposta!');
+            console.error('Error:', error);
+        });
+}
+
+async function fetchSearchProposalByName() {
     const id = document.getElementById('idLead').value;
     await fetch(`http://localhost:8080/lead/${id}`, {
         method: 'GET',
@@ -68,7 +114,110 @@ async function fetchSearchClientByName() {
         .then(response => response.json())
         .then(data => {
             document.getElementById('name').value = data.idClient.name;
-            console.log(data);
+            document.getElementById('idClient').value = data.idClient.idClient;
         })
         .catch(error => console.error('Error:', error));
+}
+
+async function deleteProposal(id) {
+    await fetch(`http://localhost:8080/proposal/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(() => {
+            alert('Proposta excluída com sucesso!');
+            fetchAllProposals();
+        })
+        .catch((error) => {
+            alert('Erro ao excluir Proposta!');
+            console.error('Error:', error);
+        });
+}
+
+
+function handleCloseEditProposal(idProposal) {
+    let editProposal = document.getElementById('editProposal');
+    editProposal.classList.toggle('hidden');
+
+    if (!editProposal.classList.contains('hidden')) {
+        console.log(idProposal);
+        getElementsEditProposal(idProposal);
+    } else {
+        clearProposalEditFields();
+    }
+}
+
+function clearProposalEditFields() {
+    document.getElementById('dateEdit').value = '';
+    document.getElementById('valueEdit').value = '';
+    document.getElementById('soluctionEdit').value = '';
+    document.getElementById('statusEdit').value = '';
+    document.getElementById('fileEdit').value = '';
+    document.getElementById('idLigacaoEdit').value = '';
+
+}
+
+function getElementsEditProposal(id) {
+    fetch(`http://localhost:8080/proposal/${id}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.proposal && data.lead) {
+                idGeralProposal = data.proposal.id;
+                document.getElementById('idLeadEdit').value = data.lead.idLead;
+                document.getElementById('serviceEdit').value = data.proposal.service;
+                document.getElementById('dateEdit').value = data.proposal.date;
+                document.getElementById('valueEdit').value = data.proposal.value;
+                document.getElementById('descriptionEdit').value = data.proposal.description;
+                document.getElementById('fileEdit').value = data.proposal.file;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching proposal data:', error);
+        });
+}
+
+function fetchEditProposal(event) {
+    event.preventDefault();
+    const id = idGeralProposal;
+    const data = {
+        lead: {
+            idLead: document.getElementById('idLead').value,
+            client: {
+                idClient: document.getElementById('idClient').value,
+                name: document.getElementById('name').value,
+            },
+        },
+        proposal: {
+            service: document.getElementById('service').value,
+            proposalDate: document.getElementById('date').value,
+            value: document.getElementById('value').value,
+            description: document.getElementById('description').value,
+            file: document.getElementById('file').value,
+        }
+    };
+
+    fetch(`http://localhost:8080/proposal/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(() => {
+            alert('Proposta atualizada com sucesso!');
+            idGeralProposal = null;
+            handleCloseEditProposal();
+            fetchAllProposals();
+        })
+        .catch((error) => {
+            alert('Erro ao atualizar proposta!');
+            console.error('Error:', error);
+        });
 }
