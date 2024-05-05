@@ -261,7 +261,7 @@
     <div id="cadLead" class="w-screen h-screen hidden absolute top-0 left-0">
         <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
         <form action="" method="post"
-              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg ">
+              class="bg-white w-[750px] h-[660px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg ">
             <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Cadastro de Ligações</h1>
             <ion-icon name="close" fontSize=''
                       class="text-2xl absolute top-2 right-2 cursor-pointer hover:text-gray-600 duration-150 ease-in-out text-white"
@@ -273,7 +273,15 @@
                         <input type="text" name="name" id="name" placeholder="Nome do cliente"
                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
                     </div>
-                    <div class="w-full mx-2">
+                    <div>
+                        <label for="cpfCnpj" class="text-sm font-semibold">CPF/CNPJ</label> <br>
+                        <input type="number" name="cpfCnpj" id="cpfCnpj" placeholder="CPF/CNPJ do cliente"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px] mr-2">
+                    </div>
+
+                </div>
+                <div>
+                    <div class="w-650 mx-2">
                         <label for="soluction" class="text-sm font-semibold">Resultado</label><br>
                         <select name="soluction" id="soluction" placeholder="Escolha a solução"
                                 class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
@@ -314,7 +322,7 @@
                     <label for="description" class="text-sm font-semibold px-2">Descrição</label> <br>
                     <textarea name="description" id="description" placeholder="Informações da Ligação"
                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full
-                resize-none h-32" rows="4"></textarea>
+                resize-none h-32 wr-2" rows="4"></textarea>
                 </div>
             </div>
             <div class="float-right py-2 flex">
