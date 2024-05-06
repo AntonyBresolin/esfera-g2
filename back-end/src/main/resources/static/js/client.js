@@ -4,7 +4,6 @@ window.onload = async function () {
     await fetchAllClients();
 }
 
-
 function selectAllCheckboxes(source) {
     let checkboxes = document.getElementsByName('foo');
     for (let checkbox of checkboxes) {
@@ -47,7 +46,7 @@ function listClients(clients) {
         </a>
       </td>
       <td>
-        <div class="flex items-center">
+        <div class="flex items-center gap-2">
           <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
           onClick="handleCloseEditClient(${data.client.idClient})"
           >
@@ -198,6 +197,7 @@ async function deleteClient(idClient) {
 }
 
 async function deleteSelectedClients() {
+    event.preventDefault();
     let checkboxes = document.getElementsByName('foo');
     let clients = [];
     for (let checkbox of checkboxes) {
@@ -215,6 +215,7 @@ async function deleteSelectedClients() {
     })
         .then(() => {
             alert('Clientes excluídos com sucesso!');
+            showDeleteClientModal();
             fetchAllClients();
         })
         .catch((error) => {
@@ -228,7 +229,6 @@ function handleCloseEditClient(idClient) {
     editClient.classList.toggle('hidden');
 
     if (!editClient.classList.contains('hidden')) {
-        console.log(idClient);
         getElementsEditClient(idClient);
     } else {
         clearClientEditFields();
@@ -369,4 +369,9 @@ async function fetchSearchClientByName() {
             console.log(data);
         })
         .catch(error => console.error('Error:', error));
+}
+
+function showDeleteClientModal() {
+    let modal = document.getElementById('deleteClientModal');
+    modal.classList.toggle('hidden');
 }
