@@ -16,6 +16,13 @@ public class TypeContact {
 
     private String type;
 
+    public TypeContact() {
+    }
+
+    public TypeContact(String type) {
+        this.type = type;
+    }
+
     public Long getIdTypeContact() {
         return idTypeContact;
     }
