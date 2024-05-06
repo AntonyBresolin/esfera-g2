@@ -9,18 +9,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/client")
 public class ClientController {
 
     @Autowired
     private ClientRepository clientRepository;
-
-    @GetMapping
-    public String client(Model model) {
-        model.addAttribute("selectedScreen", "client");
-        return "client";
-    }
 
     @GetMapping("/all")
     public List<Client> getAllClients() {
@@ -48,6 +42,11 @@ public class ClientController {
                     return clientRepository.save(client);
                 })
                 .orElseThrow();
+    }
+
+    @GetMapping("/cpf/{cpfCnpj}")
+    public List<Client> getClientsByCpfCnpj(@PathVariable String cpfCnpj) {
+        return clientRepository.findClientsByCpfCnpj(cpfCnpj);
     }
 
     @DeleteMapping("/{id}")

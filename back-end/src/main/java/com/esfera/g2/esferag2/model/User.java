@@ -25,7 +25,16 @@ public class User {
 
     private String role;
 
+    public User() {
+    }
 
+    public User(String name, String email, String passwordHash, String phone, String role) {
+        this.name = name;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.phone = phone;
+        this.role = role;
+    }
 
     public Long getIdUser() {
         return idUser;

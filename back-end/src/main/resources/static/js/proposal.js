@@ -1,9 +1,16 @@
+if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate) {
+} else {
+    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('sessionEnd');
+    window.location.href = '/login';
+}
+
 let idGeralProposal;
 
 window.onload = async function () {
     await fetchAllProposals();
 }
-
 
 function handleCloseAddProposal() {
     let addProposal = document.getElementById('cadProposal');

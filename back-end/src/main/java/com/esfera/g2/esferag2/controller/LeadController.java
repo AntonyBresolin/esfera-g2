@@ -16,11 +16,7 @@ public class LeadController {
     @Autowired
     private LeadRepository leadRepository;
 
-    @GetMapping
-    public String lead(Model model) {
-        model.addAttribute("selectedScreen", "lead");
-        return "lead";
-    }
+
 
     @GetMapping("/all")
     public List<Lead> getAllLeads() {

@@ -18,11 +18,7 @@ public class ProposalController {
     @Autowired
     private ProposalRepository proposalRepository;
 
-    @GetMapping
-    public String proposal(Model model) {
-        model.addAttribute("selectedScreen", "proposal");
-        return "proposal";
-    }
+
 
     @GetMapping("/all")
     public List<Proposal> getAllProposals() {

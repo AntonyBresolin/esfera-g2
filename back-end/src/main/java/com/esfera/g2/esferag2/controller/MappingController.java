@@ -11,17 +11,33 @@ public class MappingController {
         return "login";
     }
 
-    @GetMapping("/dashboard")
+    @GetMapping("/nav/dashboard")
     public String dashboard(Model model) {
         model.addAttribute("selectedScreen", "dashboard");
         return "home";
     }
 
-
-
-    @GetMapping("/configuration")
+    @GetMapping("/nav/configuration")
     public String configuration(Model model) {
         model.addAttribute("selectedScreen", "configuration");
         return "configuration";
+    }
+
+    @GetMapping("/nav/lead")
+    public String lead(Model model) {
+        model.addAttribute("selectedScreen", "lead");
+        return "lead";
+    }
+
+    @GetMapping("/nav/client")
+    public String client(Model model) {
+        model.addAttribute("selectedScreen", "client");
+        return "client";
+    }
+
+    @GetMapping("/nav/proposal")
+    public String proposal(Model model) {
+        model.addAttribute("selectedScreen", "proposal");
+        return "proposal";
     }
 }
