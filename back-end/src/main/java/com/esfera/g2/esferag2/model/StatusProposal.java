@@ -14,6 +14,12 @@ public class  StatusProposal {
     @Column(nullable = false)
     private String name;
 
+    public StatusProposal() {
+    }
+
+    public StatusProposal(String name) {
+        this.name = name;
+    }
 
     public Long getIdStatusProposal() {
         return idStatusProposal;

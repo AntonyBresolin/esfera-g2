@@ -14,6 +14,13 @@ public class LeadResult {
     @Column(nullable = false)
     private String result;
 
+    public LeadResult() {
+    }
+
+    public LeadResult(String result) {
+        this.result = result;
+    }
+
     public Long getIdLeadResult() {
         return idLeadResult;
     }
