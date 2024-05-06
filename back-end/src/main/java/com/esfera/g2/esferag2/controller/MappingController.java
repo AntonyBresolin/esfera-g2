@@ -17,7 +17,6 @@ public class MappingController {
         return "home";
     }
 
-
     @GetMapping("/nav/configuration")
     public String configuration(Model model) {
         model.addAttribute("selectedScreen", "configuration");

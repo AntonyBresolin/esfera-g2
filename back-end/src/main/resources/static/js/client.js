@@ -1,9 +1,16 @@
+if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate) {
+} else {
+    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('sessionEnd');
+    window.location.href = '/login';
+}
+
 let idGeralClient;
 
 window.onload = async function () {
     await fetchAllClients();
 }
-
 
 function selectAllCheckboxes(source) {
     let checkboxes = document.getElementsByName('foo');
