@@ -6,10 +6,14 @@ if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate
     window.location.href = '/login';
 }
 
+let currentPage = 0; // Página atual
+let pageSize = 20; // Tamanho padrão da página
+let sortBy = 'idClient'; // Ordenação padrão
+
 let idGeralClient;
 
 window.onload = async function () {
-    await fetchAllClients();
+    await fetchAllClients(currentPage);
 }
 
 function selectAllCheckboxes(source) {
@@ -72,13 +76,28 @@ function listClients(clients) {
     });
 }
 
-async function fetchAllClients() {
-    await fetch('http://localhost:8080/client-address-contact/all')
+async function fetchAllClients(page) {
+    await fetch(`http://localhost:8080/client-address-contact/all?page=${page}&size=${pageSize}&sortBy=${sortBy}`)
         .then(response => response.json())
         .then(data => {
-            listClients(data);
+            listClients(data.content);
+            updatePagination(data);
         })
         .catch(error => console.error('Error:', error));
+}
+
+function updatePagination(pageInfo) {
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    if (currentPage > 0) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchAllClients(${currentPage - 1})">Anterior</button>`;
+    }
+    if (currentPage < totalPages - 1) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchAllClients(${currentPage + 1})">Próximo</button>`;
+    }
 }
 
 
@@ -142,7 +161,7 @@ async function fetchAddClient(event) {
         .then(() => {
             alert('Cliente cadastrado com sucesso!');
             handleCloseAddCliente();
-            fetchAllClients();
+            fetchAllClients(currentPage);
         })
         .catch((error) => {
             alert('Erro ao cadastrar cliente!');
@@ -182,7 +201,7 @@ async function fetchImportClientData() {
         .finally(() => {
                 document.getElementById('fileInput').value = '';
                 handleCloseImportClientData();
-                fetchAllClients();
+                fetchAllClients(currentPage);
             }
         );
 }
@@ -197,7 +216,7 @@ async function deleteClient() {
     })
         .then(() => {
             showUniqueDeleteClientModal();
-            fetchAllClients();
+            fetchAllClients(currentPage);
         })
         .catch((error) => {
             alert('Erro ao excluir cliente!');
@@ -225,7 +244,7 @@ async function deleteSelectedClients() {
     })
         .then(() => {
             showDeleteClientModal();
-            fetchAllClients();
+            fetchAllClients(currentPage);
         })
         .catch((error) => {
             alert('Erro ao excluir clientes!');
@@ -356,7 +375,7 @@ function fetchEditClient(event) {
             alert('Cliente atualizado com sucesso!');
             idGeralClient = null;
             handleCloseEditClient();
-            fetchAllClients();
+            fetchAllClients(currentPage);
         })
         .catch((error) => {
             alert('Erro ao atualizar cliente!');

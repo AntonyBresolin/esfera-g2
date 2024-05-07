@@ -7,6 +7,15 @@ public class ClientAddressContactDTO {
     Address address;
     List<Contact> contact;
 
+    public ClientAddressContactDTO() {
+    }
+
+    public ClientAddressContactDTO(Client client, Address address, List<Contact> contact) {
+        this.client = client;
+        this.address = address;
+        this.contact = contact;
+    }
+
     public Client getClient() {
         return client;
     }
