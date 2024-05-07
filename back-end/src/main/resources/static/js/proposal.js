@@ -32,7 +32,6 @@ function listProposals(proposals) {
     let table = document.getElementById('tableProposals');
     let tbody = table.getElementsByTagName('tbody')[0];
     tbody.innerHTML = '';
-    console.log(proposals)
     proposals.forEach(data => {
         let tr = document.createElement('tr');
         tr.className = 'bg-white border-b hover:bg-gray-50';
@@ -179,7 +178,6 @@ function handleCloseEditProposal(idProposal) {
     editProposal.classList.toggle('hidden');
 
     if (!editProposal.classList.contains('hidden')) {
-        console.log(idProposal);
         getElementsEditProposal(idProposal);
     } else {
         clearProposalEditFields();
@@ -222,7 +220,6 @@ function getElementsEditProposal(id) {
             return response.json();
         })
         .then(data => {
-            console.log(data)
             if (data && data.idLead && data.idStatusProposal) {
                 idGeralProposal = data.idProposal;
                 document.getElementById('dateEdit').value = data.proposalDate;

@@ -42,6 +42,7 @@ public class ProposalController {
                     proposal.setService(proposalDetails.getService());
                     proposal.setProposalDate(proposalDetails.getProposalDate());
                     proposal.setValue(proposalDetails.getValue());
+                    proposal.setIdStatusProposal(proposalDetails.getIdStatusProposal());
                     proposal.setDescription(proposalDetails.getDescription());
                     proposal.setFile(proposalDetails.getFile());
                     return proposalRepository.save(proposal);
