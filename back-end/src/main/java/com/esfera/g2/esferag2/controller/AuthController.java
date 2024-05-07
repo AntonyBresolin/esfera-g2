@@ -41,10 +41,6 @@ public class AuthController {
                                @RequestParam("phone") String phone,
                                @RequestParam("role") String role,
                                RedirectAttributes redirectAttributes) {
-        if (userService.findByName(name) != null) {
-            redirectAttributes.addFlashAttribute("error", "O nome de usuário já está sendo usado");
-            return "redirect:/register";
-        }
 
         if (userService.findByEmail(email) != null) {
             redirectAttributes.addFlashAttribute("error", "O email de usuário já está sendo usado");

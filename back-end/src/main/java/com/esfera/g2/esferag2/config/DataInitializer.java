@@ -8,6 +8,7 @@ import com.esfera.g2.esferag2.repository.LeadResultRepository;
 import com.esfera.g2.esferag2.repository.StatusProposalRepository;
 import com.esfera.g2.esferag2.repository.TypeContactRepository;
 import com.esfera.g2.esferag2.repository.UserRepository;
+import com.esfera.g2.esferag2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -19,13 +20,15 @@ public class DataInitializer implements CommandLineRunner {
     private final LeadResultRepository leadResultRepository;
     private final TypeContactRepository typeContactRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public DataInitializer(StatusProposalRepository statusProposalRepository, LeadResultRepository leadResultRepository, TypeContactRepository typeContactRepository, UserRepository userRepository) {
+    public DataInitializer(StatusProposalRepository statusProposalRepository, LeadResultRepository leadResultRepository, TypeContactRepository typeContactRepository, UserRepository userRepository, UserService userService) {
         this.statusProposalRepository = statusProposalRepository;
         this.leadResultRepository = leadResultRepository;
         this.typeContactRepository = typeContactRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
 
@@ -63,7 +66,8 @@ public class DataInitializer implements CommandLineRunner {
 
         if (userRepository.count() == 0) {
             // Dados para User
-            userRepository.save(new User("Admin", "admin", "admin", "44999999999", "Televendedor"));
+            String senha = userService.hashPassword("admin");
+            userRepository.save(new User("Admin", "admin", senha, "44999999999", "Televendedor"));
 
             System.out.println("User dummy scripts OK!");
         }
