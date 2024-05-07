@@ -54,14 +54,14 @@ function listClients(clients) {
         </a>
       </td>
       <td>
-        <div class="flex items-center">
+        <div class="flex items-center gap-2">
           <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
           onClick="handleCloseEditClient(${data.client.idClient})"
           >
             <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
           </div>
           <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
-          onClick="deleteClient(${data.client.idClient})"
+          onClick="showUniqueDeleteClientModal(${data.client.idClient})"
           >
             <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
           </div>
@@ -187,24 +187,27 @@ async function fetchImportClientData() {
         );
 }
 
-async function deleteClient(idClient) {
-    await fetch(`http://localhost:8080/client-address-contact/delete/${idClient}`, {
+async function deleteClient() {
+    event.preventDefault();
+    await fetch(`http://localhost:8080/client-address-contact/delete/${sessionStorage.getItem('idClientToDel')}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
         }
     })
         .then(() => {
-            alert('Cliente excluído com sucesso!');
+            showUniqueDeleteClientModal();
             fetchAllClients();
         })
         .catch((error) => {
             alert('Erro ao excluir cliente!');
             console.error('Error:', error);
         });
+    sessionStorage.removeItem('idClientToDel');
 }
 
 async function deleteSelectedClients() {
+    event.preventDefault();
     let checkboxes = document.getElementsByName('foo');
     let clients = [];
     for (let checkbox of checkboxes) {
@@ -221,7 +224,7 @@ async function deleteSelectedClients() {
         body: JSON.stringify(clients)
     })
         .then(() => {
-            alert('Clientes excluídos com sucesso!');
+            showDeleteClientModal();
             fetchAllClients();
         })
         .catch((error) => {
@@ -235,7 +238,6 @@ function handleCloseEditClient(idClient) {
     editClient.classList.toggle('hidden');
 
     if (!editClient.classList.contains('hidden')) {
-        console.log(idClient);
         getElementsEditClient(idClient);
     } else {
         clearClientEditFields();
@@ -373,7 +375,18 @@ async function fetchSearchClientByName() {
         .then(response => response.json())
         .then(data => {
             listClients(data);
-            console.log(data);
         })
         .catch(error => console.error('Error:', error));
+}
+
+function showDeleteClientModal() {
+    let modal = document.getElementById('deleteClientModal');
+    modal.classList.toggle('hidden');
+}
+
+function showUniqueDeleteClientModal(idClient) {
+    let modal = document.getElementById('deleteUniqueClientModal');
+    modal.classList.toggle('hidden');
+
+    sessionStorage.setItem('idClientToDel', idClient);
 }
