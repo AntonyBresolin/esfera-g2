@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/lead")
 public class LeadController {
 
     @Autowired
     private LeadRepository leadRepository;
-
 
 
     @GetMapping("/all")
@@ -41,6 +40,7 @@ public class LeadController {
                     lead.setDate(leadDetails.getDate());
                     lead.setDuration(leadDetails.getDuration());
                     lead.setDescription(leadDetails.getDescription());
+                    lead.setCallTime(leadDetails.getCallTime());
                     return leadRepository.save(lead);
                 })
                 .orElseThrow();
