@@ -25,7 +25,7 @@
                    class="w-full bg-[#F0F0F7] px-3 py-2 rounded-full focus:outline-none mr-[-30px] focus:bg-gray-200">
             <ion-icon name="search-outline" fontSize=''
                       class='text-lg text-black cursor-pointer hover:text-gray-600 duration-150 ease-in-out'
-            onClick="fetchSearchClientByName()"></ion-icon>
+                      onClick="fetchSearchClientByName()"></ion-icon>
         </div>
         <button
                 class="bg-gray-100 text-black px-4 py-1 rounded-lg flex items-center font-semibold border hover:bg-gray-200 duration-150"
@@ -62,10 +62,9 @@
                 WhatsApp
             </th>
             <th scope="col" class="px-6 py-3">
-                <div class="bg-red-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
-                     onClick="deleteSelectedClients()"
-                >
-                    <ion-icon name="trash" fontSize='' class='text-lg text-red-700'></ion-icon>
+                <div class="bg-red-200 px-2 py-2 rounded-full text-black font-bold flex justify-center text-red-700 items-center w-full cursor-pointer hover:bg-red-300 hover:text-red-800 duration-150 ease-in-out"
+                     onClick="showDeleteClientModal()">
+                    <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
                 </div>
             </th>
         </tr>
@@ -73,16 +72,21 @@
         <tbody class="overscroll-contain">
         </tbody>
     </table>
+    <div id="pagination" class="sticky bottom-0 w-full bg-gray-200 py-2 flex items-center justify-between shadow-sm"></div>
     <div id="cadClient" class="w-screen h-screen hidden absolute top-0 left-0">
-        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <div onClick="handleCloseAddCliente()"
+             class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
         <form action="" method="post"
-              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg px-2"
+              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
               onSubmit="fetchAddClient(event)">
-            <h1 class="text-lg px-4 py-2 font-semibold"> Cadastro de Cliente</h1>
-            <ion-icon name="close" fontSize=''
-                      class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-gray-600 duration-150 ease-in-out"
-                      onClick="handleCloseAddCliente()"></ion-icon>
-            <div class="flex flex-col">
+            <div class="sticky top-0">
+                <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Cadastro de
+                    Cliente </h1>
+                <ion-icon name="close" fontSize=''
+                          class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-white-600 duration-150 ease-in-out text-white"
+                          onClick="handleCloseAddCliente()"></ion-icon>
+            </div>
+            <div class="flex flex-col px-2">
                 <div class="flex justify-between py-2">
                     <div class="w-full mx-2">
                         <label for="name" class="text-sm font-semibold">Nome</label> <br>
@@ -139,43 +143,71 @@
                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
                     </div>
                 </div>
-            </div>
-            <h2>Endereço</h2>
-            <div class="flex justify-between py-2">
-                <div class="w-full">
-                    <label for="zipCode" class="text-sm font-semibold">Cep</label> <br>
-                    <input type="text" name="zipCode" id="zipCode" placeholder="99999-999"
-                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                <h2>Endereço</h2>
+                <div class="flex justify-between py-2">
+                    <div class="w-full">
+                        <label for="zipCode" class="text-sm font-semibold">Cep</label> <br>
+                        <input type="text" name="zipCode" id="zipCode" placeholder="99999-999"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="country" class="text-sm font-semibold">Pais</label><br>
+                        <input type="text" name="country" id="country" placeholder="Brasil"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full">
+                        <label for="state" class="text-sm font-semibold">Estado</label> <br>
+                        <select name="state" id="state"
+                        class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                            <option value="none">SELECIONE UMA OPÇAO</option>
+                            <option value="Acre">Acre</option>
+                            <option value="Alagoas">Alagoas</option>
+                            <option value="Amapá">Amapá</option>
+                            <option value="Amazonas">Amazonas</option>
+                            <option value="Bahia">Bahia</option>
+                            <option value="Ceará">Ceará</option>
+                            <option value="Distrito Federal">Distrito Federal</option>
+                            <option value="Espírito Santo">Espírito Santo</option>
+                            <option value="Goiás">Goiás</option>
+                            <option value="Maranhão">Maranhão</option>
+                            <option value="Mato Grosso">Mato Grosso</option>
+                            <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
+                            <option value="Minas Gerais">Minas Gerais</option>
+                            <option value="Pará">Pará</option>
+                            <option value="Paraíba">Paraíba</option>
+                            <option value="Paraná">Paraná</option>
+                            <option value="Pernambuco">Pernambuco</option>
+                            <option value="Piauí">Piauí</option>
+                            <option value="Rio de Janeiro">Rio de Janeiro</option>
+                            <option value="Rio Grande do Norte">Rio Grande do Norte</option>
+                            <option value="Rio Grande do Sul">Rio Grande do Sul</option>
+                            <option value="Rondônia">Rondônia</option>
+                            <option value="Roraima">Roraima</option>
+                            <option value="Santa Catarina">Santa Catarina</option>
+                            <option value="São Paulo">São Paulo</option>
+                            <option value="Sergipe">Sergipe</option>
+                            <option value="Tocantins">Tocantins</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="w-full m-2">
-                    <label for="country" class="text-sm font-semibold uppercase">Pais</label><br>
-                    <input type="text" name="country" id="country" placeholder="Brasil"
-                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                <div class="flex justify-between py-2">
+                    <div class="w-full">
+                        <label for="city" class="text-sm font-semibold uppercase">Cidade</label><br>
+                        <input type="text" name="city" id="city" placeholder="Cidade x"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="street" class="text-sm font-semibold">Rua</label> <br>
+                        <input type="text" name="street" id="street" placeholder="Rua x"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="number" class="text-sm font-semibold uppercase">Numero</label><br>
+                        <input type="number" name="number" id="number" placeholder="00"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
                 </div>
-                <div class="w-full">
-                    <label for="state" class="text-sm font-semibold">Estado</label> <br>
-                    <select name="state" id="state">
-                        <option value="none">SELECIONE UMA OPÇAO</option>
-                        <option value="Brasil">Brasil</option>
-                    </select>
-                </div>
-            </div>
-            <div class="flex justify-between py-2">
-                <div class="w-full">
-                    <label for="city" class="text-sm font-semibold uppercase">Cidade</label><br>
-                    <input type="text" name="city" id="city" placeholder="Cidade x"
-                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
-                </div>
-                <div class="w-full">
-                    <label for="street" class="text-sm font-semibold">Rua</label> <br>
-                    <input type="text" name="street" id="street" placeholder="Rua x"
-                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
-                </div>
-                <div class="w-full m-2">
-                    <label for="number" class="text-sm font-semibold uppercase">Numero</label><br>
-                    <input type="number" name="number" id="number" placeholder="00"
-                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
-                </div>
+
             </div>
             <div class="float-right py-2">
                 <button type="submit"
@@ -186,17 +218,23 @@
                         onClick="handleCloseAddCliente()">Cancelar
                 </button>
             </div>
+
         </form>
     </div>
     <div id="editClient" class="w-screen h-screen hidden absolute top-0 left-0">
+        <div onClick="handleCloseEditClient()"
+             class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
         <form action="" method="post"
-              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg px-2"
+              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
               onSubmit="fetchEditClient(event)">
-            <h1 class="text-lg px-4 py-2 font-semibold"> Editar Cliente</h1>
-            <ion-icon name="close" fontSize=''
-                      class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-gray-600 duration-150 ease-in-out"
-                      onClick="handleCloseEditClient()"></ion-icon>
-            <div class="flex flex-col">
+
+            <div class="sticky top-0">
+                <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Editar Cliente </h1>
+                <ion-icon name="close" fontSize=''
+                          class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-white-600 duration-150 ease-in-out text-white"
+                          onClick="handleCloseEditClient()"></ion-icon>
+            </div>
+            <div class="flex flex-col px-2">
                 <div class="flex justify-between py-2">
                     <div class="w-full mx-2">
                         <label for="name" class="text-sm font-semibold">Nome</label> <br>
@@ -253,47 +291,75 @@
                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
                     </div>
                 </div>
-            </div>
-            <h2>Endereço</h2>
-            <div class="flex justify-between py-2">
-                <div class="w-full">
-                    <label for="zipCode" class="text-sm font-semibold">Cep</label> <br>
-                    <input type="text" name="zipCode" id="zipCodeEdit" placeholder="99999-999"
-                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                <h2>Endereço</h2>
+                <div class="flex justify-between py-2">
+                    <div class="w-full">
+                        <label for="zipCode" class="text-sm font-semibold">Cep</label> <br>
+                        <input type="text" name="zipCode" id="zipCodeEdit" placeholder="99999-999"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="country" class="text-sm font-semibold uppercase">Pais</label><br>
+                        <input type="text" name="country" id="countryEdit" placeholder="Brasil"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="state" class="text-sm font-semibold">Estado</label> <br>
+                        <select name="state" id="stateEdit"
+                        class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                            <option value="none">SELECIONE UMA OPÇAO</option>
+                            <option value="Acre">Acre</option>
+                            <option value="Alagoas">Alagoas</option>
+                            <option value="Amapá">Amapá</option>
+                            <option value="Amazonas">Amazonas</option>
+                            <option value="Bahia">Bahia</option>
+                            <option value="Ceará">Ceará</option>
+                            <option value="Distrito Federal">Distrito Federal</option>
+                            <option value="Espírito Santo">Espírito Santo</option>
+                            <option value="Goiás">Goiás</option>
+                            <option value="Maranhão">Maranhão</option>
+                            <option value="Mato Grosso">Mato Grosso</option>
+                            <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
+                            <option value="Minas Gerais">Minas Gerais</option>
+                            <option value="Pará">Pará</option>
+                            <option value="Paraíba">Paraíba</option>
+                            <option value="Paraná">Paraná</option>
+                            <option value="Pernambuco">Pernambuco</option>
+                            <option value="Piauí">Piauí</option>
+                            <option value="Rio de Janeiro">Rio de Janeiro</option>
+                            <option value="Rio Grande do Norte">Rio Grande do Norte</option>
+                            <option value="Rio Grande do Sul">Rio Grande do Sul</option>
+                            <option value="Rondônia">Rondônia</option>
+                            <option value="Roraima">Roraima</option>
+                            <option value="Santa Catarina">Santa Catarina</option>
+                            <option value="São Paulo">São Paulo</option>
+                            <option value="Sergipe">Sergipe</option>
+                            <option value="Tocantins">Tocantins</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="w-full m-2">
-                    <label for="country" class="text-sm font-semibold uppercase">Pais</label><br>
-                    <input type="text" name="country" id="countryEdit" placeholder="Brasil"
-                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                <div class="flex justify-between py-2">
+                    <div class="w-full">
+                        <label for="city" class="text-sm font-semibold uppercase">Cidade</label><br>
+                        <input type="text" name="city" id="cityEdit" placeholder="Cidade x"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="street" class="text-sm font-semibold">Rua</label> <br>
+                        <input type="text" name="street" id="streetEdit" placeholder="Rua x"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="number" class="text-sm font-semibold uppercase">Numero</label><br>
+                        <input type="number" name="number" id="numberEdit" placeholder="00"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
                 </div>
-                <div class="w-full">
-                    <label for="state" class="text-sm font-semibold">Estado</label> <br>
-                    <select name="state" id="stateEdit">
-                        <option value="none">SELECIONE UMA OPÇAO</option>
-                        <option value="Brasil">Brasil</option>
-                    </select>
-                </div>
-            </div>
-            <div class="flex justify-between py-2">
-                <div class="w-full">
-                    <label for="city" class="text-sm font-semibold uppercase">Cidade</label><br>
-                    <input type="text" name="city" id="cityEdit" placeholder="Cidade x"
-                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
-                </div>
-                <div class="w-full">
-                    <label for="street" class="text-sm font-semibold">Rua</label> <br>
-                    <input type="text" name="street" id="streetEdit" placeholder="Rua x"
-                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
-                </div>
-                <div class="w-full m-2">
-                    <label for="number" class="text-sm font-semibold uppercase">Numero</label><br>
-                    <input type="number" name="number" id="numberEdit" placeholder="00"
-                           class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
-                </div>
+
             </div>
             <div class="float-right py-2">
                 <button type="submit"
-                        class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold">Cadastrar
+                        class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold">Atualizar
                 </button>
                 <button type="button"
                         class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold"
@@ -301,21 +367,23 @@
                 </button>
             </div>
         </form>
-        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
     </div>
     <div id="importClientData" class="w-screen h-screen  absolute top-0 left-0 hidden ">
-        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <div onClick="handleCloseImportClientData()"
+             class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
         <form action="" method="post"
-              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg px-2"
+              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
               onSubmit="fetchImportClientData(event)">
-            <h1 class="text-lg px-4 py-2 font-semibold"> Importar Dados</h1>
-            <ion-icon name="close" fontSize=''
-                      class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-gray-600 duration-150 ease-in-out"
-                      onClick="handleCloseImportClientData()"></ion-icon>
+            <div class="sticky top-0">
+                <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Importar Dados </h1>
+                <ion-icon name="close" fontSize=''
+                          class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-white-600 duration-150 ease-in-out text-white"
+                          onClick="handleCloseImportClientData()"></ion-icon>
+            </div>
             <div class="flex flex-col">
                 <input type="file" id="fileInput" accept=".csv" class="">
             </div>
-            <div class="float-right py-2">
+            <div class="float-right py-2 px-2">
                 <button type="submit"
                         class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold">Importar
                 </button>
@@ -325,6 +393,66 @@
             </div>
         </form>
     </div>
+
+    <div id="deleteUniqueClientModal" class="w-screen h-screen  absolute top-0 left-0 hidden ">
+        <div id="modalBackDropUniqueDelete" onClick="showUniqueDeleteClientModal()"
+             class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <form action=""
+              class="bg-white pb-4 overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
+              onSubmit="deleteClient()">
+
+            <div class="sticky top-0">
+                <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Excluir Cliente </h1>
+                <ion-icon name="close" fontSize=''
+                          class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-white-600 duration-150 ease-in-out text-white"
+                          onClick="showDeleteClientModal()"></ion-icon>
+            </div>
+            <div class="flex flex-col px-4">
+                <div class="flex items-center justify-center flex-col py-8">
+                    <p class="text-xl font-bold">Deseja realmente excluir o cliente selecionado?</p>
+                    <p class="text-sm text-gray-600">Essa ação não poderá ser desfeita.</p>
+                </div>
+                <div class="flex justify-end items-center w-full my-4">
+                    <input type="button"
+                           class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold mx-4 hover:bg-gray-300 duration-150 ease-in-out cursor-pointer"
+                           onClick="showUniqueDeleteClientModal()" value="Cancelar"/>
+                    <input type="submit"
+                           class="bg-red-700 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-900 duration-150 ease-in-out cursor-pointer"
+                           value="Excluir"/>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="deleteClientModal" class="w-screen h-screen  absolute top-0 left-0 hidden ">
+        <div id="modalBackDropDelete" onClick="showDeleteClientModal()"
+             class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <form action=""
+              class="bg-white pb-4 overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
+              onSubmit="deleteSelectedClients()">
+
+            <div class="sticky top-0">
+                <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Excluir Cliente </h1>
+                <ion-icon name="close" fontSize=''
+                          class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-white-600 duration-150 ease-in-out text-white"
+                          onClick="showDeleteClientModal()"></ion-icon>
+            </div>
+            <div class="flex flex-col px-4">
+                <div class="flex items-center justify-center flex-col py-8">
+                    <p class="text-xl font-bold">Deseja realmente excluir os clientes selecionados?</p>
+                    <p class="text-sm text-gray-600">Essa ação não poderá ser desfeita.</p>
+                </div>
+                <div class="flex justify-end items-center w-full my-4">
+                    <input type="button"
+                           class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold mx-4 hover:bg-gray-300 duration-150 ease-in-out cursor-pointer"
+                           onClick="showDeleteClientModal()" value="Cancelar"/>
+                    <input type="submit"
+                           class="bg-red-700 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-900 duration-150 ease-in-out cursor-pointer"
+                           value="Excluir"/>
+                </div>
+            </div>
+        </form>
+    </div>
+
 </div>
 <button class="fixed bottom-10 right-10" onClick="handleCloseAddCliente()">
     <svg xmlns="http://www.w3.org/2000/svg"

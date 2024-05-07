@@ -12,4 +12,5 @@ import java.util.List;
 public interface AddressRepository extends JpaRepository<Address, Long> {
     List<Address> findByClient(Client idClient);
     List<Address> findAllByClientIn(Collection<Client> clients);
+    List<Address> findAllByClient(Client client);
 }

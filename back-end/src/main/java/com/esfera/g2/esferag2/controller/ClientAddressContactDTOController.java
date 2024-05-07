@@ -11,6 +11,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,33 +57,41 @@ public class ClientAddressContactDTOController {
     }
 
     @GetMapping("/all")
-    public List<ClientAddressContactDTO> listAllClientAddressContact() {
-        List<Client> clients = clientRepository.findAll();
-        List<Address> addresses = addressRepository.findAll();
-        List<Contact> contacts = contactRepository.findAll();
-        List<ClientAddressContactDTO> clientAddressContactDTOS = new ArrayList<>();
+    public Page<ClientAddressContactDTO> listAllClientAddressContact(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "idClient") String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<Client> clientsPage = clientRepository.findAll(pageable);
 
-        // Mapear endereços e contatos por id do cliente para evitar loops aninhados excessivos
-        Map<Long, List<Address>> addressMap = addresses.stream()
-                .collect(Collectors.groupingBy(a -> a.getClient().getIdClient()));
-        Map<Long, List<Contact>> contactMap = contacts.stream()
-                .collect(Collectors.groupingBy(c -> c.getClient().getIdClient()));
+        // Obtém os IDs dos clientes apenas na página atual
+        List<Long> clientIds = clientsPage.getContent().stream()
+                .map(Client::getIdClient)
+                .collect(Collectors.toList());
 
-        for (Client client : clients) {
-            List<Address> clientAddresses = addressMap.getOrDefault(client.getIdClient(), new ArrayList<>());
-            List<Contact> clientContacts = contactMap.getOrDefault(client.getIdClient(), new ArrayList<>());
+        // Obtém os DTOs de clientes com endereços e contatos
+        List<ClientAddressContactDTO> dtos = findClientDetailsWithContacts(clientIds);
 
-            for (Address address : clientAddresses) {
-                ClientAddressContactDTO clientAddressContactDTO = new ClientAddressContactDTO();
-                clientAddressContactDTO.setClient(client);
-                clientAddressContactDTO.setAddress(address);
-                clientAddressContactDTO.setContact(clientContacts);
-                clientAddressContactDTOS.add(clientAddressContactDTO);
+        // Constrói e retorna a página de DTOs
+        return new PageImpl<>(dtos, pageable, clientsPage.getTotalElements());
+    }
+
+    public List<ClientAddressContactDTO> findClientDetailsWithContacts(List<Long> clientIds) {
+        List<ClientAddressContactDTO> dtos = new ArrayList<>();
+        for (Long clientId : clientIds) {
+            Client client = clientRepository.findById(clientId).orElse(null);
+            if (client != null) {
+                List<Address> addresses = addressRepository.findAllByClient(client);
+                List<Contact> contacts = contactRepository.findAllByClient(client);
+
+                for (Address address : addresses) {
+                    dtos.add(new ClientAddressContactDTO(client, address, contacts));
+                }
             }
         }
-
-        return clientAddressContactDTOS;
+        return dtos;
     }
+
 
     @PostMapping("/import")
     public ResponseEntity<?> addClientAddressContact(@RequestParam("file") MultipartFile file) {
