@@ -19,7 +19,10 @@ public class Lead {
     private java.sql.Timestamp date;
 
     @Column(nullable = false)
-    private double duration;
+    private String duration;
+
+    @Column
+    private String callTime;
 
     @Column(nullable = false)
     private String description;
@@ -40,6 +43,14 @@ public class Lead {
         this.idLead = idLead;
     }
 
+    public String getCallTime() {
+        return callTime;
+    }
+
+    public void setCallTime(String callTime) {
+        this.callTime = callTime;
+    }
+
     public String getContact() {
         return contact;
     }
@@ -56,11 +67,11 @@ public class Lead {
         this.date = date;
     }
 
-    public double getDuration() {
+    public String getDuration() {
         return duration;
     }
 
-    public void setDuration(double duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 

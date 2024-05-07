@@ -17,7 +17,6 @@ public class LeadController {
     private LeadRepository leadRepository;
 
 
-
     @GetMapping("/all")
     public List<Lead> getAllLeads() {
         return leadRepository.findAll();
@@ -41,6 +40,7 @@ public class LeadController {
                     lead.setDate(leadDetails.getDate());
                     lead.setDuration(leadDetails.getDuration());
                     lead.setDescription(leadDetails.getDescription());
+                    lead.setCallTime(leadDetails.getCallTime());
                     return leadRepository.save(lead);
                 })
                 .orElseThrow();

@@ -1,4 +1,3 @@
-
 if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate) {
 } else {
     localStorage.removeItem('loggedIn');
@@ -10,29 +9,30 @@ if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate
 let idGeralLead;
 
 window.onload = async function () {
-  await fetchAllLeads();
+    await fetchAllLeads();
 }
 
 function selectAllCheckboxes(source) {
-  let checkboxes = document.getElementsByName('foo');
-  for (let checkbox of checkboxes) {
-    checkbox.checked = source.checked;
-  }
+    let checkboxes = document.getElementsByName('foo');
+    for (let checkbox of checkboxes) {
+        checkbox.checked = source.checked;
+    }
 }
 
 function handleCloseAddLead() {
-  let addCliente = document.getElementById('cadLead');
-  addCliente.classList.toggle('hidden');
+    let addCliente = document.getElementById('cadLead');
+    addCliente.classList.toggle('hidden');
 }
 
 function listLeads(leads) {
-  let table = document.getElementById('tableLeads');
-  let tbody = table.getElementsByTagName('tbody')[0];
-  tbody.innerHTML = '';
-  leads.forEach(data => {
-    let tr = document.createElement('tr');
-    tr.className = 'bg-white border-b hover:bg-gray-50';
-    tr.innerHTML = `
+    let table = document.getElementById('tableLeads');
+    let tbody = table.getElementsByTagName('tbody')[0];
+    console.log(leads);
+    tbody.innerHTML = '';
+    leads.forEach(data => {
+        let tr = document.createElement('tr');
+        tr.className = 'bg-white border-b hover:bg-gray-50';
+        tr.innerHTML = `
             <td class="px-4 py-4">
                 <input id="${data.idLead}" type="checkbox"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -71,67 +71,69 @@ function listLeads(leads) {
                 </div>
             </td>
         `;
-    tbody.appendChild(tr);
-  });
+        tbody.appendChild(tr);
+    });
 }
 
 async function fetchAllLeads() {
-  await fetch('http://localhost:8080/lead/all')
-      .then(response => response.json())
-      .then(data => {
-        listLeads(data);
-      })
-      .catch(error => console.error('Error:', error));
+    await fetch('http://localhost:8080/lead/all')
+        .then(response => response.json())
+        .then(data => {
+            listLeads(data);
+        })
+        .catch(error => console.error('Error:', error));
 }
 
-async function fetchAddLead(event) {
-  event.preventDefault();
-  const data = {
-    contact: document.getElementById('contact').value,
-    date: document.getElementById('date').value,
-    duration: document.getElementById('duration').value,
-    description: document.getElementById('description').value,
-    result: {
-      result: document.getElementById('result').value,
-    },
-    idClient: {
-      idClient: document.getElementById('clientId').value
-    }
-  };
+async function fetchAddLead() {
+    event.preventDefault();
+    const data = {
+        contact: document.getElementById('contact').value,
+        date: document.getElementById('date').value,
+        callTime: document.getElementById('callTime').value,
+        duration: document.getElementById('duration').value,
+        description: document.getElementById('description').value,
+        result: {
+            idLeadResult: document.getElementById('result').value,
+        },
+        idClient: {
+            idClient: document.getElementById('clientId').value
+        }
+    };
+    console.log(data)
 
-  await fetch('http://localhost:8080/lead/add', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
-      .then(() => {
-        alert('Lead cadastrado com sucesso!');
-        handleCloseAddCliente();
-        fetchAllLeads();
-      })
-      .catch((error) => {
-        alert('Erro ao cadastrar lead!');
-        console.error('Error:', error);
-      });
+    await fetch('http://localhost:8080/lead', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(() => {
+            alert('Lead cadastrado com sucesso!');
+            handleCloseAddLead();
+            fetchAllLeads();
+        })
+        .catch((error) => {
+            alert('Erro ao cadastrar lead!');
+            console.error('Error:', error);
+        });
 }
 
 async function deleteLead(idLead) {
-  await fetch(`http://localhost:8080/lead/delete/${idLead}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-      .then(() => {
-        alert('Lead excluído com sucesso!');
-        fetchAllLeads();
-      })
-      .catch((error) => {
-        alert('Erro ao excluir lead!');
-        console.error('Error:', error);
-      });
+    await fetch(`http://localhost:8080/lead/delete/${idLead}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(() => {
+            alert('Lead excluído com sucesso!');
+            fetchAllLeads();
+        })
+        .catch((error) => {
+            alert('Erro ao excluir lead!');
+            console.error('Error:', error);
+        });
 }
 
 function handleCloseEditLead(idLead) {
