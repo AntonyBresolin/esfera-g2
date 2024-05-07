@@ -40,22 +40,17 @@ function listLeads(leads) {
                 <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
             </td>
             <td class="px-6">
-                <span class='align-middle inline-block text-primary font-bold'> ${data.contact} </span>
+                <span class='align-middle inline-block text-primary font-bold'> ${data.idLead} </span>
             </td>
-            <td class="px-6">${data.date}</td>
-            <td class="px-6">${data.duration}</td>
-            <td class="px-6">${data.description}</td>
-            <td class="px-6">${data.result.result}</td>
+        
             <td class="px-6">${data.idClient.name}</td>
-            <td class="px-6">
-                <a class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center w-full cursor-pointer hover:bg-gray-300"
-                    href="https://wa.me/${data.contact}"
-                    target="_blank"
-                >
-                    <ion-icon name="call" fontSize='' class='text-lg mx-2'></ion-icon>
-                    <span class="text-sm">Enviar Mensagem</span>
-                </a>
-            </td>
+            <td class="px-6">${data.result.result}</td>
+             <td class="px-6">${data.description}</td>
+            <td class="px-6">${data.date}</td>
+            <td class="px-6">${data.callTime}</td>
+             <td class="px-6">${data.duration}</td>
+            <td class="px-6">${data.contact}</td>
+            
             <td>
                 <div class="flex items-center">
                     <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
