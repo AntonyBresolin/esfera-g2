@@ -7,18 +7,25 @@
   <title>Login</title>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script th:src="@{/js/login.js}" type="text/javascript"></script>
 </head>
 
 <body>
 <div class="flex h-screen w-screen">
   <div class="w-full h-full bg-purple-900"></div>
   <div class="w-full h-full bg-gray-200 flex flex-col items-center justify-center">
-    <form class="bg-white px-24 py-24 rounded-2xl shadow-md" method="GET" action="/nav/dashboard">
+    <form class="bg-white px-24 py-24 rounded-2xl shadow-md" method="post" action="/login" onSubmit="login()">
       <div class="flex flex-col items-center justify-center w-full">
         <h1 class="text-4xl font-bold text-purple-900 mb-8">Login</h1>
         <div class="flex flex-col">
+          <div th:if="${error}">
+            <p style="color: red" th:text="${error}"></p>
+          </div>
+          <div th:if="${success}">
+            <p style="color: green" th:text="${success}"></p>
+          </div>
           <label class="">Login:</label>
-          <input type="text" name="username" id="username" placeholder='Digite seu login' class="
+          <input type="text" name="email" id="email" placeholder='Digite seu login' class="
                   w-full p-2 my-2 rounded-md border border-gray-300 shadow-md focus:outline-none
                   focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                   disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
@@ -32,6 +39,7 @@
                   invalid:text-pink-600
                   focus:invalid:border-pink-500 focus:invalid:ring-pink-500" />
           <button type="submit" class="bg-purple-900 text-white rounded-lg p-2 m-2 hover:bg-purple-700 duration-150 ease-in-out">Entrar</button>
+          <a href="/register">Registre-se</a>
         </div>
       </div>
     </form>

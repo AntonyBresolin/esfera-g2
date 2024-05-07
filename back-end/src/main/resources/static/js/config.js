@@ -1,3 +1,11 @@
+if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate) {
+} else {
+    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('sessionEnd');
+    window.location.href = '/login';
+}
+
 const togglePerfil = () => {
   let perfil = document.querySelector('.perfil');
   let ajuda = document.querySelector('.ajuda');
