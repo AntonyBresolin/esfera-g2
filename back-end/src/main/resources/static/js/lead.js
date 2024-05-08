@@ -32,6 +32,8 @@ function listLeads(leads) {
     leads.forEach(data => {
         let tr = document.createElement('tr');
         tr.className = 'bg-white border-b hover:bg-gray-50';
+        let dataFormatada = new Date(data.date).toLocaleDateString();
+
         tr.innerHTML = `
             <td class="px-4 py-4">
                 <input id="${data.idLead}" type="checkbox"
@@ -46,7 +48,7 @@ function listLeads(leads) {
             <td class="px-6">${data.idClient.name}</td>
             <td class="px-6">${data.result.result}</td>
              <td class="px-6">${data.description}</td>
-            <td class="px-6">${data.date}</td>
+             <td class="px-6" >${dataFormatada}</td>
             <td class="px-6">${data.callTime}</td>
              <td class="px-6">${data.duration}</td>
             <td class="px-6">${data.contact}</td>
