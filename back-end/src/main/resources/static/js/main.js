@@ -32,16 +32,35 @@ function logout() {
 }
 
 window.onload = function() {
-    var username = localStorage.getItem('userId');
-    if (username) {
-        var usernameDisplay = document.getElementById('usernameDisplay');
-        if (usernameDisplay) {
-            usernameDisplay.textContent = 'Bem-vindo, Usuário ' + username + '!';
-        } else {
-            console.error('Elemento com ID "usernameDisplay" não encontrado.');
-        }
+    var userId = localStorage.getItem('userId');
+    if (userId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/user/' + userId, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var userData = JSON.parse(xhr.responseText);
+                    var userNameDisplay = document.getElementById('userNameDisplay');
+                    var userRoleDisplay = document.getElementById('userRoleDisplay');
+                    if (userNameDisplay && userRoleDisplay) {
+                        userNameDisplay.textContent = userData.name;
+                        userRoleDisplay.textContent = userData.role;
+                    } else {
+                        console.error('Elemento com ID "userNameDisplay" ou "userRoleDisplay" não encontrado.');
+                    }
+                } else {
+                    console.error('Erro ao obter dados do usuário: ' + xhr.status);
+                }
+            }
+        };
+        xhr.send();
     }
 };
+
+function setShowHelpFlagAndRedirect() {
+    sessionStorage.setItem('showHelp', 'true');
+    window.location.href = '/nav/configuration';
+}
 
 function toggleDropdown() {
     document.querySelector('.dropdown').classList.toggle('hidden');
