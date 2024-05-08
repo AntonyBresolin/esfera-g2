@@ -9,6 +9,29 @@ if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate
 let idGeralProposal;
 
 window.onload = async function () {
+    var userId = localStorage.getItem('userId');
+        if (userId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/user/' + userId, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var userData = JSON.parse(xhr.responseText);
+                        var userNameDisplay = document.getElementById('userNameDisplay');
+                        var userRoleDisplay = document.getElementById('userRoleDisplay');
+                        if (userNameDisplay && userRoleDisplay) {
+                            userNameDisplay.textContent = userData.name;
+                            userRoleDisplay.textContent = userData.role;
+                        } else {
+                            console.error('Elemento com ID "userNameDisplay" ou "userRoleDisplay" não encontrado.');
+                        }
+                    } else {
+                        console.error('Erro ao obter dados do usuário: ' + xhr.status);
+                    }
+                }
+            };
+            xhr.send();
+        }
     await fetchAllProposals();
     await fetchAllStatusProposals();
 }
