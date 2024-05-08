@@ -33,16 +33,16 @@
         <div class='w-full  mt-4 flex flex-col px-8'>
             <div class="perfil active">
                 <form action="/atualizarUsuario" method="POST" id="userForm">
-                    <div class='w-full flex justify-between border-b-2 border-gray-100 py-4 sticky'>
+                    <div class='w-full flex justify-between border-b-2 border-gray-100 py-4 sticky-header'>
                         <div>
                             <h2 class='text-xl font-semibold'>Informações pessoais</h2>
                             <p class='text-secondary'>Atualize suas informações pessoais.</p>
                         </div>
                         <div id="updateMessage" style="display: none;"></div>
                         <div class='flex items-center'>
-                            <button class='bg-[#fff] text-primary border-checkbox border-2 px-8 py-1 rounded-lg mr-4 font-semibold hover:bg-defaultBg duration-150 ease-in-out'>
+                            <!-- <button class='bg-[#fff] text-primary border-checkbox border-2 px-8 py-1 rounded-lg mr-4 font-semibold hover:bg-defaultBg duration-150 ease-in-out'>
                                 Cancelar
-                            </button>
+                            </button> -->
                             <button type="button" onclick="updateUser()" class="bg-purple-highlight text-white px-8 py-1 rounded-lg font-semibold hover:bg-[#5f04c4] duration-150 ease-in-out cursor-pointer">
                                 Salvar
                             </button>
