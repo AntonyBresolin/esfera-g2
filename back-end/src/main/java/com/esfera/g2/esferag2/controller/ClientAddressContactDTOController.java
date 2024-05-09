@@ -4,14 +4,13 @@ import com.esfera.g2.esferag2.model.Address;
 import com.esfera.g2.esferag2.model.Client;
 import com.esfera.g2.esferag2.model.ClientAddressContactDTO;
 import com.esfera.g2.esferag2.model.Contact;
-import com.esfera.g2.esferag2.repository.AddressRepository;
-import com.esfera.g2.esferag2.repository.ClientRepository;
-import com.esfera.g2.esferag2.repository.ContactRepository;
+import com.esfera.g2.esferag2.repository.*;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +19,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,6 +36,11 @@ public class ClientAddressContactDTOController {
     private ContactRepository contactRepository;
     @Autowired
     private TypeContactController typeContactController;
+
+
+    //Validation's
+    @Autowired
+    private LeadRepository leadRepository;
 
     @PostMapping("/add")
     public ResponseEntity<?> addClientAddressContact(@RequestBody ClientAddressContactDTO clientAddressContactDTO) {
@@ -143,6 +146,11 @@ public class ClientAddressContactDTOController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteClientAddressContact(@PathVariable Long id) {
+        if (!clientRepository.existsById(id)) {
+            return ResponseEntity.badRequest().body("Cliente não encontrado!");
+        } else if(leadRepository.findByIdClientIdClient(id).isPresent()){
+            return new ResponseEntity<>("Existem leads associados a este cliente, não é possível deletar", HttpStatus.CONFLICT);
+        }
         try {
             Client c = clientRepository.findById(id).orElseThrow();
 
@@ -162,24 +170,26 @@ public class ClientAddressContactDTOController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteClientAddressContacts(@RequestBody List<Long> ids) {
-        try {
-            for (Long id : ids) {
-                Client c = clientRepository.findById(id).orElseThrow();
+        List<Long> deleteds = new ArrayList<>();
+        List<Long> notDeletedDueToLeads = new ArrayList<>();
 
-                for (Address address : addressRepository.findByClient(c)) {
-                    addressRepository.deleteById(address.getIdAddress());
-                }
-                for (Contact contact : contactRepository.findByClient(c)) {
-                    contactRepository.deleteById(contact.getIdContact());
-                }
-
-                clientRepository.deleteById(id);
+        for (Long id : ids) {
+            ResponseEntity<?> response = deleteClientAddressContact(id);
+            if (response.getStatusCode() == HttpStatus.CONFLICT) {
+                notDeletedDueToLeads.add(id);
+            } else if (!response.getStatusCode().is2xxSuccessful()) {
+                return ResponseEntity.badRequest().body("Erro ao deletar, cliente cujo ID: "+id+" possui proposal cadastrada!");
+            } else {
+                deleteds.add(id);
             }
-            return ResponseEntity.status(200).body("Deletado com sucesso!");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao deletar!");
         }
+
+        if (!notDeletedDueToLeads.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Clientes com os seguintes IDs não puderam ser deletados devido a leads associados: " + notDeletedDueToLeads);
+        }
+        return ResponseEntity.ok("Deletado com sucesso. Total deletados: " + deleteds.size());
     }
+
 
     @PutMapping("/update/{id}")
     public ClientAddressContactDTO updateClientAddressContact(@PathVariable Long id, @RequestBody ClientAddressContactDTO clientAddressContactDTO) {

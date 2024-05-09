@@ -2,7 +2,10 @@ package com.esfera.g2.esferag2.controller;
 
 import com.esfera.g2.esferag2.model.Lead;
 import com.esfera.g2.esferag2.repository.LeadRepository;
+import com.esfera.g2.esferag2.repository.ProposalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,8 @@ public class LeadController {
 
     @Autowired
     private LeadRepository leadRepository;
+    @Autowired
+    private ProposalRepository proposalRepository;
 
 
     @GetMapping("/all")
@@ -46,8 +51,19 @@ public class LeadController {
                 .orElseThrow();
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteLead(@PathVariable Long id) {
-        leadRepository.deleteById(id);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteLead(@PathVariable Long id) {
+        if (!leadRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        } else if(proposalRepository.findByIdLeadIdLead(id).isPresent()){
+            return new ResponseEntity<>("Existem propostas associadas a este lead, não é possível deletar", HttpStatus.CONFLICT);
+        }
+        try {
+            leadRepository.deleteById(id);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao deletar lead");
+        }
+
+        return ResponseEntity.ok().build();
     }
 }
