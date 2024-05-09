@@ -9,6 +9,29 @@ if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate
 let idGeralLead;
 
 window.onload = async function () {
+    var userId = localStorage.getItem('userId');
+    if (userId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/user/' + userId, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var userData = JSON.parse(xhr.responseText);
+                    var userNameDisplay = document.getElementById('userNameDisplay');
+                    var userRoleDisplay = document.getElementById('userRoleDisplay');
+                    if (userNameDisplay && userRoleDisplay) {
+                        userNameDisplay.textContent = userData.name;
+                        userRoleDisplay.textContent = userData.role;
+                    } else {
+                        console.error('Elemento com ID "userNameDisplay" ou "userRoleDisplay" não encontrado.');
+                    }
+                } else {
+                    console.error('Erro ao obter dados do usuário: ' + xhr.status);
+                }
+            }
+        };
+        xhr.send();
+    }
     await fetchAllLeads();
 }
 
@@ -32,6 +55,8 @@ function listLeads(leads) {
     leads.forEach(data => {
         let tr = document.createElement('tr');
         tr.className = 'bg-white border-b hover:bg-gray-50';
+        let dataFormatada = new Date(data.date).toLocaleDateString();
+
         tr.innerHTML = `
             <td class="px-4 py-4">
                 <input id="${data.idLead}" type="checkbox"
@@ -46,7 +71,7 @@ function listLeads(leads) {
             <td class="px-6">${data.idClient.name}</td>
             <td class="px-6">${data.result.result}</td>
              <td class="px-6">${data.description}</td>
-            <td class="px-6">${data.date}</td>
+             <td class="px-6" >${dataFormatada}</td>
             <td class="px-6">${data.callTime}</td>
              <td class="px-6">${data.duration}</td>
             <td class="px-6">${data.contact}</td>
@@ -59,7 +84,7 @@ function listLeads(leads) {
                         <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
                     </div>
                     <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
-                        onClick="deleteLead(${data.idLead})"
+                        onClick="showDeleteLeadModal(${data.idLead})"
                     >
                         <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
                     </div>
@@ -114,15 +139,38 @@ async function fetchAddLead() {
         });
 }
 
-async function deleteLead(idLead) {
-    await fetch(`http://localhost:8080/lead/delete/${idLead}`, {
+async function deleteLead() {
+    event.preventDefault();
+    let warning = document.getElementById('warnings');
+    let warningMessage = document.getElementById('warningMessage');
+    let warningTitle = document.getElementById('warningTitle');
+    await fetch(`http://localhost:8080/lead/delete/${sessionStorage.getItem("idLeadToDel")}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
         }
     })
-        .then(() => {
-            alert('Lead excluído com sucesso!');
+        .then((response) => {
+            if (response.status === 409) {
+                warning.classList.toggle('hidden');
+                warningMessage.textContent = 'Lead não pode ser excluído, pois está associado a uma ou mais propostas.';
+                warningTitle.classList.add('bg-red-200');
+                setTimeout(() => {
+                    warning.classList.toggle('hidden');
+                    warningTitle.classList.remove('bg-red-200');
+                }, 3000);
+            } else if (response.status === 404) {
+                alert('Lead não encontrado.');
+            } else {
+                warning.classList.toggle('hidden');
+                warningMessage.textContent = 'Lead excluído com sucesso.';
+                warningTitle.classList.add('bg-green-200');
+                setTimeout(() => {
+                    warning.classList.toggle('hidden');
+                    warningTitle.classList.remove('bg-green-200');
+                }, 3000);
+            }
+            showDeleteLeadModal();
             fetchAllLeads();
         })
         .catch((error) => {
@@ -136,7 +184,6 @@ function handleCloseEditLead(idLead) {
     editLead.classList.toggle('hidden');
 
     if (!editLead.classList.contains('hidden')) {
-        console.log(idLead);
         getElementsEditLead(idLead);
     } else {
         clearLeadEditFields();
@@ -174,3 +221,12 @@ function getElementsEditLead(idLead) {
             console.error('Error fetching lead data:', error);
         });
 }
+
+function showDeleteLeadModal(idLead) {
+    let deleteModal = document.getElementById('deleteLeadModal');
+    deleteModal.classList.toggle('hidden');
+
+    sessionStorage.setItem('idLeadToDel', idLead);
+}
+
+

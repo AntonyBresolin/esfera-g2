@@ -27,7 +27,7 @@ public class Lead {
     @Column(nullable = false)
     private String description;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(nullable = false)
     private LeadResult result;
 

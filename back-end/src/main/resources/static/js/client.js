@@ -13,6 +13,29 @@ let sortBy = 'idClient'; // Ordenação padrão
 let idGeralClient;
 
 window.onload = async function () {
+    var userId = localStorage.getItem('userId');
+        if (userId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/user/' + userId, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var userData = JSON.parse(xhr.responseText);
+                        var userNameDisplay = document.getElementById('userNameDisplay');
+                        var userRoleDisplay = document.getElementById('userRoleDisplay');
+                        if (userNameDisplay && userRoleDisplay) {
+                            userNameDisplay.textContent = userData.name;
+                            userRoleDisplay.textContent = userData.role;
+                        } else {
+                            console.error('Elemento com ID "userNameDisplay" ou "userRoleDisplay" não encontrado.');
+                        }
+                    } else {
+                        console.error('Erro ao obter dados do usuário: ' + xhr.status);
+                    }
+                }
+            };
+            xhr.send();
+        }
     await fetchAllClients(currentPage);
 }
 
@@ -208,13 +231,35 @@ async function fetchImportClientData() {
 
 async function deleteClient() {
     event.preventDefault();
+    let warning = document.getElementById('warnings');
+    let warningMessage = document.getElementById('warningMessage');
+    let warningTitle = document.getElementById('warningTitle');
     await fetch(`http://localhost:8080/client-address-contact/delete/${sessionStorage.getItem('idClientToDel')}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
         }
     })
-        .then(() => {
+        .then((response) => {
+            if (response.status === 409) {
+                warning.classList.toggle('hidden');
+                warningTitle.classList.add('bg-red-200');
+                warningMessage.innerHTML = 'Não é possível excluir o cliente pois ele possui leads associados.';
+                warningTitle.innerHTML = 'Erro ao excluir cliente';
+                setTimeout(() => {
+                    warningTitle.classList.remove('bg-red-200');
+                    warning.classList.toggle('hidden');
+                }, 3000);
+            } else if(response.status === 200) {
+                warning.classList.toggle('hidden');
+                warningTitle.classList.add('bg-green-200');
+                warningMessage.innerHTML = 'Cliente excluído com sucesso.';
+                warningTitle.innerHTML = 'Cliente excluído';
+                setTimeout(() => {
+                    warningTitle.classList.remove('bg-green-200');
+                    warning.classList.toggle('hidden');
+                }, 3000);
+            }
             showUniqueDeleteClientModal();
             fetchAllClients(currentPage);
         })
@@ -227,6 +272,11 @@ async function deleteClient() {
 
 async function deleteSelectedClients() {
     event.preventDefault();
+
+    let warning = document.getElementById('warnings');
+    let warningMessage = document.getElementById('warningMessage');
+    let warningTitle = document.getElementById('warningTitle');
+
     let checkboxes = document.getElementsByName('foo');
     let clients = [];
     for (let checkbox of checkboxes) {
@@ -235,21 +285,43 @@ async function deleteSelectedClients() {
         }
     }
 
-    await fetch('http://localhost:8080/client-address-contact/delete', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(clients)
-    })
-        .then(() => {
-            showDeleteClientModal();
-            fetchAllClients(currentPage);
-        })
-        .catch((error) => {
-            alert('Erro ao excluir clientes!');
-            console.error('Error:', error);
+    try {
+        const response = await fetch('http://localhost:8080/client-address-contact/delete', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(clients)
         });
+
+        if (response.status === 200) {
+            const message = await response.text();  // assuming the server sends back plain text
+            warning.classList.toggle('hidden');
+            warningTitle.classList.add('bg-green-200');
+            warningMessage.innerHTML = message;  // Using server's response message
+            warningTitle.innerHTML = 'Clientes excluídos';
+            setTimeout(() => {
+                warningTitle.classList.remove('bg-green-200');
+                warning.classList.toggle('hidden');
+            }, 3000);
+        } else if(response.status === 409) {
+            const errorMessage = await response.text();
+            warning.classList.toggle('hidden');
+            warningTitle.classList.add('bg-red-200');
+            warningMessage.innerHTML = errorMessage;
+            warningTitle.innerHTML = 'Erro ao excluir clientes';
+            setTimeout(() => {
+                warningTitle.classList.remove('bg-red-200');
+                warning.classList.toggle('hidden');
+            }, 3000);
+        }
+
+        showDeleteClientModal();
+        fetchAllClients(currentPage);
+    } catch (error) {
+        alert('Erro ao excluir clientes!');
+        console.error('Error:', error);
+    }
 }
 
 function handleCloseEditClient(idClient) {

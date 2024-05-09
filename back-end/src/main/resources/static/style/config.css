@@ -7,5 +7,12 @@
   font-size: 32px;
   font-weight: 600;
   background-color: red;
+}
 
+.sticky-header {
+   position: sticky;
+   top: 61px;
+   z-index: 10;
+   background-color: white;
+   border-bottom: 2px solid #ccc;
 }

@@ -67,7 +67,7 @@ public class DataInitializer implements CommandLineRunner {
         if (userRepository.count() == 0) {
             // Dados para User
             String senha = userService.hashPassword("admin");
-            userRepository.save(new User("Admin", "admin", senha, "44999999999", "Televendedor"));
+            userRepository.save(new User("Admin", "admin@admin.com", senha, "44999999999", "Administrador"));
 
             System.out.println("User dummy scripts OK!");
         }

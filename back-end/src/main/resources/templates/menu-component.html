@@ -8,21 +8,20 @@
             <div class="flex items-center mr-4 hover:text-slate-600 cursor-pointer text-primary">
                 <ion-icon name="notifications" class="text-2xl"></ion-icon>
             </div>
-            <div class=" flex items-center mr-4 hover:text-slate-600 cursor-pointer text-primary">
+            <!-- <div class=" flex items-center mr-4 hover:text-slate-600 cursor-pointer text-primary">
                 <ion-icon name="settings" class="text-2xl"></ion-icon>
-            </div>
-            <div class="flex items-center mr-4 cursor-pointer text-primary hover:text-slate-600 "
-                 onclick="toggleDropdown()">
+            </div> -->
+            <div class="flex items-center mr-4 cursor-pointer text-primary hover:text-slate-600 " onclick="toggleDropdown()">
                 <div class="flex flex-col text-center mr-2">
-                    <h2 class="font-bold text-xl mb-0 pb-0 capitalize">Fernando Pereira</h2>
-                    <p class="text-secondary italic text-xs	mt-0 pt-0 capitalize">Empresas empresas</p>
+                    <h2 id="userNameDisplay" class="font-bold text-xl mb-0 pb-0 capitalize"></h2>
+                    <p id="userRoleDisplay" class="text-secondary italic text-xs mt-0 pt-0 capitalize"></p>
                 </div>
                 <ion-icon name="person-circle" class="text-[45px]"></ion-icon>
             </div>
         </div>
         <div class="absolute md:mt-[60px] right-10 bg-[#fff] hidden rounded-b-lg shadow-lg py-2 dropdown">
             <ul class="text-purple-contrast">
-                <a to="/user/configuration"
+                <a href="/nav/configuration"
                    class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
                     <SettingsIcon fontSize="" class="text-2xl mr-4"/>
                     <span class="text-black">Configurações de perfil</span>
@@ -30,35 +29,34 @@
                 <a to="/login"
                    class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
                     <EmailIcon fontSize="" class="text-2xl mr-4"/>
-                    <span class="text-black">Configurações de email</span>
+                    <span class="text-red-500">Configurações de email</span>
                 </a>
                 <a to="/login"
                    class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
                     <GroupsIcon fontSize="" class="text-2xl mr-4"/>
-                    <span class="text-black">Equipes</span>
+                    <span class="text-red-500">Equipes</span>
                 </a>
                 <a to="/login"
                    class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
                     <TuneIcon fontSize="" class="text-2xl mr-4"/>
-                    <span class="text-black">Criar serviços</span>
+                    <span class="text-red-500">Criar serviços</span>
                 </a>
                 <a to="/login"
                    class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
                     <CloudDownloadIcon fontSize="" class="text-2xl mr-4"/>
-                    <span class="text-black">Importar dados</span>
+                    <span class="text-red-500">Importar dados</span>
                 </a>
                 <a to="/login"
                    class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
                     <DeleteIcon fontSize="" class="text-2xl mr-4"/>
-                    <span class="text-black">Lixeira</span>
+                    <span class="text-red-500">Lixeira</span>
                 </a>
-                <a to="/login"
+                <a onClick="logout()"
                    class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
                     <LogoutIcon fontSize="" class="text-2xl mr-4"/>
                     <span class="text-black">Sair</span>
                 </a>
-                <a to="/login"
-                   class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
+                <a onclick="setShowHelpFlagAndRedirect()" class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
                     <QuestionMarkIcon fontSize="" class="text-2xl mr-4"/>
                     <span class="text-black">Obter ajuda</span>
                 </a>
@@ -124,8 +122,7 @@
         </div>
         <div>
             <hr>
-            </hr>
-            <div class='text-[#98A2B3] text-center py-4 hover:text-gray-600 ease-in-out duration-150 cursor-pointer'>
+            <div class='text-[#98A2B3] text-center py-4 hover:text-gray-600 ease-in-out duration-150 cursor-pointer' onclick="setShowHelpFlagAndRedirect()">
                 <ion-icon name="help-circle" fontSize='' class='text-xl mr-2'></ion-icon>
                 <span class=''>Ajuda</span>
             </div>
