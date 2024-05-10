@@ -56,6 +56,20 @@ async function fetchAllProposals(page) {
         .catch(error => console.error('Error:', error));
 }
 
+async function fetchSearchProposalByClientName(page) {
+    const name = document.getElementById('searchProposal').value;
+    await fetch(`http://localhost:8080/proposal/search/${name}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
+            method: 'GET',
+        })
+        .then(response => response.json())
+        .then(data => {
+            listProposals(data.content);
+            updatePaginationSearch(data);
+        })
+        .catch(error => console.error('Error:', error));
+
+}
+
 
 function updatePagination(pageInfo) {
     const totalPages = pageInfo.totalPages;
@@ -71,6 +85,21 @@ function updatePagination(pageInfo) {
     }
 }
 
+function updatePaginationSearch(pageInfo) {
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    if (currentPage > 0) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchSearchProposalByClientName(${currentPage - 1})">Anterior</button>`;
+    }
+    if (currentPage < totalPages - 1) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchSearchProposalByClientName(${currentPage + 1})">Próximo</button>`;
+    }
+
+}
+
 function listProposals(proposals) {
     let table = document.getElementById('tableProposals');
     let tbody = table.getElementsByTagName('tbody')[0];
@@ -78,14 +107,14 @@ function listProposals(proposals) {
     proposals.forEach(data => {
         let tr = document.createElement('tr');
         tr.className = 'bg-white border-b hover:bg-gray-50';
-
+        let dataFormatada = new Date(data.proposalDate).toLocaleDateString();
         // Verificar se as propriedades necessárias estão definidas
         const idProposal = data.idProposal ? data.idProposal : '';
         const clientName = data.idLead ? data.idLead.idClient.name : '';
         const clientCpfCnpj = data.idLead ? data.idLead.idClient.cpfCnpj: '';
         const service = data.service ? data.service : '';
         const description = data.description ? data.description : '';
-        const date = data.proposalDate ? data.proposalDate : '';
+        //const date = data.proposalDate ? data.proposalDate : '';
         const value = data.value ? data.value : '';
         const status = data.idStatusProposal ? data.idStatusProposal.name : '';
         const file = data.file ? data.file : '';
@@ -99,7 +128,7 @@ function listProposals(proposals) {
             <td class="px-6">${service}</td>
             <td class="px-6">${status}</td>
             <td class="px-6">${description}</td>
-            <td class="px-6">${date}</td>
+            <td class="px-6">${dataFormatada}</td>
             <td class="px-6">${value}</td>
             <td class="px-6">
             <a href="${file}"
@@ -176,22 +205,6 @@ async function fetchSearchProposalByName() {
         .then(data => {
             document.getElementById('name').value = data.idClient.name;
             document.getElementById('idClient').value = data.idClient.idClient;
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-async function fetchSearchProposalByNameEdit() {
-    const id = document.getElementById('idLeadEdit').value;
-    await fetch(`http://localhost:8080/lead/${id}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('nameEdit').value = data.idClient.name;
-            document.getElementById('idClientEdit').value = data.idClient.idClient;
         })
         .catch(error => console.error('Error:', error));
 }
