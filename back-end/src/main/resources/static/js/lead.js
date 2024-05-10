@@ -6,6 +6,11 @@ if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate
     window.location.href = '/login';
 }
 
+let currentPage = 0; // Página atual
+let pageSize = 20; // Tamanho padrão da página
+let sortBy = 'idLead'; // Ordenação padrão
+
+
 let idGeralLead;
 
 window.onload = async function () {
@@ -32,7 +37,7 @@ window.onload = async function () {
         };
         xhr.send();
     }
-    await fetchAllLeads();
+    await fetchAllLeads(currentPage);
 }
 
 function selectAllCheckboxes(source) {
@@ -50,7 +55,6 @@ function handleCloseAddLead() {
 function listLeads(leads) {
     let table = document.getElementById('tableLeads');
     let tbody = table.getElementsByTagName('tbody')[0];
-    console.log(leads);
     tbody.innerHTML = '';
     leads.forEach(data => {
         let tr = document.createElement('tr');
@@ -95,13 +99,28 @@ function listLeads(leads) {
     });
 }
 
-async function fetchAllLeads() {
-    await fetch('http://localhost:8080/lead/all')
+async function fetchAllLeads(page) {
+    await fetch(`http://localhost:8080/lead/all?page=${page}&size=${pageSize}&sort=${sortBy}`)
         .then(response => response.json())
         .then(data => {
-            listLeads(data);
+            listLeads(data.content);
+            updatePagination(data);
         })
         .catch(error => console.error('Error:', error));
+}
+
+function updatePagination(pageInfo) {
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    if (currentPage > 0) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchAllLeads(${currentPage - 1})">Anterior</button>`;
+    }
+    if (currentPage < totalPages - 1) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchAllLeads(${currentPage + 1})">Próximo</button>`;
+    }
 }
 
 async function fetchAddLead() {
@@ -119,7 +138,6 @@ async function fetchAddLead() {
             idClient: document.getElementById('clientId').value
         }
     };
-    console.log(data)
 
     await fetch('http://localhost:8080/lead', {
         method: 'POST',
@@ -131,7 +149,7 @@ async function fetchAddLead() {
         .then(() => {
             alert('Lead cadastrado com sucesso!');
             handleCloseAddLead();
-            fetchAllLeads();
+             fetchAllLeads(currentPage);
         })
         .catch((error) => {
             alert('Erro ao cadastrar lead!');
@@ -171,7 +189,7 @@ async function deleteLead() {
                 }, 3000);
             }
             showDeleteLeadModal();
-            fetchAllLeads();
+             fetchAllLeads(currentPage);
         })
         .catch((error) => {
             alert('Erro ao excluir lead!');
