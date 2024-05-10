@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface ProposalRepository extends JpaRepository<Proposal, Long> {
     Optional<Proposal> findByIdLeadIdLead(Long leadId);
     Page<Proposal> findAll(Pageable pageable);
+    Page<Proposal> findByIdLeadIdClientNameContainingIgnoreCase(String name, Pageable pageable);
 }

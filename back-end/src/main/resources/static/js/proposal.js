@@ -56,6 +56,20 @@ async function fetchAllProposals(page) {
         .catch(error => console.error('Error:', error));
 }
 
+async function fetchSearchProposalByClientName(page) {
+    const name = document.getElementById('searchProposal').value;
+    await fetch(`http://localhost:8080/proposal/search/${name}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
+            method: 'GET',
+        })
+        .then(response => response.json())
+        .then(data => {
+            listProposals(data.content);
+            updatePaginationSearch(data);
+        })
+        .catch(error => console.error('Error:', error));
+
+}
+
 
 function updatePagination(pageInfo) {
     const totalPages = pageInfo.totalPages;
@@ -69,6 +83,21 @@ function updatePagination(pageInfo) {
     if (currentPage < totalPages - 1) {
         paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchAllProposals(${currentPage + 1})">Próximo</button>`;
     }
+}
+
+function updatePaginationSearch(pageInfo) {
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    if (currentPage > 0) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchSearchProposalByClientName(${currentPage - 1})">Anterior</button>`;
+    }
+    if (currentPage < totalPages - 1) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchSearchProposalByClientName(${currentPage + 1})">Próximo</button>`;
+    }
+
 }
 
 function listProposals(proposals) {

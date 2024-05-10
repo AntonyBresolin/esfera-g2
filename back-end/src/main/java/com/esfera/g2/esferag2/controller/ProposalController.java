@@ -66,4 +66,14 @@ public class ProposalController {
             return new ResponseEntity<>("ID não encontrado!", HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/search/{name}")
+    public Page<Proposal> getAllProposalsByClientName(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "idProposal") String sortBy,
+            @PathVariable String name) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return proposalRepository.findByIdLeadIdClientNameContainingIgnoreCase(name, pageable);
+    }
 }
