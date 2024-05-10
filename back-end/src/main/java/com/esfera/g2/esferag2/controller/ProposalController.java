@@ -3,6 +3,10 @@ package com.esfera.g2.esferag2.controller;
 import com.esfera.g2.esferag2.model.Proposal;
 import com.esfera.g2.esferag2.repository.ProposalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,10 +25,13 @@ public class ProposalController {
 
 
     @GetMapping("/all")
-    public List<Proposal> getAllProposals() {
-        return proposalRepository.findAll();
+    public Page<Proposal> getAllProposals(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "idProposal") String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return proposalRepository.findAll(pageable);
     }
-
     @GetMapping("/{id}")
     public Proposal getProposalById(@PathVariable Long id) {
         return proposalRepository.findById(id).orElseThrow();

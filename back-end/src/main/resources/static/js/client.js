@@ -110,6 +110,7 @@ async function fetchAllClients(page) {
 }
 
 function updatePagination(pageInfo) {
+    console.log(pageInfo);
     const totalPages = pageInfo.totalPages;
     const currentPage = pageInfo.number;
     const paginationElement = document.getElementById('pagination');
