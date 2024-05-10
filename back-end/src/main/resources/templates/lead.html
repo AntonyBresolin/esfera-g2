@@ -15,7 +15,7 @@
 <body class="bg-[#DCDCDC] flex overflow-hidden h-screen w-screen">
 <div th:replace="~{menu-component :: navbar-component}"></div>
 <div th:replace="~{menu-component :: sidebar-component(selectedScreen=${selectedScreen})}"></div>
-<div class="w-full h-full pt-[60px]">
+<div class="w-full h-full pt-[60px] overscroll-contain overflow-auto">
     <div class="flex justify-between items-center px-8 py-4 bg-white">
         <h1 class="text-xl font-bold text-primary">Ligações</h1>
         <div class="flex items-center w-[540px]">
@@ -71,6 +71,8 @@
         </thead>
         <tbody>
     </table>
+    <div id="pagination"
+         class="sticky bottom-0 w-full bg-gray-200 py-2 flex items-center justify-between shadow-sm"></div>
     <div id="cadLead" class="w-screen h-screen hidden absolute top-0 left-0">
         <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
         <form action="" method="post"

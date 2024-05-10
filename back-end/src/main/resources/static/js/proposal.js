@@ -8,6 +8,10 @@ if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate
 
 let idGeralProposal;
 
+let currentPage = 0; // Página atual
+let pageSize = 20; // Tamanho padrão da página
+let sortBy = 'idProposal'; // Ordenação padrão
+
 window.onload = async function () {
     var userId = localStorage.getItem('userId');
         if (userId) {
@@ -32,7 +36,7 @@ window.onload = async function () {
             };
             xhr.send();
         }
-    await fetchAllProposals();
+    await fetchAllProposals(currentPage);
     await fetchAllStatusProposals();
 }
 
@@ -42,13 +46,29 @@ function handleCloseAddProposal() {
 }
 
 
-async function fetchAllProposals() {
-    await fetch('http://localhost:8080/proposal/all')
+async function fetchAllProposals(page) {
+    await fetch(`http://localhost:8080/proposal/all?page=${page}&size=${pageSize}&sort=${sortBy}`)
         .then(response => response.json())
         .then(data => {
-            listProposals(data);
+            listProposals(data.content);
+            updatePagination(data);
         })
         .catch(error => console.error('Error:', error));
+}
+
+
+function updatePagination(pageInfo) {
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    if (currentPage > 0) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchAllProposals(${currentPage - 1})">Anterior</button>`;
+    }
+    if (currentPage < totalPages - 1) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchAllProposals(${currentPage + 1})">Próximo</button>`;
+    }
 }
 
 function listProposals(proposals) {
@@ -109,7 +129,7 @@ function listProposals(proposals) {
 }
 
 
-async function fetchAddProposal(event) {
+async function fetchAddProposal() {
     event.preventDefault();
     const data = {
         idLead: {
@@ -136,7 +156,7 @@ async function fetchAddProposal(event) {
             alert('Proposta cadastrada com sucesso!');
             clearProposalFields();
             handleCloseAddProposal();
-            fetchAllProposals();
+            fetchAllProposals(currentPage);
         })
         .catch((error) => {
             alert('Erro ao cadastrar proposta!');
@@ -171,7 +191,7 @@ async function deleteProposal(id) {
     })
         .then(() => {
             alert('Proposta excluída com sucesso!');
-            fetchAllProposals();
+            fetchAllProposals(currentPage);
         })
         .catch((error) => {
             alert('Erro ao excluir Proposta!');
@@ -289,7 +309,7 @@ async function fetchAddEditProposal(event) {
             alert('Proposta editada com sucesso!');
             idGeralProposal = null;
             handleCloseEditProposal();
-            fetchAllProposals();
+            fetchAllProposals(currentPage);
         })
         .catch((error) => {
             alert('Erro ao editar proposta!');
