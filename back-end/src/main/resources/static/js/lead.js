@@ -238,8 +238,8 @@ function clearLeadFields() {
     document.getElementById('callTime').value = '';
     document.getElementById('duration').value = '';
     document.getElementById('description').value = '';
-    document.getElementById('clientId').value = '';
-    document.getElementById('cpfCnpj').value = '';
+    document.getElementById('clientSelect').value = '1';
+    document.getElementById('cpfCnpjSearchByCPF').value = '';
     document.getElementById('result').value = '1'; // Define o resultado padrão para "Atendeu"
 }
 
