@@ -48,8 +48,8 @@ function selectAllCheckboxes(source) {
 }
 
 function handleCloseAddLead() {
-    let addCliente = document.getElementById('cadLead');
-    addCliente.classList.toggle('hidden');
+    let addLead = document.getElementById('cadLead');
+    addLead.classList.toggle('hidden');
 }
 
 function listLeads(leads) {
@@ -135,7 +135,7 @@ async function fetchAddLead() {
             idLeadResult: document.getElementById('result').value,
         },
         idClient: {
-            idClient: document.getElementById('clientId').value
+            idClient: document.getElementById('clientSelect').value
         }
     };
 
@@ -148,8 +148,9 @@ async function fetchAddLead() {
     })
         .then(() => {
             alert('Lead cadastrado com sucesso!');
+            clearLeadFields();
             handleCloseAddLead();
-             fetchAllLeads(currentPage);
+            fetchAllLeads(currentPage);
         })
         .catch((error) => {
             alert('Erro ao cadastrar lead!');
@@ -189,13 +190,36 @@ async function deleteLead() {
                 }, 3000);
             }
             showDeleteLeadModal();
-             fetchAllLeads(currentPage);
+            fetchAllLeads(currentPage);
         })
-        .catch((error) => {
-            alert('Erro ao excluir lead!');
-            console.error('Error:', error);
-        });
+        .catch(error => console.error('Erro ao buscar nome do cliente:', error));
 }
+
+async function fetchSearchClientByCpfCnpj() {
+    const cpfCnpj = document.getElementById('cpfCnpjSearchByCPF').value;
+
+    await fetch(`http://localhost:8080/client/cpf/` + cpfCnpj, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Limpar as opções anteriores
+            const clientSelect = document.getElementById('clientSelect');
+            clientSelect.innerHTML = '';
+
+            data.forEach(client => {
+                const option = document.createElement('option');
+                option.value = client.idClient;
+                option.textContent = client.name;
+                clientSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Erro ao buscar nome do cliente:', error));
+}
+
 
 function handleCloseEditLead(idLead) {
     let editLead = document.getElementById('editLead');
@@ -204,20 +228,34 @@ function handleCloseEditLead(idLead) {
     if (!editLead.classList.contains('hidden')) {
         getElementsEditLead(idLead);
     } else {
-        clearLeadEditFields();
+        clearLeadEditFields(); // Limpa os campos de edição do lead
     }
 }
 
-function clearLeadEditFields() {
-    document.getElementById('contactEdit').value = '';
-    document.getElementById('dateEdit').value = '';
-    document.getElementById('durationEdit').value = '';
-    document.getElementById('descriptionEdit').value = '';
-    document.getElementById('resultEdit').value = '';
+function clearLeadFields() {
+    document.getElementById('date').value = '';
+    document.getElementById('contact').value = '';
+    document.getElementById('callTime').value = '';
+    document.getElementById('duration').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('clientSelect').value = '1';
+    document.getElementById('cpfCnpjSearchByCPF').value = '';
+    document.getElementById('result').value = '1'; // Define o resultado padrão para "Atendeu"
 }
 
-function getElementsEditLead(idLead) {
-    fetch(`http://localhost:8080/lead/${idLead}`)
+function clearLeadEditFields() {
+    document.getElementById('dateEdit').value = '';
+    document.getElementById('contactEdit').value = '';
+    document.getElementById('callTimeEdit').value = '';
+    document.getElementById('durationEdit').value = '';
+    document.getElementById('descriptionEdit').value = '';
+    document.getElementById('clientIdEdit').value = '';
+    document.getElementById('cpfCnpjEdit').value = '';
+    document.getElementById('resultEdit').value = '1'; // Define o resultado padrão para "Atendeu"
+}
+
+function getElementsEditLead(id) {
+    fetch(`http://localhost:8080/lead/${id}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -225,18 +263,72 @@ function getElementsEditLead(idLead) {
             return response.json();
         })
         .then(data => {
-            if (data && data.lead) {
-                idGeralLead = data.lead.idLead;
-                document.getElementById('nameEdit').value = data.lead.contact;
-                document.getElementById('dateEdit').value = data.lead.date;
-                document.getElementById('durationEdit').value = data.lead.duration;
-                document.getElementById('descriptionEdit').value = data.lead.description;
-                // Considere verificar se o resultado existe
-                document.getElementById('resultEdit').value = data.lead.result ? data.lead.result.result : '';
+            if (data) {
+                document.getElementById('dateEdit').value = data.date;
+                document.getElementById('contactEdit').value = data.contact;
+                document.getElementById('callTimeEdit').value = data.callTime;
+                document.getElementById('durationEdit').value = data.duration;
+                document.getElementById('descriptionEdit').value = data.description;
+                document.getElementById('clientIdEdit').value = data.idClient.idClient;
+                document.getElementById('cpfCnpjEdit').value = data.idClient.cpfCnpj;
+                document.getElementById('resultEdit').value = data.result.idLeadResult;
+                idGeralLead = data.idClient.idClient;
             }
         })
+
         .catch(error => {
             console.error('Error fetching lead data:', error);
+        });
+
+}
+
+async function fetchAllStatusLeads() {
+    var selection = document.getElementById("result");
+    var selectionEdit = document.getElementById("resultEdit");
+    await fetch('http://localhost:8080/LeadResult')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(value => {
+                selection.innerHTML += `<option value="${value.idLeadResult}">${value.name}</option>`;
+                selectionEdit.innerHTML += `<option value="${value.idLeadResult}">${value.name}</option>`;
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+async function fetchAddEditLead() {
+    event.preventDefault();
+    let id = idGeralLead;
+    const data = {
+        contact: document.getElementById('contactEdit').value,
+        date: document.getElementById('dateEdit').value,
+        callTime: document.getElementById('callTimeEdit').value,
+        duration: document.getElementById('durationEdit').value,
+        description: document.getElementById('descriptionEdit').value,
+        result: {
+            idLeadResult: document.getElementById('resultEdit').value,
+        },
+        idClient: {
+            idClient: document.getElementById('clientIdEdit').value,
+        }
+    };
+
+    await fetch('http://localhost:8080/lead/' + id, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(() => {
+            alert('Lead editado com sucesso!');
+            idGeralLead = null;
+            handleCloseEditLead();
+            fetchAllLeads();
+        })
+        .catch((error) => {
+            alert('Erro ao editar lead!');
+            console.error('Error:', error);
         });
 }
 
