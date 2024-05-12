@@ -6,10 +6,38 @@ if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate
     window.location.href = '/login';
 }
 
+let currentPage = 0; // Página atual
+let pageSize = 20; // Tamanho padrão da página
+let sortBy = 'idLead'; // Ordenação padrão
+
+
 let idGeralLead;
 
 window.onload = async function () {
-    await fetchAllLeads();
+    var userId = localStorage.getItem('userId');
+    if (userId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/user/' + userId, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var userData = JSON.parse(xhr.responseText);
+                    var userNameDisplay = document.getElementById('userNameDisplay');
+                    var userRoleDisplay = document.getElementById('userRoleDisplay');
+                    if (userNameDisplay && userRoleDisplay) {
+                        userNameDisplay.textContent = userData.name;
+                        userRoleDisplay.textContent = userData.role;
+                    } else {
+                        console.error('Elemento com ID "userNameDisplay" ou "userRoleDisplay" não encontrado.');
+                    }
+                } else {
+                    console.error('Erro ao obter dados do usuário: ' + xhr.status);
+                }
+            }
+        };
+        xhr.send();
+    }
+    await fetchAllLeads(currentPage);
 }
 
 function selectAllCheckboxes(source) {
@@ -60,7 +88,7 @@ function listLeads(leads) {
                         <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
                     </div>
                     <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
-                        onClick="deleteLead(${data.idLead})"
+                        onClick="showDeleteLeadModal(${data.idLead})"
                     >
                         <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
                     </div>
@@ -71,13 +99,28 @@ function listLeads(leads) {
     });
 }
 
-async function fetchAllLeads() {
-    await fetch('http://localhost:8080/lead/all')
+async function fetchAllLeads(page) {
+    await fetch(`http://localhost:8080/lead/all?page=${page}&size=${pageSize}&sort=${sortBy}`)
         .then(response => response.json())
         .then(data => {
-            listLeads(data);
+            listLeads(data.content);
+            updatePagination(data);
         })
         .catch(error => console.error('Error:', error));
+}
+
+function updatePagination(pageInfo) {
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    if (currentPage > 0) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchAllLeads(${currentPage - 1})">Anterior</button>`;
+    }
+    if (currentPage < totalPages - 1) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchAllLeads(${currentPage + 1})">Próximo</button>`;
+    }
 }
 
 async function fetchAddLead() {
@@ -107,7 +150,7 @@ async function fetchAddLead() {
             alert('Lead cadastrado com sucesso!');
             clearLeadFields();
             handleCloseAddLead();
-            fetchAllLeads();
+            fetchAllLeads(currentPage);
         })
         .catch((error) => {
             alert('Erro ao cadastrar lead!');
@@ -115,10 +158,47 @@ async function fetchAddLead() {
         });
 }
 
+async function deleteLead() {
+    event.preventDefault();
+    let warning = document.getElementById('warnings');
+    let warningMessage = document.getElementById('warningMessage');
+    let warningTitle = document.getElementById('warningTitle');
+    await fetch(`http://localhost:8080/lead/delete/${sessionStorage.getItem("idLeadToDel")}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then((response) => {
+            if (response.status === 409) {
+                warning.classList.toggle('hidden');
+                warningMessage.textContent = 'Lead não pode ser excluído, pois está associado a uma ou mais propostas.';
+                warningTitle.classList.add('bg-red-200');
+                setTimeout(() => {
+                    warning.classList.toggle('hidden');
+                    warningTitle.classList.remove('bg-red-200');
+                }, 3000);
+            } else if (response.status === 404) {
+                alert('Lead não encontrado.');
+            } else {
+                warning.classList.toggle('hidden');
+                warningMessage.textContent = 'Lead excluído com sucesso.';
+                warningTitle.classList.add('bg-green-200');
+                setTimeout(() => {
+                    warning.classList.toggle('hidden');
+                    warningTitle.classList.remove('bg-green-200');
+                }, 3000);
+            }
+            showDeleteLeadModal();
+            fetchAllLeads(currentPage);
+        })
+        .catch(error => console.error('Erro ao buscar nome do cliente:', error));
+}
+
 async function fetchSearchClientByCpfCnpj() {
     const cpfCnpj = document.getElementById('cpfCnpjSearchByCPF').value;
 
-    await fetch(`http://localhost:8080/client/cpf/`+cpfCnpj, {
+    await fetch(`http://localhost:8080/client/cpf/` + cpfCnpj, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -146,7 +226,7 @@ function handleCloseEditLead(idLead) {
     editLead.classList.toggle('hidden');
 
     if (!editLead.classList.contains('hidden')) {
-        getElementsEditLead(idLead); // Chama a função para obter os dados do lead para edição
+        getElementsEditLead(idLead);
     } else {
         clearLeadEditFields(); // Limpa os campos de edição do lead
     }
@@ -233,7 +313,7 @@ async function fetchAddEditLead() {
         }
     };
 
-    await fetch('http://localhost:8080/lead/'+id, {
+    await fetch('http://localhost:8080/lead/' + id, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -251,3 +331,12 @@ async function fetchAddEditLead() {
             console.error('Error:', error);
         });
 }
+
+function showDeleteLeadModal(idLead) {
+    let deleteModal = document.getElementById('deleteLeadModal');
+    deleteModal.classList.toggle('hidden');
+
+    sessionStorage.setItem('idLeadToDel', idLead);
+}
+
+

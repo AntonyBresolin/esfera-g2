@@ -32,6 +32,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public String hashPassword(String password) {
+        return passwordEncoderUtil.encodePassword(password);
+    }
+
     public boolean checkPassword(String rawPassword, String encodedPassword) {
         return passwordEncoderUtil.checkPassword(rawPassword, encodedPassword);
     }

@@ -32,21 +32,20 @@
         </ul>
         <div class='w-full  mt-4 flex flex-col px-8'>
             <div class="perfil active">
-                <form>
-                    <div class='w-full flex justify-between border-b-2 border-gray-100 py-4 sticky'>
+                <form action="/atualizarUsuario" method="POST" id="userForm">
+                    <div class='w-full flex justify-between border-b-2 border-gray-100 py-4 sticky-header'>
                         <div>
                             <h2 class='text-xl font-semibold'>Informações pessoais</h2>
                             <p class='text-secondary'>Atualize suas informações pessoais.</p>
                         </div>
+                        <div id="updateMessage" style="display: none;"></div>
                         <div class='flex items-center'>
-                            <button
-                                    class='bg-[#fff] text-primary border-checkbox border-2 px-8 py-1 rounded-lg mr-4 font-semibold hover:bg-defaultBg duration-150 ease-in-out'>
+                            <!-- <button class='bg-[#fff] text-primary border-checkbox border-2 px-8 py-1 rounded-lg mr-4 font-semibold hover:bg-defaultBg duration-150 ease-in-out'>
                                 Cancelar
-                            </button>
-                            <div
-                                    class=' bg-purple-highlight text-white px-8 py-1 rounded-lg font-semibold hover:bg-[#5f04c4] duration-150 ease-in-out cursor-pointer'>
+                            </button> -->
+                            <button type="button" onclick="updateUser()" class="bg-purple-highlight text-white px-8 py-1 rounded-lg font-semibold hover:bg-[#5f04c4] duration-150 ease-in-out cursor-pointer">
                                 Salvar
-                            </div>
+                            </button>
                         </div>
                     </div>
                     <div class='w-full flex justify-between border-b-2 border-gray-100 py-4'>
@@ -55,13 +54,7 @@
                             <p class='text-secondary'>Esse nome será exibido no seu perfil.</p>
                         </div>
                         <div class='w-full'>
-                            <input type="text" name="firstName" id="firstName" placeholder='Digite seu nome' class="
-                  w-full p-2 my-2 rounded-md border border-gray-300 shadow-md focus:outline-none
-                  focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-                  disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-                  invalid:text-pink-600
-                  focus:invalid:border-pink-500 focus:invalid:ring-pink-500"/>
-                            <input type="text" name="lastName" id="lastName" placeholder='Digite seu sobrenome' class="
+                            <input type="text" name="name" id="name" placeholder='Digite seu nome' class="
                   w-full p-2 my-2 rounded-md border border-gray-300 shadow-md focus:outline-none
                   focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                   disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
@@ -77,6 +70,21 @@
                         </div>
                         <div class='w-full'>
                             <input type="email" name="email" id="email" placeholder='Digite seu email' class="
+                  w-full p-2 my-2 rounded-md border border-gray-300 shadow-md focus:outline-none
+                  focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+                  disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+                  invalid:text-pink-600
+                  focus:invalid:border-pink-500 focus:invalid:ring-pink-500"/>
+                        </div>
+                        <div class='w-full'></div>
+                    </div>
+                    <div class='w-full flex justify-between border-b-2 border-gray-100 py-4'>
+                        <div class='w-full'>
+                            <h2 class='text-xl font-semibold'>Cargo</h2>
+                            <p class='text-secondary'>Essa é sua função dentro da empresa.</p>
+                        </div>
+                        <div class='w-full'>
+                            <input type="text" name="role" id="role" placeholder='Digite seu cargo' class="
                   w-full p-2 my-2 rounded-md border border-gray-300 shadow-md focus:outline-none
                   focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                   disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
@@ -104,7 +112,7 @@
                             <h2 class='text-xl font-semibold'>Alterar senha</h2>
                         </div>
                         <div class='w-full'>
-                            <input type="password" name="password" id="password" placeholder='Digite sua senha atual'
+                            <input type="password" name="password" id="password" placeholder='Digite sua senha (Obrigatório para alterar dados)'
                                    class="
                   w-full p-2 my-2 rounded-md border border-gray-300 shadow-md focus:outline-none
                   focus:border-sky-500 focus:ring-1 focus:ring-sky-500

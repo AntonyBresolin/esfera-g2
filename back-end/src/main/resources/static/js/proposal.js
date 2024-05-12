@@ -8,8 +8,35 @@ if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate
 
 let idGeralProposal;
 
+let currentPage = 0; // Página atual
+let pageSize = 20; // Tamanho padrão da página
+let sortBy = 'idProposal'; // Ordenação padrão
+
 window.onload = async function () {
-    await fetchAllProposals();
+    var userId = localStorage.getItem('userId');
+        if (userId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/user/' + userId, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var userData = JSON.parse(xhr.responseText);
+                        var userNameDisplay = document.getElementById('userNameDisplay');
+                        var userRoleDisplay = document.getElementById('userRoleDisplay');
+                        if (userNameDisplay && userRoleDisplay) {
+                            userNameDisplay.textContent = userData.name;
+                            userRoleDisplay.textContent = userData.role;
+                        } else {
+                            console.error('Elemento com ID "userNameDisplay" ou "userRoleDisplay" não encontrado.');
+                        }
+                    } else {
+                        console.error('Erro ao obter dados do usuário: ' + xhr.status);
+                    }
+                }
+            };
+            xhr.send();
+        }
+    await fetchAllProposals(currentPage);
     await fetchAllStatusProposals();
 }
 
@@ -19,31 +46,75 @@ function handleCloseAddProposal() {
 }
 
 
-async function fetchAllProposals() {
-    await fetch('http://localhost:8080/proposal/all')
+async function fetchAllProposals(page) {
+    await fetch(`http://localhost:8080/proposal/all?page=${page}&size=${pageSize}&sort=${sortBy}`)
         .then(response => response.json())
         .then(data => {
-            listProposals(data);
+            listProposals(data.content);
+            updatePagination(data);
         })
         .catch(error => console.error('Error:', error));
+}
+
+async function fetchSearchProposalByClientName(page) {
+    const name = document.getElementById('searchProposal').value;
+    await fetch(`http://localhost:8080/proposal/search/${name}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
+            method: 'GET',
+        })
+        .then(response => response.json())
+        .then(data => {
+            listProposals(data.content);
+            updatePaginationSearch(data);
+        })
+        .catch(error => console.error('Error:', error));
+
+}
+
+
+function updatePagination(pageInfo) {
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    if (currentPage > 0) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchAllProposals(${currentPage - 1})">Anterior</button>`;
+    }
+    if (currentPage < totalPages - 1) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchAllProposals(${currentPage + 1})">Próximo</button>`;
+    }
+}
+
+function updatePaginationSearch(pageInfo) {
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    if (currentPage > 0) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchSearchProposalByClientName(${currentPage - 1})">Anterior</button>`;
+    }
+    if (currentPage < totalPages - 1) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchSearchProposalByClientName(${currentPage + 1})">Próximo</button>`;
+    }
+
 }
 
 function listProposals(proposals) {
     let table = document.getElementById('tableProposals');
     let tbody = table.getElementsByTagName('tbody')[0];
     tbody.innerHTML = '';
-    console.log(proposals)
     proposals.forEach(data => {
         let tr = document.createElement('tr');
         tr.className = 'bg-white border-b hover:bg-gray-50';
-
+        let dataFormatada = new Date(data.proposalDate).toLocaleDateString();
         // Verificar se as propriedades necessárias estão definidas
         const idProposal = data.idProposal ? data.idProposal : '';
         const clientName = data.idLead ? data.idLead.idClient.name : '';
         const clientCpfCnpj = data.idLead ? data.idLead.idClient.cpfCnpj: '';
         const service = data.service ? data.service : '';
         const description = data.description ? data.description : '';
-        const date = data.proposalDate ? data.proposalDate : '';
+        //const date = data.proposalDate ? data.proposalDate : '';
         const value = data.value ? data.value : '';
         const status = data.idStatusProposal ? data.idStatusProposal.name : '';
         const file = data.file ? data.file : '';
@@ -57,7 +128,7 @@ function listProposals(proposals) {
             <td class="px-6">${service}</td>
             <td class="px-6">${status}</td>
             <td class="px-6">${description}</td>
-            <td class="px-6">${date}</td>
+            <td class="px-6">${dataFormatada}</td>
             <td class="px-6">${value}</td>
             <td class="px-6">
             <a href="${file}"
@@ -87,7 +158,7 @@ function listProposals(proposals) {
 }
 
 
-async function fetchAddProposal(event) {
+async function fetchAddProposal() {
     event.preventDefault();
     const data = {
         idLead: {
@@ -114,7 +185,7 @@ async function fetchAddProposal(event) {
             alert('Proposta cadastrada com sucesso!');
             clearProposalFields();
             handleCloseAddProposal();
-            fetchAllProposals();
+            fetchAllProposals(currentPage);
         })
         .catch((error) => {
             alert('Erro ao cadastrar proposta!');
@@ -138,22 +209,6 @@ async function fetchSearchProposalByName() {
         .catch(error => console.error('Error:', error));
 }
 
-async function fetchSearchProposalByNameEdit() {
-    const id = document.getElementById('idLeadEdit').value;
-    await fetch(`http://localhost:8080/lead/${id}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('nameEdit').value = data.idClient.name;
-            document.getElementById('idClientEdit').value = data.idClient.idClient;
-        })
-        .catch(error => console.error('Error:', error));
-}
-
 
 
 async function deleteProposal(id) {
@@ -165,7 +220,7 @@ async function deleteProposal(id) {
     })
         .then(() => {
             alert('Proposta excluída com sucesso!');
-            fetchAllProposals();
+            fetchAllProposals(currentPage);
         })
         .catch((error) => {
             alert('Erro ao excluir Proposta!');
@@ -179,7 +234,6 @@ function handleCloseEditProposal(idProposal) {
     editProposal.classList.toggle('hidden');
 
     if (!editProposal.classList.contains('hidden')) {
-        console.log(idProposal);
         getElementsEditProposal(idProposal);
     } else {
         clearProposalEditFields();
@@ -222,7 +276,6 @@ function getElementsEditProposal(id) {
             return response.json();
         })
         .then(data => {
-            console.log(data)
             if (data && data.idLead && data.idStatusProposal) {
                 idGeralProposal = data.idProposal;
                 document.getElementById('dateEdit').value = data.proposalDate;
@@ -285,7 +338,7 @@ async function fetchAddEditProposal(event) {
             alert('Proposta editada com sucesso!');
             idGeralProposal = null;
             handleCloseEditProposal();
-            fetchAllProposals();
+            fetchAllProposals(currentPage);
         })
         .catch((error) => {
             alert('Erro ao editar proposta!');
