@@ -8,6 +8,7 @@ class EsferaG2ApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }
