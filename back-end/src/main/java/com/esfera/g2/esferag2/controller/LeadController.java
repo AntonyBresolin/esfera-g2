@@ -67,4 +67,13 @@ public class LeadController {
 
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/name/{name}")
+    public Page<Lead> getLeadsByContact(@PathVariable String name,
+                                        @RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "20") int size,
+                                        @RequestParam(defaultValue = "idLead") String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return leadRepository.findLeadsByIdClientNameContainingIgnoreCase(name, pageable);
+    }
 }

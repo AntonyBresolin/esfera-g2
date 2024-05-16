@@ -4,7 +4,10 @@ import com.esfera.g2.esferag2.model.Address;
 import com.esfera.g2.esferag2.model.Client;
 import com.esfera.g2.esferag2.model.ClientAddressContactDTO;
 import com.esfera.g2.esferag2.model.Contact;
-import com.esfera.g2.esferag2.repository.*;
+import com.esfera.g2.esferag2.repository.AddressRepository;
+import com.esfera.g2.esferag2.repository.ClientRepository;
+import com.esfera.g2.esferag2.repository.ContactRepository;
+import com.esfera.g2.esferag2.repository.LeadRepository;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -148,7 +151,7 @@ public class ClientAddressContactDTOController {
     public ResponseEntity<?> deleteClientAddressContact(@PathVariable Long id) {
         if (!clientRepository.existsById(id)) {
             return ResponseEntity.badRequest().body("Cliente não encontrado!");
-        } else if(leadRepository.findByIdClientIdClient(id).isPresent()){
+        } else if (leadRepository.findByIdClientIdClient(id).isPresent()) {
             return new ResponseEntity<>("Existem leads associados a este cliente, não é possível deletar", HttpStatus.CONFLICT);
         }
         try {
@@ -158,7 +161,7 @@ public class ClientAddressContactDTOController {
                 addressRepository.deleteById(address.getIdAddress());
             }
             for (Contact contact : contactRepository.findByClient(c)) {
-                    contactRepository.deleteById(contact.getIdContact());
+                contactRepository.deleteById(contact.getIdContact());
             }
 
             clientRepository.deleteById(id);
@@ -178,7 +181,7 @@ public class ClientAddressContactDTOController {
             if (response.getStatusCode() == HttpStatus.CONFLICT) {
                 notDeletedDueToLeads.add(id);
             } else if (!response.getStatusCode().is2xxSuccessful()) {
-                return ResponseEntity.badRequest().body("Erro ao deletar, cliente cujo ID: "+id+" possui proposal cadastrada!");
+                return ResponseEntity.badRequest().body("Erro ao deletar, cliente cujo ID: " + id + " possui proposal cadastrada!");
             } else {
                 deleteds.add(id);
             }
@@ -211,14 +214,14 @@ public class ClientAddressContactDTOController {
 
         List<Contact> contacts = contactRepository.findByClient(client);
 
-        for(Contact contact : contacts) {
-            if(contact.getIdTypeContact().getIdTypeContact() == 1) {
+        for (Contact contact : contacts) {
+            if (contact.getIdTypeContact().getIdTypeContact() == 1) {
                 contact.setData(clientAddressContactDTO.getContact().get(0).getData());
-            } else if(contact.getIdTypeContact().getIdTypeContact() == 2) {
+            } else if (contact.getIdTypeContact().getIdTypeContact() == 2) {
                 contact.setData(clientAddressContactDTO.getContact().get(1).getData());
-            } else if(contact.getIdTypeContact().getIdTypeContact() == 3) {
+            } else if (contact.getIdTypeContact().getIdTypeContact() == 3) {
                 contact.setData(clientAddressContactDTO.getContact().get(2).getData());
-            } else if(contact.getIdTypeContact().getIdTypeContact() == 4) {
+            } else if (contact.getIdTypeContact().getIdTypeContact() == 4) {
                 contact.setData(clientAddressContactDTO.getContact().get(3).getData());
             }
             contactRepository.save(contact);
@@ -239,31 +242,23 @@ public class ClientAddressContactDTOController {
     }
 
     @GetMapping("/name/{name}")
-    public List<ClientAddressContactDTO> getClientAddressContactByName(@PathVariable String name) {
-        List<Client> clients = clientRepository.findByNameContainingIgnoreCase(name);
-        List<Address> addresses = addressRepository.findAllByClientIn(clients);
-        List<Contact> contacts = contactRepository.findAllByClientIn(clients);
-        List<ClientAddressContactDTO> clientAddressContactDTOS = new ArrayList<>();
+    public Page<ClientAddressContactDTO> getClientAddressContactByName(@PathVariable String name,
+                                                                       @RequestParam(defaultValue = "0") int page,
+                                                                       @RequestParam(defaultValue = "20") int size,
+                                                                       @RequestParam(defaultValue = "idClient") String sortBy
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<Client> clientsPage = clientRepository.findClientsByNameContainingIgnoreCase(name, pageable);
 
-        // Mapear endereços e contatos por id do cliente para evitar loops aninhados excessivos
-        Map<Long, List<Address>> addressMap = addresses.stream()
-                .collect(Collectors.groupingBy(a -> a.getClient().getIdClient()));
-        Map<Long, List<Contact>> contactMap = contacts.stream()
-                .collect(Collectors.groupingBy(c -> c.getClient().getIdClient()));
+        // Obtém os IDs dos clientes apenas na página atual
+        List<Long> clientIds = clientsPage.getContent().stream()
+                .map(Client::getIdClient)
+                .collect(Collectors.toList());
 
-        for (Client client : clients) {
-            List<Address> clientAddresses = addressMap.getOrDefault(client.getIdClient(), new ArrayList<>());
-            List<Contact> clientContacts = contactMap.getOrDefault(client.getIdClient(), new ArrayList<>());
+        // Obtém os DTOs de clientes com endereços e contatos
+        List<ClientAddressContactDTO> dtos = findClientDetailsWithContacts(clientIds);
 
-            for (Address address : clientAddresses) {
-                ClientAddressContactDTO clientAddressContactDTO = new ClientAddressContactDTO();
-                clientAddressContactDTO.setClient(client);
-                clientAddressContactDTO.setAddress(address);
-                clientAddressContactDTO.setContact(clientContacts);
-                clientAddressContactDTOS.add(clientAddressContactDTO);
-            }
-        }
-
-        return clientAddressContactDTOS;
+        // Constrói e retorna a página de DTOs
+        return new PageImpl<>(dtos, pageable, clientsPage.getTotalElements());
     }
 }

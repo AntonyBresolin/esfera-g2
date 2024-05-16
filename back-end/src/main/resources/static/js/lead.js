@@ -195,31 +195,37 @@ async function deleteLead() {
         .catch(error => console.error('Erro ao buscar nome do cliente:', error));
 }
 
-async function fetchSearchClientByCpfCnpj() {
-    const cpfCnpj = document.getElementById('cpfCnpjSearchByCPF').value;
+async function fetchSearchLeadByClientCpfCnpj(page) {
 
-    await fetch(`http://localhost:8080/client/cpf/` + cpfCnpj, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
+    const name = document.getElementById('searchByNamePesquisar').value;
+
+    await fetch(`http://localhost:8080/lead/name/${name}?page=${page}&size=${pageSize}&sort=${sortBy}`,
+        {
+            method: 'GET',
+        })
         .then(response => response.json())
         .then(data => {
-            // Limpar as opções anteriores
-            const clientSelect = document.getElementById('clientSelect');
-            clientSelect.innerHTML = '';
-
-            data.forEach(client => {
-                const option = document.createElement('option');
-                option.value = client.idClient;
-                option.textContent = client.name;
-                clientSelect.appendChild(option);
-            });
+            listLeads(data.content);
+            updatePaginationSearch(data);
         })
-        .catch(error => console.error('Erro ao buscar nome do cliente:', error));
+        .catch(error => console.error('Error:', error));
 }
 
+
+function updatePaginationSearch(pageInfo) {
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    if (currentPage > 0) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchSearchLeadByClientCpfCnpj(${currentPage - 1})">Anterior</button>`;
+    }
+    if (currentPage < totalPages - 1) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchSearchLeadByClientCpfCnpj(${currentPage + 1})">Próximo</button>`;
+    }
+
+}
 
 function handleCloseEditLead(idLead) {
     let editLead = document.getElementById('editLead');

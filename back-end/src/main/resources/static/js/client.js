@@ -39,6 +39,19 @@ window.onload = async function () {
     await fetchAllClients(currentPage);
 }
 
+
+
+function fooSelected() {
+    let checkboxes = document.getElementsByName('foo');
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            return true;
+        }
+    }
+    return false;
+
+}
+
 function selectAllCheckboxes(source) {
     let checkboxes = document.getElementsByName('foo');
     for (let checkbox of checkboxes) {
@@ -62,7 +75,7 @@ function listClients(clients) {
         tr.innerHTML = `
       <td class="px-4 py-4"><input id="${data.client.idClient}" type="checkbox"
       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-      name="foo" value="${data.client.idClient}" />
+      name="foo" value="${data.client.idClient}" onClick="" />
       <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
       <td class="px-6">
         <span class='align-middle inline-block text-primary font-bold'> ${data.client.name} </span>
@@ -456,9 +469,9 @@ function fetchEditClient(event) {
         });
 }
 
-async function fetchSearchClientByName() {
+async function fetchSearchClientByName(page) {
     const name = document.getElementById('searchClient').value;
-    await fetch(`http://localhost:8080/client-address-contact/name/${name}`, {
+    await fetch(`http://localhost:8080/client-address-contact/name/${name}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -466,9 +479,26 @@ async function fetchSearchClientByName() {
     })
         .then(response => response.json())
         .then(data => {
-            listClients(data);
+            listClients(data.content);
+            updatePaginationSearch(data);
+
         })
         .catch(error => console.error('Error:', error));
+}
+
+
+function updatePaginationSearch(pageInfo) {
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    if (currentPage > 0) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchSearchLeadByClientCpfCnpj(${currentPage - 1})">Anterior</button>`;
+    }
+    if (currentPage < totalPages - 1) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchSearchLeadByClientCpfCnpj(${currentPage + 1})">Próximo</button>`;
+    }
 }
 
 function showDeleteClientModal() {
