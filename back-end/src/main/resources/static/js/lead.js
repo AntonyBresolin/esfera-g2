@@ -339,4 +339,35 @@ function showDeleteLeadModal(idLead) {
     sessionStorage.setItem('idLeadToDel', idLead);
 }
 
+function exportLeads() {
+    const table = document.getElementById('tableLeads');
+    const rows = table.querySelectorAll('tbody > tr');
 
+    const csvRows = [];
+
+    const header = Array.from(table.querySelectorAll('thead > tr > th')).map(th => th.textContent.trim());
+    
+    const filteredHeader = header.filter(column => column !== "Ações" && column !== "" && column !== "checkbox");
+
+    csvRows.push(filteredHeader.join(','));
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const rowData = [];
+        cells.forEach((cell, index) => {
+            if (index !== 0 && index !== cells.length - 1) {
+                rowData.push(cell.textContent.trim());
+            }
+        });
+        csvRows.push(rowData.join(','));
+    });
+
+    const csvData = csvRows.join('\n');
+
+    const blob = new Blob([csvData], { type: 'text/csv' });
+
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'leads.csv';
+    link.click();
+}

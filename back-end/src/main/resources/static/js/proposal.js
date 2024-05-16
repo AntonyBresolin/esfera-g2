@@ -345,3 +345,34 @@ async function fetchAddEditProposal(event) {
             console.error('Error:', error);
         });
 }
+
+function exportProposals() {
+    const table = document.getElementById('tableProposals');
+    const rows = table.querySelectorAll('tbody > tr');
+
+    const csvRows = [];
+
+    const header = Array.from(table.querySelectorAll('thead > tr > th')).map(th => th.textContent.trim());
+    const filteredHeader = header.filter(column => column !== "Ações" && column !== "" && column !== "Anexo");
+    csvRows.push(filteredHeader.join(','));
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const rowData = [];
+        cells.forEach((cell, index) => {
+            if (index !== cells.length - 2 && index !== cells.length - 1) {
+                rowData.push(cell.textContent.trim());
+            }
+        });
+        csvRows.push(rowData.join(','));
+    });
+
+    const csvData = csvRows.join('\n');
+
+    const blob = new Blob([csvData], { type: 'text/csv' });
+
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'proposals.csv';
+    link.click();
+}
