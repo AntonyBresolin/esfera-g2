@@ -56,7 +56,7 @@ public class LeadController {
     public ResponseEntity<?> deleteLead(@PathVariable Long id) {
         if (!leadRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
-        } else if (proposalRepository.findByIdLeadIdLead(id).isPresent()) {
+        } else if (proposalRepository.existsByIdLeadIdLead(id)) {
             return new ResponseEntity<>("Existem propostas associadas a este lead, não é possível deletar", HttpStatus.CONFLICT);
         }
         try {

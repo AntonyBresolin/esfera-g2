@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface LeadRepository extends JpaRepository<Lead, Long> {
-    Optional<Lead> findByIdClientIdClient(Long leadId);
+    Boolean existsByIdClientIdClient(Long leadId);
     Page<Lead> findAll(Pageable pageable);
 
     Page<Lead> findLeadsByIdClientNameContainingIgnoreCase(String name, Pageable pageable);

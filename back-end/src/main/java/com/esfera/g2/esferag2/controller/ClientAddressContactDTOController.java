@@ -23,7 +23,6 @@ import java.io.Reader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -151,7 +150,7 @@ public class ClientAddressContactDTOController {
     public ResponseEntity<?> deleteClientAddressContact(@PathVariable Long id) {
         if (!clientRepository.existsById(id)) {
             return ResponseEntity.badRequest().body("Cliente não encontrado!");
-        } else if (leadRepository.findByIdClientIdClient(id).isPresent()) {
+        } else if (leadRepository.existsByIdClientIdClient(id)) {
             return new ResponseEntity<>("Existem leads associados a este cliente, não é possível deletar", HttpStatus.CONFLICT);
         }
         try {
