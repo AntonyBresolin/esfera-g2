@@ -195,10 +195,26 @@ async function deleteLead() {
         .catch(error => console.error('Erro ao buscar nome do cliente:', error));
 }
 
+async function fetchSearchLeadByClientCpfCnpj(page) {
+
+    const name = document.getElementById('searchByNamePesquisar').value;
+
+    await fetch(`http://localhost:8080/lead/name/${name}?page=${page}&size=${pageSize}&sort=${sortBy}`,
+        {
+            method: 'GET',
+        })
+        .then(response => response.json())
+        .then(data => {
+            listLeads(data.content);
+            updatePaginationSearch(data);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
 async function fetchSearchClientByCpfCnpj() {
     const cpfCnpj = document.getElementById('cpfCnpjSearchByCPF').value;
 
-    await fetch(`http://localhost:8080/client/cpf/` + cpfCnpj, {
+    await fetch(`http://localhost:8080/client/cpf/`+cpfCnpj, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -220,6 +236,21 @@ async function fetchSearchClientByCpfCnpj() {
         .catch(error => console.error('Erro ao buscar nome do cliente:', error));
 }
 
+
+function updatePaginationSearch(pageInfo) {
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    if (currentPage > 0) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchSearchLeadByClientCpfCnpj(${currentPage - 1})">Anterior</button>`;
+    }
+    if (currentPage < totalPages - 1) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchSearchLeadByClientCpfCnpj(${currentPage + 1})">Próximo</button>`;
+    }
+
+}
 
 function handleCloseEditLead(idLead) {
     let editLead = document.getElementById('editLead');
@@ -264,7 +295,7 @@ function getElementsEditLead(id) {
         })
         .then(data => {
             if (data) {
-                document.getElementById('dateEdit').value = data.date;
+                document.getElementById('dateEdit').value = (new Date(data.date)).toISOString().substring(0, 10);
                 document.getElementById('contactEdit').value = data.contact;
                 document.getElementById('callTimeEdit').value = data.callTime;
                 document.getElementById('durationEdit').value = data.duration;

@@ -20,7 +20,7 @@
     <div class="flex justify-between items-center px-8 py-4 bg-white">
         <h1 class="text-xl font-bold text-primary">Propostas</h1>
         <div class="flex items-center w-[540px]">
-            <input type="text" placeholder="Pesquisar"
+            <input type="text" placeholder="Digite o nome do cliente"
                    id="searchProposal"
                    class="w-full bg-[#F0F0F7] px-3 py-2 rounded-full focus:outline-none mr-[-30px] focus:bg-gray-200">
             <ion-icon name="search-outline" fontSize=''
@@ -74,7 +74,7 @@
     <div id="pagination"
          class="sticky bottom-0 w-full bg-gray-200 py-2 flex items-center justify-between shadow-sm"></div>
     <div id="cadProposal" class="w-screen h-screen absolute top-0 left-0 hidden">
-        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <div onClick="handleCloseAddProposal()" class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
         <form action="" method="post"
               class="bg-white w-[1000px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
               onSubmit="fetchAddProposal(event)">
@@ -87,16 +87,18 @@
                 <div class="flex flex-col justify-between">
                     <div class="flex justify-between">
                         <div class="w-full mx-2 h-full">
-                            <label for="idLead" class="text-sm font-semibold">ID LIGAÇÃO</label> <br>
-                            <input type="number" name="idLead" id="idLead" placeholder="ID da ligação"
+                            <label for="idLead" class="text-sm font-semibold">ID LIGAÇÃO<span
+                                    class="text-red-600">*</span></label> <br>
+                            <input type="number" name="idLead" id="idLead" placeholder="ID da ligação" required
                                    class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[160px]">
                             <button type="button"
                                     class="bg-gray-200 text-black px-2 py-1 rounded-lg font-semibold ml-2"
                                     onClick="fetchSearchProposalByName()">Enviar
                             </button>
 
-                            <label for="date" class="text-sm font-semibold">Data de Conclusão</label> <br>
-                            <input type="date" name="date" id="date" placeholder="Data da proposta"
+                            <label for="date" class="text-sm font-semibold">Data de Conclusão<span class="text-red-600">*</span></label>
+                            <br>
+                            <input type="date" name="date" id="date" placeholder="Data da proposta" required
                                    class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
 
                             <label for="value" class="text-sm font-semibold">Valores</label> <br>
@@ -105,15 +107,18 @@
                         </div>
 
                         <div class="w-full mx-2 h-full">
-                            <label for="idClient" class="text-sm font-semibold mr-9">ID</label>
+                            <label for="idClient" class="text-sm font-semibold mr-9">ID<span
+                                    class="text-red-600">*</span></label>
                             <label for="name" class="text-sm font-semibold">Nome</label> <br>
-                            <input type="number" name="idClient" id="idClient" placeholder="ID"
-                                   class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[50px]" readonly>
+                            <input type="number" name="idClient" id="idClient" placeholder="ID" required
+                                   class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[50px]"
+                                   >
                             <input type="text" name="name" id="name" placeholder="Nome do cliente"
-                                   class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[160px]" readonly> <br>
+                                   class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[160px]"
+                                   > <br>
 
                             <label for="service" class="text-sm font-semibold">Tipo de Solução</label><br>
-                            <select name="service" id="service" placeholder="Escolha a solução"
+                            <select name="service" id="service"
                                     class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
                                 <option value="Acompanhamento">Acompanhamento</option>
                                 <option value="Consultoria">Consultoria</option>
@@ -121,7 +126,7 @@
                             </select>
 
                             <label for="status" class="text-sm font-semibold">Status da Proposta</label><br>
-                            <select name="status" id="status" placeholder="Escolha o Status"
+                            <select name="status" id="status"
                                     class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
                             </select>
 
@@ -163,7 +168,7 @@
     </div>
 </div>
 <div id="editProposal" class="w-screen h-screen absolute top-0 left-0 hidden">
-    <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+    <div onClick="handleCloseEditProposal()" class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
 
     <form action="" method="post"
           class="bg-white w-[1000px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
@@ -177,9 +182,11 @@
             <div class="flex flex-col justify-between">
                 <div class="flex justify-between">
                     <div class="w-full mx-2 h-full">
-                        <label for="idLeadEdit" class="text-sm font-semibold">ID LIGAÇÃO</label> <br>
-                        <input type="number" name="idLeadEdit" id="idLeadEdit" placeholder="ID da ligação"
-                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[160px]"readonly> <br>
+                        <label for="idLeadEdit" class="text-sm font-semibold">ID LIGAÇÃO<span
+                                class="text-red-600">*</span></label> <br>
+                        <input type="number" name="idLeadEdit" id="idLeadEdit" placeholder="ID da ligação" required
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[160px]"
+                               > <br>
 
                         <label for="date" class="text-sm font-semibold">Data de Conclusão</label> <br>
                         <input type="date" name="date" id="dateEdit" placeholder="Data da proposta"
@@ -194,13 +201,15 @@
                         <label for="idClientEdit" class="text-sm font-semibold mr-9">ID</label>
                         <label for="nameEdit" class="text-sm font-semibold">Nome</label> <br>
                         <input type="number" name="idClient" id="idClientEdit" placeholder="ID"
-                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[50px]" readonly>
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[50px]"
+                               >
                         <input type="text" name="name" id="nameEdit" placeholder="Nome do cliente"
-                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[160px]" readonly> <br>
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[160px]"
+                               > <br>
 
 
                         <label for="serviceEdit" class="text-sm font-semibold">Tipo de Solução</label><br>
-                        <select name="serviceEdit" id="serviceEdit" placeholder="Escolha a solução"
+                        <select name="serviceEdit" id="serviceEdit"
                                 class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
                             <option value="Acompanhamento">Acompanhamento</option>
                             <option value="Consultoria">Consultoria</option>
@@ -208,7 +217,7 @@
                         </select>
 
                         <label for="statusEdit" class="text-sm font-semibold">Status da Proposta</label><br>
-                        <select name="statusEdit" id="statusEdit" placeholder="Escolha o Status"
+                        <select name="statusEdit" id="statusEdit"
                                 class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
                         </select>
 

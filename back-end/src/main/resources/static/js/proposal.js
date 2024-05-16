@@ -278,7 +278,7 @@ function getElementsEditProposal(id) {
         .then(data => {
             if (data && data.idLead && data.idStatusProposal) {
                 idGeralProposal = data.idProposal;
-                document.getElementById('dateEdit').value = data.proposalDate;
+                document.getElementById('dateEdit').value = (new Date(data.proposalDate)).toISOString().substring(0, 10);
                 document.getElementById('valueEdit').value = data.value;
                 document.getElementById('serviceEdit').value = data.service;
                 document.getElementById('statusEdit').value = data.idStatusProposal.idStatusProposal;

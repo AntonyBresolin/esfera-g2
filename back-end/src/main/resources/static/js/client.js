@@ -14,29 +14,41 @@ let idGeralClient;
 
 window.onload = async function () {
     var userId = localStorage.getItem('userId');
-        if (userId) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/user/' + userId, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        var userData = JSON.parse(xhr.responseText);
-                        var userNameDisplay = document.getElementById('userNameDisplay');
-                        var userRoleDisplay = document.getElementById('userRoleDisplay');
-                        if (userNameDisplay && userRoleDisplay) {
-                            userNameDisplay.textContent = userData.name;
-                            userRoleDisplay.textContent = userData.role;
-                        } else {
-                            console.error('Elemento com ID "userNameDisplay" ou "userRoleDisplay" não encontrado.');
-                        }
+    if (userId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/user/' + userId, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var userData = JSON.parse(xhr.responseText);
+                    var userNameDisplay = document.getElementById('userNameDisplay');
+                    var userRoleDisplay = document.getElementById('userRoleDisplay');
+                    if (userNameDisplay && userRoleDisplay) {
+                        userNameDisplay.textContent = userData.name;
+                        userRoleDisplay.textContent = userData.role;
                     } else {
-                        console.error('Erro ao obter dados do usuário: ' + xhr.status);
+                        console.error('Elemento com ID "userNameDisplay" ou "userRoleDisplay" não encontrado.');
                     }
+                } else {
+                    console.error('Erro ao obter dados do usuário: ' + xhr.status);
                 }
-            };
-            xhr.send();
-        }
+            }
+        };
+        xhr.send();
+    }
     await fetchAllClients(currentPage);
+}
+
+
+function fooSelected() {
+    let checkboxes = document.getElementsByName('foo');
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            return true;
+        }
+    }
+    return false;
+
 }
 
 function selectAllCheckboxes(source) {
@@ -62,7 +74,7 @@ function listClients(clients) {
         tr.innerHTML = `
       <td class="px-4 py-4"><input id="${data.client.idClient}" type="checkbox"
       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-      name="foo" value="${data.client.idClient}" />
+      name="foo" value="${data.client.idClient}" onClick="" />
       <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
       <td class="px-6">
         <span class='align-middle inline-block text-primary font-bold'> ${data.client.name} </span>
@@ -110,7 +122,6 @@ async function fetchAllClients(page) {
 }
 
 function updatePagination(pageInfo) {
-    console.log(pageInfo);
     const totalPages = pageInfo.totalPages;
     const currentPage = pageInfo.number;
     const paginationElement = document.getElementById('pagination');
@@ -133,7 +144,7 @@ async function fetchAddClient(event) {
             cpfCnpj: document.getElementById('cpf').value,
             company: document.getElementById('company').value,
             role: document.getElementById('role').value,
-            date: 33333333,
+            date: document.getElementById('date').value,
         },
         contact: [
             {
@@ -175,6 +186,11 @@ async function fetchAddClient(event) {
         }
     };
 
+    if (!validarDocumento(data.client.cpfCnpj)) {
+        alert('CPF ou CNPJ inválido!');
+        return;
+    }
+
     await fetch('http://localhost:8080/client-address-contact/add', {
         method: 'POST',
         headers: {
@@ -185,6 +201,7 @@ async function fetchAddClient(event) {
         .then(() => {
             alert('Cliente cadastrado com sucesso!');
             handleCloseAddCliente();
+            clearClientCadFields();
             fetchAllClients(currentPage);
         })
         .catch((error) => {
@@ -204,12 +221,18 @@ function handleCloseImportClientData() {
 async function fetchImportClientData() {
     event.preventDefault();
 
+
     const formData = new FormData();
     const fileInput = document.getElementById('fileInput');
     if (!fileInput.files[0]) {
         alert('Selecione um arquivo para importar!');
         return;
     }
+    let loading = document.getElementById('loadingSpinner');
+    let fileDiv = document.getElementById('fileDiv');
+    loading.classList.toggle('hidden');
+    fileDiv.classList.toggle('hidden');
+
 
     formData.append('file', fileInput.files[0]);
 
@@ -217,12 +240,16 @@ async function fetchImportClientData() {
         method: 'POST',
         body: formData
     })
-        .then(response => alert("Dados importados com sucesso!"))
+        .then(response =>
+            alert("Dados importados com sucesso!")
+        )
         .catch(error => {
             alert("Erro ao importar dados!");
             console.error('Error:', error)
         })
         .finally(() => {
+                loading.classList.toggle('hidden');
+                fileDiv.classList.toggle('hidden');
                 document.getElementById('fileInput').value = '';
                 handleCloseImportClientData();
                 fetchAllClients(currentPage);
@@ -251,7 +278,7 @@ async function deleteClient() {
                     warningTitle.classList.remove('bg-red-200');
                     warning.classList.toggle('hidden');
                 }, 3000);
-            } else if(response.status === 200) {
+            } else if (response.status === 200) {
                 warning.classList.toggle('hidden');
                 warningTitle.classList.add('bg-green-200');
                 warningMessage.innerHTML = 'Cliente excluído com sucesso.';
@@ -305,7 +332,7 @@ async function deleteSelectedClients() {
                 warningTitle.classList.remove('bg-green-200');
                 warning.classList.toggle('hidden');
             }, 3000);
-        } else if(response.status === 409) {
+        } else if (response.status === 409) {
             const errorMessage = await response.text();
             warning.classList.toggle('hidden');
             warningTitle.classList.add('bg-red-200');
@@ -353,6 +380,24 @@ function clearClientEditFields() {
     document.getElementById('countryEdit').value = '';
 }
 
+function clearClientCadFields() {
+    document.getElementById('name').value = '';
+    document.getElementById('cpf').value = '';
+    document.getElementById('company').value = '';
+    document.getElementById('role').value = '';
+    document.getElementById('celular').value = '';
+    document.getElementById('telefone').value = '';
+    document.getElementById('whatsapp').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('zipCode').value = '';
+    document.getElementById('street').value = '';
+    document.getElementById('number').value = '';
+    document.getElementById('state').value = '';
+    document.getElementById('city').value = '';
+    document.getElementById('country').value = '';
+
+}
+
 function getElementsEditClient(idClient) {
     fetch(`http://localhost:8080/client-address-contact/${idClient}`)
         .then(response => {
@@ -368,6 +413,7 @@ function getElementsEditClient(idClient) {
                 document.getElementById('cpfEdit').value = data.client.cpfCnpj;
                 document.getElementById('companyEdit').value = data.client.company;
                 document.getElementById('roleEdit').value = data.client.role;
+                document.getElementById('dateEdit').value = (new Date(data.client.date)).toISOString().substring(0, 10);
                 // Considerar verificar se cada contato existe
                 document.getElementById('celularEdit').value = data.contact[0]?.data || '';
                 document.getElementById('telefoneEdit').value = data.contact[1]?.data || '';
@@ -395,7 +441,7 @@ function fetchEditClient(event) {
             cpfCnpj: document.getElementById('cpfEdit').value,
             company: document.getElementById('companyEdit').value,
             role: document.getElementById('roleEdit').value,
-            date: 33333333,
+            date: document.getElementById('dateEdit').value,
         },
         contact: [
             {
@@ -456,9 +502,9 @@ function fetchEditClient(event) {
         });
 }
 
-async function fetchSearchClientByName() {
+async function fetchSearchClientByName(page) {
     const name = document.getElementById('searchClient').value;
-    await fetch(`http://localhost:8080/client-address-contact/name/${name}`, {
+    await fetch(`http://localhost:8080/client-address-contact/name/${name}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -466,9 +512,26 @@ async function fetchSearchClientByName() {
     })
         .then(response => response.json())
         .then(data => {
-            listClients(data);
+            listClients(data.content);
+            updatePaginationSearch(data);
+
         })
         .catch(error => console.error('Error:', error));
+}
+
+
+function updatePaginationSearch(pageInfo) {
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+    const paginationElement = document.getElementById('pagination');
+    paginationElement.innerHTML = '';
+
+    if (currentPage > 0) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchSearchLeadByClientCpfCnpj(${currentPage - 1})">Anterior</button>`;
+    }
+    if (currentPage < totalPages - 1) {
+        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchSearchLeadByClientCpfCnpj(${currentPage + 1})">Próximo</button>`;
+    }
 }
 
 function showDeleteClientModal() {
@@ -482,3 +545,81 @@ function showUniqueDeleteClientModal(idClient) {
 
     sessionStorage.setItem('idClientToDel', idClient);
 }
+
+
+/*
+    Validadores
+ */
+
+function validarDocumento(documento) {
+    documento = documento.replace(/[^\d]+/g, ''); // Remove caracteres não numéricos
+
+    if (documento.length === 11) {
+        return validaCPF(documento);
+    } else if (documento.length === 14) {
+        return validaCNPJ(documento);
+    } else {
+        return false; // Não é CPF nem CNPJ
+    }
+}
+
+function validaCPF(cpf) {
+    if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) {
+        return false;
+    }
+
+    let soma = 0;
+    let resto;
+
+    for (let i = 1; i <= 9; i++) {
+        soma += parseInt(cpf[i - 1]) * (11 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf[9])) return false;
+
+    soma = 0;
+    for (let i = 1; i <= 10; i++) {
+        soma += parseInt(cpf[i - 1]) * (12 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf[10])) return false;
+
+    return true;
+}
+
+function validaCNPJ(cnpj) {
+    if (cnpj.length !== 14 || !!cnpj.match(/(\d)\1{13}/)) {
+        return false;
+    }
+
+    let tamanho = cnpj.length - 2;
+    let numeros = cnpj.substring(0, tamanho);
+    let digitos = cnpj.substring(tamanho);
+    let soma = 0;
+    let pos = tamanho - 7;
+
+    for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+    }
+
+    let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+    if (resultado !== parseInt(digitos.charAt(0))) return false;
+
+    tamanho = tamanho + 1;
+    numeros = cnpj.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+    for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+    }
+
+    resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+    if (resultado !== parseInt(digitos.charAt(1))) return false;
+
+    return true;
+}
+
