@@ -339,35 +339,43 @@ function showDeleteLeadModal(idLead) {
     sessionStorage.setItem('idLeadToDel', idLead);
 }
 
-function exportLeads() {
-    const table = document.getElementById('tableLeads');
-    const rows = table.querySelectorAll('tbody > tr');
+async function exportLeads() {
+    try {
+        const response = await fetch('http://localhost:8080/lead/export');
+        const leads = await response.json();
 
-    const csvRows = [];
+        if (leads && leads.length > 0) {
+            let csvContent = '';
 
-    const header = Array.from(table.querySelectorAll('thead > tr > th')).map(th => th.textContent.trim());
-    
-    const filteredHeader = header.filter(column => column !== "Ações" && column !== "" && column !== "checkbox");
+            const header = 'ID,NOME,RESULTADO,DESCRIÇÃO,DATA,HORA,DURAÇÃO,CONTATO';
+            csvContent += header + '\n';
 
-    csvRows.push(filteredHeader.join(','));
+            leads.forEach(lead => {
+                const id = lead.idLead || '';
+                const nome = lead.idClient ? lead.idClient.name : '';
+                const resultado = lead.result ? lead.result.result : '';
+                const descricao = lead.description || '';
+                const data = lead.date ? new Date(lead.date).toLocaleDateString() : '';
+                const hora = lead.callTime || '';
+                const duracao = lead.duration || '';
+                const contato = lead.contact || '';
 
-    rows.forEach(row => {
-        const cells = row.querySelectorAll('td');
-        const rowData = [];
-        cells.forEach((cell, index) => {
-            if (index !== 0 && index !== cells.length - 1) {
-                rowData.push(cell.textContent.trim());
-            }
-        });
-        csvRows.push(rowData.join(','));
-    });
+                const leadData = `${id},${nome},${resultado},${descricao},${data},${hora},${duracao},${contato}`;
+                csvContent += leadData + '\n';
+            });
 
-    const csvData = csvRows.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
 
-    const blob = new Blob([csvData], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'leads.csv';
 
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = 'leads.csv';
-    link.click();
+            link.click();
+        } else {
+            console.log('Não há dados de leads para exportar.');
+        }
+    } catch (error) {
+        console.error('Erro ao exportar leads:', error);
+    }
 }
+

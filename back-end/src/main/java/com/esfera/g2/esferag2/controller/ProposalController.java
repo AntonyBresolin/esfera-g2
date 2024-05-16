@@ -22,7 +22,10 @@ public class ProposalController {
     @Autowired
     private ProposalRepository proposalRepository;
 
-
+    @GetMapping("/export")
+    public ResponseEntity<?> exportProposals() {
+        return ResponseEntity.ok(proposalRepository.findAll());
+    }
 
     @GetMapping("/all")
     public Page<Proposal> getAllProposals(

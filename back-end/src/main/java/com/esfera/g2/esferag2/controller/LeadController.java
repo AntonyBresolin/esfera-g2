@@ -18,6 +18,10 @@ public class LeadController {
     @Autowired
     private ProposalRepository proposalRepository;
 
+    @GetMapping("/export")
+    public ResponseEntity<?> exportLeads() {
+        return ResponseEntity.ok(leadRepository.findAll());
+    }
 
     @GetMapping("/all")
     public Page<Lead> getAllLeads(
