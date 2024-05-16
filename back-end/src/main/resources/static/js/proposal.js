@@ -373,6 +373,37 @@ async function fetchAddEditProposal(event) {
 
 
 
+function exportProposals() {
+    fetch('http://localhost:8080/proposal/export')
+        .then(response => response.json())
+        .then(data => {
+            const csvRows = [];
+            const header = ['ID', 'CLIENTE', 'CPF / CNPJ', 'SERVIÇO', 'STATUS', 'DESCRIÇÃO', 'DATA', 'VALOR'];
+            csvRows.push(header.join(','));
+
+            data.forEach(proposal => {
+                const row = [
+                    proposal.idProposal,
+                    proposal.idLead.idClient.name,
+                    proposal.idLead.idClient.cpfCnpj,
+                    proposal.service,
+                    proposal.idStatusProposal.name,
+                    proposal.description,
+                    new Date(proposal.proposalDate).toLocaleDateString(),
+                    proposal.value
+                ];
+                csvRows.push(row.join(','));
+            });
+
+            const csvData = csvRows.join('\n');
+            const blob = new Blob([csvData], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'proposals.csv';
+            link.click();
+        })
+        .catch(error => console.error('Error:', error));
+}
 function downloadFile(fileId, proposalId) {
     fetch(`http://localhost:8080/proposal/download/${fileId}`)
         .then(response => {
@@ -396,4 +427,3 @@ function downloadFile(fileId, proposalId) {
             alert('Ocorreu um erro ao tentar baixar o arquivo. Por favor, tente novamente.');
         });
 }
-

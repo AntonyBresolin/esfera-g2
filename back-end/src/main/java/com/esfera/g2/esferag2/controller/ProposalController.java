@@ -36,6 +36,12 @@ public class ProposalController {
     @Autowired
     private StatusProposalRepository statusProposalRepository;
 
+
+    @GetMapping("/export")
+    public ResponseEntity<?> exportProposals() {
+        return ResponseEntity.ok(proposalRepository.findAll());
+    }
+
     @GetMapping("/all")
     public Page<Proposal> getAllProposals(
             @RequestParam(defaultValue = "0") int page,
