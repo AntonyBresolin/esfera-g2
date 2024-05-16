@@ -1,19 +1,27 @@
 package com.esfera.g2.esferag2.controller;
 
+import com.esfera.g2.esferag2.model.Lead;
 import com.esfera.g2.esferag2.model.Proposal;
+import com.esfera.g2.esferag2.model.StatusProposal;
+import com.esfera.g2.esferag2.model.User;
+import com.esfera.g2.esferag2.repository.LeadRepository;
 import com.esfera.g2.esferag2.repository.ProposalRepository;
+import com.esfera.g2.esferag2.repository.StatusProposalRepository;
+import com.esfera.g2.esferag2.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
+import java.sql.Timestamp;
 
 @RestController
 @RequestMapping("/proposal")
@@ -21,6 +29,13 @@ public class ProposalController {
 
     @Autowired
     private ProposalRepository proposalRepository;
+    @Autowired
+    private LeadRepository leadRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private StatusProposalRepository statusProposalRepository;
+
 
     @GetMapping("/export")
     public ResponseEntity<?> exportProposals() {
@@ -35,26 +50,88 @@ public class ProposalController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return proposalRepository.findAll(pageable);
     }
+
     @GetMapping("/{id}")
     public Proposal getProposalById(@PathVariable Long id) {
         return proposalRepository.findById(id).orElseThrow();
     }
 
-    @PostMapping
-    public Proposal createProposal(@RequestBody Proposal proposal) {
+    @PostMapping(consumes = "multipart/form-data")
+    public Proposal createProposal(@RequestParam("idLead") Long idLead,
+                                   @RequestParam("idUser") Long idUser,
+                                   @RequestParam("completionDate") String completionDateStr,
+                                   @RequestParam("service") String service,
+                                   @RequestParam("value") String value,
+                                   @RequestParam("description") String description,
+                                   @RequestParam("idStatusProposal") Long idStatusProposal,
+                                   @RequestPart(value = "file", required = false) MultipartFile file) {
+        if (idLead == null || completionDateStr == null) {
+            throw new IllegalArgumentException("O campo idClient e a data de conclusão são obrigatórios.");
+        }
+        Lead lead = leadRepository.findById(idLead).orElseThrow();
+        User user = userRepository.findById(idUser).orElseThrow();
+        StatusProposal statusProposal = statusProposalRepository.findById(idStatusProposal).orElseThrow();
+
+        // Converter a string para Timestamp
+        Timestamp completionDate = Timestamp.valueOf(completionDateStr + " 00:00:00");
+        double valueTratado = (!value.isEmpty() ? Double.parseDouble(value) : 0.0);
+
+        Proposal proposal = new Proposal();
+        proposal.setIdLead(lead);
+        proposal.setIdUser(user);
+        proposal.setProposalDate(completionDate);
+        proposal.setService(service);
+        proposal.setValue(valueTratado);
+        proposal.setDescription(description);
+        proposal.setIdStatusProposal(statusProposal);
+
+        if (file != null) {
+            try {
+                proposal.setFile(file.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace(); // TODO - Melhorar tratamento de erro
+            }
+        }
+
         return proposalRepository.save(proposal);
     }
 
-    @PutMapping("/{id}")
-    public Proposal updateProposal(@PathVariable Long id, @RequestBody Proposal proposalDetails) {
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
+    public Proposal updateProposal(@PathVariable Long id,
+                                   @RequestParam("idLead") Long idLead,
+                                   @RequestParam("idUser") Long idUser,
+                                   @RequestParam("completionDate") String completionDateStr,
+                                   @RequestParam("service") String service,
+                                   @RequestParam("value") String value,
+                                   @RequestParam("description") String description,
+                                   @RequestParam("idStatusProposal") Long idStatusProposal,
+                                   @RequestPart(value = "file", required = false) MultipartFile file) {
         return proposalRepository.findById(id)
                 .map(proposal -> {
-                    proposal.setService(proposalDetails.getService());
-                    proposal.setProposalDate(proposalDetails.getProposalDate());
-                    proposal.setValue(proposalDetails.getValue());
-                    proposal.setIdStatusProposal(proposalDetails.getIdStatusProposal());
-                    proposal.setDescription(proposalDetails.getDescription());
-                    proposal.setFile(proposalDetails.getFile());
+                    Lead lead = leadRepository.findById(idLead).orElseThrow();
+                    User user = userRepository.findById(idUser).orElseThrow();
+                    StatusProposal statusProposal = statusProposalRepository.findById(idStatusProposal).orElseThrow();
+
+                    // Converter a string para Timestamp
+                    Timestamp completionDate = Timestamp.valueOf(completionDateStr + " 00:00:00");
+                    double valueTratado = (value.isEmpty() ? Double.parseDouble(value) : 0.0);
+
+                    proposal.setIdLead(lead);
+                    proposal.setIdUser(user);
+                    proposal.setProposalDate(completionDate);
+                    proposal.setService(service);
+                    proposal.setValue(valueTratado);
+                    proposal.setDescription(description);
+                    proposal.setIdStatusProposal(statusProposal);
+
+                    if (file != null) {
+                        try {
+                            proposal.setFile(file.getBytes());
+                        } catch (IOException e) {
+                            e.printStackTrace(); // TODO - Melhorar tratamento de erro
+                        }
+                    }
+
                     return proposalRepository.save(proposal);
                 })
                 .orElseThrow();
@@ -78,5 +155,24 @@ public class ProposalController {
             @PathVariable String name) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return proposalRepository.findByIdLeadIdClientNameContainingIgnoreCase(name, pageable);
+    }
+
+    @GetMapping("/download/{id}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) {
+        Proposal proposal = proposalRepository.findById(id).orElseThrow();
+        byte[] file = proposal.getFile();
+
+        if (file == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF); // Defina o tipo de arquivo apropriado
+        headers.setContentDispositionFormData("attachment", "proposal_" + id + ".pdf");
+        headers.setContentLength(file.length);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(file);
     }
 }

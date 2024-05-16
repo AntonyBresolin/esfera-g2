@@ -24,6 +24,14 @@ public class Client {
 
     private Timestamp date;
 
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
+    }
+
     public String getName() {
         return name;
     }
