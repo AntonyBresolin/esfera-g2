@@ -144,7 +144,7 @@ function listProposals(proposals) {
                         <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
                     </div>
                     <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
-                        onClick="deleteProposal(${idProposal})"
+                        onClick="showDeleteProposalModal(${idProposal})"
                     >
                         <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
                     </div>
@@ -216,7 +216,8 @@ async function fetchSearchProposalByName() {
 
 
 async function deleteProposal(id) {
-    await fetch(`http://localhost:8080/proposal/${id}`, {
+event.preventDefault();
+    await fetch(`http://localhost:8080/proposal/${sessionStorage.getItem("idProposalToDel")}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -225,6 +226,7 @@ async function deleteProposal(id) {
         .then(() => {
             alert('Proposta excluída com sucesso!');
             fetchAllProposals(currentPage);
+            hideDeleteProposalModal()
         })
         .catch((error) => {
             alert('Erro ao excluir Proposta!');
@@ -358,6 +360,18 @@ async function fetchAddEditProposal(event) {
             console.error('Error:', error);
         });
 }
+
+        function showDeleteProposalModal(id) {
+            sessionStorage.setItem("idProposalToDel", id)
+            document.getElementById('deleteProposalModal').classList.remove('hidden');
+        }
+
+        function hideDeleteProposalModal() {
+            sessionStorage.setItem("idProposalToDel", null)
+            document.getElementById('deleteProposalModal').classList.add('hidden');
+        }
+
+
 
 function exportProposals() {
     fetch('http://localhost:8080/proposal/export')
