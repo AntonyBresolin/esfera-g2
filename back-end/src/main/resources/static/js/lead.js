@@ -295,7 +295,7 @@ function getElementsEditLead(id) {
         })
         .then(data => {
             if (data) {
-                document.getElementById('dateEdit').value = data.date;
+                document.getElementById('dateEdit').value = (new Date(data.date)).toISOString().substring(0, 10);
                 document.getElementById('contactEdit').value = data.contact;
                 document.getElementById('callTimeEdit').value = data.callTime;
                 document.getElementById('durationEdit').value = data.duration;
