@@ -16,7 +16,7 @@
 <div th:replace="~{menu-component :: navbar-component}"></div>
 <div th:replace="~{menu-component :: sidebar-component(selectedScreen=${selectedScreen})}"></div>
 
-<div class="w-full h-full pt-[60px]">
+<div class="w-full h-full pt-[60px] overflow-auto">
     <div class="flex justify-between items-center px-8 py-4 bg-white">
         <h1 class="text-xl font-bold text-primary">Propostas</h1>
         <div class="flex items-center w-[540px]">
@@ -135,7 +135,8 @@
 
                     <div class="mx-2">
                         <label for="value" class="text-sm font-semibold">Anexar Arquivo</label> <br>
-                        <input type="file" name="profilePicture" id="file" class="w-full border-2 py-12 cursor-pointer
+                        <input type="file" name="profilePicture" id="file" accept=".pdf"
+                               class="w-full border-2 py-12 cursor-pointer
                     file:block file:text-center
                     file:justify-center file:hover:bg-defaultBg
                     file:duration-300 file:ease-in-out
@@ -226,7 +227,9 @@
 
                 <div class="mx-2">
                     <label for="fileEdit" class="text-sm font-semibold">Anexar Arquivo</label> <br>
-                    <input type="file" name="profilePicture" id="fileEdit" class="w-full border-2 py-12 cursor-pointer
+                    <input type="file" name="profilePicture" id="fileEdit"
+                           accept=".pdf"
+                           class="w-full border-2 py-12 cursor-pointer
                     file:block file:text-center
                     file:justify-center file:hover:bg-defaultBg
                     file:duration-300 file:ease-in-out
