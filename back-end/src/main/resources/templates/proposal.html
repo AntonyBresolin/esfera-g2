@@ -258,6 +258,30 @@
     </form>
 </div>
 
+<div id="deleteProposalModal" class="w-screen h-screen absolute top-0 left-0 hidden" >
+    <div onClick="hideDeleteProposalModal()" id="modalBackDropDelete" class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+    <form action="" class="bg-white pb-4 overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
+          onSubmit="deleteProposal()">
+        <div class="sticky top-0">
+            <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Excluir Proposta </h1>
+            <ion-icon name="close" fontSize='' class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-white-600 duration-150 ease-in-out text-white"
+                      onClick="hideDeleteProposalModal()"></ion-icon>
+        </div>
+        <div class="flex flex-col px-4">
+            <div class="flex items-center justify-center flex-col py-8">
+                <p class="text-xl font-bold">Deseja realmente excluir a proposta selecionada?</p>
+                <p class="text-sm text-gray-600">Essa ação não poderá ser desfeita.</p>
+            </div>
+            <div class="flex justify-end items-center w-full my-4">
+                <button type="button" class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold mx-4 hover:bg-gray-300 duration-150 ease-in-out cursor-pointer"
+                        onClick="hideDeleteProposalModal()">Cancelar</button>
+                <input type="submit" class="bg-red-700 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-900 duration-150 ease-in-out cursor-pointer" value="Excluir" />
+            </div>
+        </div>
+    </form>
+</div>
+
+
 <button class="fixed bottom-10 right-10 " onClick="handleCloseAddProposal()">
     <svg xmlns="http://www.w3.org/2000/svg"
          class="h-16 w-16 text-white bg-purple-highlight p-2 rounded-2xl hover:bg-[#5f04c4] duration-150 ease-in-out"
