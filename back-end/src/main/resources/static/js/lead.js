@@ -211,6 +211,31 @@ async function fetchSearchLeadByClientCpfCnpj(page) {
         .catch(error => console.error('Error:', error));
 }
 
+async function fetchSearchClientByCpfCnpj() {
+    const cpfCnpj = document.getElementById('cpfCnpjSearchByCPF').value;
+
+    await fetch(`http://localhost:8080/client/cpf/`+cpfCnpj, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Limpar as opções anteriores
+            const clientSelect = document.getElementById('clientSelect');
+            clientSelect.innerHTML = '';
+
+            data.forEach(client => {
+                const option = document.createElement('option');
+                option.value = client.idClient;
+                option.textContent = client.name;
+                clientSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Erro ao buscar nome do cliente:', error));
+}
+
 
 function updatePaginationSearch(pageInfo) {
     const totalPages = pageInfo.totalPages;

@@ -87,7 +87,7 @@
                     <div class="w-50 mx-2 flex justify-between items-center">
                         <!-- Div flexível para alinhar horizontalmente -->
                         <div>
-                            <label for="cpfCnpjSearchByCPF" class="text-sm font-semibold">CPF/CNPJ</label> <br>
+                            <label for="cpfCnpjSearchByCPF" class="text-sm font-semibold">CPF/CNPJ<span class="text-red-600">*</span></label> <br>
                             <input type="number" name="cpfCnpjSearchByCPF" id="cpfCnpjSearchByCPF"
                                    placeholder="CPF/CNPJ do cliente"
                                    class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
@@ -98,16 +98,16 @@
                         </div>
                     </div>
                     <div class="w-80">
-                        <label for="clientSelect" class="text-sm font-semibold">Selecione o cliente</label> <br>
-                        <select name="clientSelect" id="clientSelect"
+                        <label for="clientSelect" class="text-sm font-semibold">Selecione o cliente<span class="text-red-600">*</span></label> <br>
+                        <select name="clientSelect" id="clientSelect" required
                                 class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px] mr-2">
                         </select>
                     </div>
                 </div>
                 <div class="flex justify-between py-2">
                     <div class="w-full mx-2">
-                        <label for="result" class="text-sm font-semibold">Resultado</label><br>
-                        <select name="result" id="result" placeholder="Escolha a solução"
+                        <label for="result" class="text-sm font-semibold">Resultado<span class="text-red-600">*</span></label><br>
+                        <select name="result" id="result" placeholder="Escolha a solução" required
                                 class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
                             <option value="1">Atendeu</option>
                             <option value="2">Desligou</option>
@@ -118,8 +118,8 @@
                 </div>
                 <div class="flex justify-between py-2">
                     <div class="w-full mx-2">
-                        <label for="date" class="text-sm font-semibold">Data da Ligação</label> <br>
-                        <input type="date" name="date" id="date" placeholder="Data da Ligacao"
+                        <label for="date" class="text-sm font-semibold">Data da Ligação<span class="text-red-600">*</span></label> <br>
+                        <input type="date" name="date" id="date" placeholder="Data da Ligacao" required
                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
                     </div>
                     <div class="w-full mx-2">
