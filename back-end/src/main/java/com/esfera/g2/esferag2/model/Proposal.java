@@ -24,6 +24,7 @@ public class Proposal {
     @Column(nullable = false)
     private String description;
 
+    @Column(length = 209715200)
     private byte[] file;
 
     @ManyToOne
