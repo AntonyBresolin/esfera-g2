@@ -74,7 +74,7 @@
     <div id="pagination"
          class="sticky bottom-0 w-full bg-gray-200 py-2 flex items-center justify-between shadow-sm"></div>
     <div id="cadLead" class="w-screen h-screen hidden absolute top-0 left-0">
-        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <div onClick="handleCloseAddLead()" class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
         <form action="" method="post"
               class="bg-white w-[760px] h-[600px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg "
               onSubmit="fetchAddLead()">
@@ -161,7 +161,7 @@
 
 
     <div id="editLead" class="w-screen h-screen hidden absolute top-0 left-0">
-        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <div onClick="handleCloseEditLead()" class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
 
         <form action="" method="put"
               class="bg-white w-[750px] h-[660px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg "
@@ -176,7 +176,7 @@
                         <label for="clientIdEdit" class="text-sm font-semibold">ID do Cliente</label> <br>
                         <input type="number" name="clientIdEdit" id="clientIdEdit" placeholder="ID do cliente"
                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-gray-300 w-full text-gray-500"
-                               readonly>
+                               required>
                     </div>
                     <div>
                         <label for="cpfCnpjEdit" class="text-sm font-semibold">CPF/CNPJ</label> <br>

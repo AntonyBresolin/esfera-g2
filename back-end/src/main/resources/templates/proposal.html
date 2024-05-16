@@ -74,7 +74,7 @@
     <div id="pagination"
          class="sticky bottom-0 w-full bg-gray-200 py-2 flex items-center justify-between shadow-sm"></div>
     <div id="cadProposal" class="w-screen h-screen absolute top-0 left-0 hidden">
-        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <div onClick="handleCloseAddProposal()" class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
         <form action="" method="post"
               class="bg-white w-[1000px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
               onSubmit="fetchAddProposal(event)">
@@ -168,7 +168,7 @@
     </div>
 </div>
 <div id="editProposal" class="w-screen h-screen absolute top-0 left-0 hidden">
-    <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+    <div onClick="handleCloseEditProposal()" class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
 
     <form action="" method="post"
           class="bg-white w-[1000px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
