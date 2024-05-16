@@ -373,7 +373,7 @@
         <div onClick="handleCloseImportClientData()"
              class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
         <form action="" method="post"
-              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
+              class="bg-white w-[500px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg flex flex-col justify-between"
               onSubmit="fetchImportClientData(event)">
             <div class="sticky top-0">
                 <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Importar Dados </h1>
@@ -381,10 +381,25 @@
                           class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-white-600 duration-150 ease-in-out text-white"
                           onClick="handleCloseImportClientData()"></ion-icon>
             </div>
-            <div class="flex flex-col">
-                <input type="file" id="fileInput" accept=".csv" class="">
-            </div>
-            <div class="float-right py-2 px-2">
+                <div class="mx-2 py-4" id="fileDiv">
+                    <label for="fileInput" class="text-lg font-semibold">Anexar Arquivo <span class="text-emerald-600">.csv</span>:</label> <br>
+                    <input type="file" name="profilePicture" id="fileInput" accept=".csv"
+                           class="w-full border-2 py-12 cursor-pointer
+                    file:block file:text-center
+                    file:justify-center file:hover:bg-defaultBg
+                    file:duration-300 file:ease-in-out
+                    file:mx-auto file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-violet-50 file:text-violet-700
+                    hover:file:bg-violet-100"/>
+                </div>
+            <!-- Loading spinner -->
+                <div id="loadingSpinner" class="hidden flex flex-col items-center justify-center w-full h-full mt-8 mb-4">
+                    <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-purple-500"></div>
+                    <p class="mt-4 text-lg font-semibold text-black animate-pulse">Importando clientes...</p>
+                </div>
+            <div class="py-2 px-2 w-full flex justify-end">
                 <button type="submit"
                         class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold">Importar
                 </button>
@@ -392,6 +407,7 @@
                         onClick="handleCloseImportClientData()">Cancelar
                 </button>
             </div>
+
         </form>
     </div>
 

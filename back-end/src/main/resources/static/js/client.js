@@ -14,31 +14,30 @@ let idGeralClient;
 
 window.onload = async function () {
     var userId = localStorage.getItem('userId');
-        if (userId) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/user/' + userId, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        var userData = JSON.parse(xhr.responseText);
-                        var userNameDisplay = document.getElementById('userNameDisplay');
-                        var userRoleDisplay = document.getElementById('userRoleDisplay');
-                        if (userNameDisplay && userRoleDisplay) {
-                            userNameDisplay.textContent = userData.name;
-                            userRoleDisplay.textContent = userData.role;
-                        } else {
-                            console.error('Elemento com ID "userNameDisplay" ou "userRoleDisplay" não encontrado.');
-                        }
+    if (userId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/user/' + userId, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var userData = JSON.parse(xhr.responseText);
+                    var userNameDisplay = document.getElementById('userNameDisplay');
+                    var userRoleDisplay = document.getElementById('userRoleDisplay');
+                    if (userNameDisplay && userRoleDisplay) {
+                        userNameDisplay.textContent = userData.name;
+                        userRoleDisplay.textContent = userData.role;
                     } else {
-                        console.error('Erro ao obter dados do usuário: ' + xhr.status);
+                        console.error('Elemento com ID "userNameDisplay" ou "userRoleDisplay" não encontrado.');
                     }
+                } else {
+                    console.error('Erro ao obter dados do usuário: ' + xhr.status);
                 }
-            };
-            xhr.send();
-        }
+            }
+        };
+        xhr.send();
+    }
     await fetchAllClients(currentPage);
 }
-
 
 
 function fooSelected() {
@@ -217,12 +216,18 @@ function handleCloseImportClientData() {
 async function fetchImportClientData() {
     event.preventDefault();
 
+
     const formData = new FormData();
     const fileInput = document.getElementById('fileInput');
     if (!fileInput.files[0]) {
         alert('Selecione um arquivo para importar!');
         return;
     }
+    let loading = document.getElementById('loadingSpinner');
+    let fileDiv = document.getElementById('fileDiv');
+    loading.classList.toggle('hidden');
+    fileDiv.classList.toggle('hidden');
+
 
     formData.append('file', fileInput.files[0]);
 
@@ -230,12 +235,16 @@ async function fetchImportClientData() {
         method: 'POST',
         body: formData
     })
-        .then(response => alert("Dados importados com sucesso!"))
+        .then(response =>
+                alert("Dados importados com sucesso!")
+        )
         .catch(error => {
             alert("Erro ao importar dados!");
             console.error('Error:', error)
         })
         .finally(() => {
+                loading.classList.toggle('hidden');
+                fileDiv.classList.toggle('hidden');
                 document.getElementById('fileInput').value = '';
                 handleCloseImportClientData();
                 fetchAllClients(currentPage);
@@ -264,7 +273,7 @@ async function deleteClient() {
                     warningTitle.classList.remove('bg-red-200');
                     warning.classList.toggle('hidden');
                 }, 3000);
-            } else if(response.status === 200) {
+            } else if (response.status === 200) {
                 warning.classList.toggle('hidden');
                 warningTitle.classList.add('bg-green-200');
                 warningMessage.innerHTML = 'Cliente excluído com sucesso.';
@@ -318,7 +327,7 @@ async function deleteSelectedClients() {
                 warningTitle.classList.remove('bg-green-200');
                 warning.classList.toggle('hidden');
             }, 3000);
-        } else if(response.status === 409) {
+        } else if (response.status === 409) {
             const errorMessage = await response.text();
             warning.classList.toggle('hidden');
             warningTitle.classList.add('bg-red-200');
