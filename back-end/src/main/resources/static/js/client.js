@@ -122,7 +122,6 @@ async function fetchAllClients(page) {
 }
 
 function updatePagination(pageInfo) {
-    console.log(pageInfo);
     const totalPages = pageInfo.totalPages;
     const currentPage = pageInfo.number;
     const paginationElement = document.getElementById('pagination');
@@ -145,7 +144,7 @@ async function fetchAddClient(event) {
             cpfCnpj: document.getElementById('cpf').value,
             company: document.getElementById('company').value,
             role: document.getElementById('role').value,
-            date: 33333333,
+            date: document.getElementById('date').value,
         },
         contact: [
             {
@@ -187,6 +186,11 @@ async function fetchAddClient(event) {
         }
     };
 
+    if (!validarDocumento(data.client.cpfCnpj)) {
+        alert('CPF ou CNPJ inválido!');
+        return;
+    }
+
     await fetch('http://localhost:8080/client-address-contact/add', {
         method: 'POST',
         headers: {
@@ -197,6 +201,7 @@ async function fetchAddClient(event) {
         .then(() => {
             alert('Cliente cadastrado com sucesso!');
             handleCloseAddCliente();
+            clearClientCadFields();
             fetchAllClients(currentPage);
         })
         .catch((error) => {
@@ -236,7 +241,7 @@ async function fetchImportClientData() {
         body: formData
     })
         .then(response =>
-                alert("Dados importados com sucesso!")
+            alert("Dados importados com sucesso!")
         )
         .catch(error => {
             alert("Erro ao importar dados!");
@@ -375,6 +380,24 @@ function clearClientEditFields() {
     document.getElementById('countryEdit').value = '';
 }
 
+function clearClientCadFields() {
+    document.getElementById('name').value = '';
+    document.getElementById('cpf').value = '';
+    document.getElementById('company').value = '';
+    document.getElementById('role').value = '';
+    document.getElementById('celular').value = '';
+    document.getElementById('telefone').value = '';
+    document.getElementById('whatsapp').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('zipCode').value = '';
+    document.getElementById('street').value = '';
+    document.getElementById('number').value = '';
+    document.getElementById('state').value = '';
+    document.getElementById('city').value = '';
+    document.getElementById('country').value = '';
+
+}
+
 function getElementsEditClient(idClient) {
     fetch(`http://localhost:8080/client-address-contact/${idClient}`)
         .then(response => {
@@ -390,6 +413,7 @@ function getElementsEditClient(idClient) {
                 document.getElementById('cpfEdit').value = data.client.cpfCnpj;
                 document.getElementById('companyEdit').value = data.client.company;
                 document.getElementById('roleEdit').value = data.client.role;
+                document.getElementById('dateEdit').value = (new Date(data.client.date)).toISOString().substring(0, 10);
                 // Considerar verificar se cada contato existe
                 document.getElementById('celularEdit').value = data.contact[0]?.data || '';
                 document.getElementById('telefoneEdit').value = data.contact[1]?.data || '';
@@ -417,7 +441,7 @@ function fetchEditClient(event) {
             cpfCnpj: document.getElementById('cpfEdit').value,
             company: document.getElementById('companyEdit').value,
             role: document.getElementById('roleEdit').value,
-            date: 33333333,
+            date: document.getElementById('dateEdit').value,
         },
         contact: [
             {
@@ -521,3 +545,81 @@ function showUniqueDeleteClientModal(idClient) {
 
     sessionStorage.setItem('idClientToDel', idClient);
 }
+
+
+/*
+    Validadores
+ */
+
+function validarDocumento(documento) {
+    documento = documento.replace(/[^\d]+/g, ''); // Remove caracteres não numéricos
+
+    if (documento.length === 11) {
+        return validaCPF(documento);
+    } else if (documento.length === 14) {
+        return validaCNPJ(documento);
+    } else {
+        return false; // Não é CPF nem CNPJ
+    }
+}
+
+function validaCPF(cpf) {
+    if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) {
+        return false;
+    }
+
+    let soma = 0;
+    let resto;
+
+    for (let i = 1; i <= 9; i++) {
+        soma += parseInt(cpf[i - 1]) * (11 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf[9])) return false;
+
+    soma = 0;
+    for (let i = 1; i <= 10; i++) {
+        soma += parseInt(cpf[i - 1]) * (12 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf[10])) return false;
+
+    return true;
+}
+
+function validaCNPJ(cnpj) {
+    if (cnpj.length !== 14 || !!cnpj.match(/(\d)\1{13}/)) {
+        return false;
+    }
+
+    let tamanho = cnpj.length - 2;
+    let numeros = cnpj.substring(0, tamanho);
+    let digitos = cnpj.substring(tamanho);
+    let soma = 0;
+    let pos = tamanho - 7;
+
+    for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+    }
+
+    let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+    if (resultado !== parseInt(digitos.charAt(0))) return false;
+
+    tamanho = tamanho + 1;
+    numeros = cnpj.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+    for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+    }
+
+    resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+    if (resultado !== parseInt(digitos.charAt(1))) return false;
+
+    return true;
+}
+

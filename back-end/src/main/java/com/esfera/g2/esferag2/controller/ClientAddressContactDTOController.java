@@ -200,6 +200,7 @@ public class ClientAddressContactDTOController {
         client.setCpfCnpj(clientAddressContactDTO.getClient().getCpfCnpj());
         client.setCompany(clientAddressContactDTO.getClient().getCompany());
         client.setRole(clientAddressContactDTO.getClient().getRole());
+        client.setDate(clientAddressContactDTO.getClient().getDate());
         clientRepository.save(client);
 
         Address address = addressRepository.findByClient(client).get(0);
