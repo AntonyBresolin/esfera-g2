@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Esfera pró soluções</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../style/nav.css">
+    <link rel="stylesheet" href="../style/home.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script th:src="@{/js/main.js}" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-[#DCDCDC] flex overflow-hidden h-screen w-screen">
+    <div th:replace="~{menu-component :: navbar-component}"></div>
+    <div th:replace="~{menu-component :: sidebar-component(selectedScreen=${selectedScreen})}"></div>
+
+    <div class="w-[83.5vw] h-full absolute mt-[61px] ml-[16.5vw] top-0">
+        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <!-- MENSAGEM DE MANUTENÇÃO -->
+        <div class="w-full h-full absolute top-0 left-0 z-50 flex justify-center items-center">
+            <div class="bg-gray-50 w-[50%] h-[50%] flex flex-col justify-center items-center rounded-lg shadow-lg px-12">
+                <ion-icon class="text-amber-500 text-4xl" name="warning-sharp"></ion-icon>
+                <h1 class="text-3xl font-bold text-black">Em manutenção</h1>
+                <p class="text-black text-center">Desculpe-nos pelo transtorno, estamos trabalhando para melhorar a sua experiência.</p>
+            </div>
+        </div>
+    </div>
+    <main style="display: flex; flex-direction: column; padding-top: 61px; width: 100%;">
+        <div style="display: flex; justify-content: space-between; width: 100%; flex-grow: 1;">
+            <div style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 5px; margin-bottom: 5px; margin-left: 10px; border: 1px solid black; border-radius: 10px; height: 215px;">
+                <canvas id="lineChart1" style="width: 100%; height: 85%;"></canvas>
+                <p style="text-align: center; height: 15%;">+10% em comparação ao mês anterior</p>
+            </div>
+            <div style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border: 1px solid black; border-radius: 10px; height: 215px;">
+                <canvas id="lineChart2" style="width: 100%; height: 85%;"></canvas>
+                <p style="text-align: center; height: 15%;">+10% em comparação ao mês anterior</p>
+            </div>
+            <div style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 10px; margin-bottom: 5px; margin-left: 5px; border: 1px solid black; border-radius: 10px; height: 215px;">
+                <b><p style="text-align: center; height: 33.3%; line-height: 100px;">Faturamento</p></b>
+                <b><p style="font-size: 50px; text-align: center; height: 33.3%;">R$34.000</p></b>
+                <p style="text-align: center; height: 33.3%;">+10% em comparação ao mês anterior</p>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; width: 100%; flex-grow: 1;">
+            <div style="background-color: white; flex-grow: 1; width: 50%; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 10px; border: 1px solid black; border-radius: 10px; height: 215px;">
+                <canvas id="barChart" style="width: 100%; height: 100%;"></canvas>
+            </div>
+            <div style="background-color: white; flex-grow: 1; width: 50%; margin: 5px 10px; border: 1px solid black; border-radius: 10px; height: 215px; display: flex; justify-content: center;">
+                <canvas id="pieChart" style="width: 80%; height: 80%;"></canvas>
+                <!-- <b><p style="line-height: 200px; margin-left: 10px;">30 Ligações</p></b> -->
+            </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; width: 100%; flex-grow: 1;">
+            <div style="background-color: white; flex-grow: 1; margin-top: 5px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; border: 1px solid black; border-radius: 10px; height: 215px;">
+                <div class="container">
+                    <div class="task-column" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;" ondrop="drop(event, 'todo-list')" ondragover="allowDrop(event)">
+                        <h2>A Fazer</h2>
+                        <ul id="todo-list" class="task-list">
+                        </ul>
+                    </div>
+                    <div class="task-column" ondrop="drop(event, 'inprogress-list')" ondragover="allowDrop(event)">
+                        <h2>Em Progresso</h2>
+                        <ul id="inprogress-list" class="task-list">
+                        </ul>
+                    </div>
+                    <div class="task-column" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;" ondrop="drop(event, 'done-list')" ondragover="allowDrop(event)">
+                        <h2>Concluído</h2>
+                        <ul id="done-list" class="task-list">
+                        </ul>
+                    </div>
+                </div>
+                <button id="add-task-btn" class="btn-add-task">Adicionar Tarefa</button>
+            </div>
+        </div>
+        <div class="task-form" style="display: none;">
+            <b><h2 style="text-align: center;">Adicionar Tarefa</h2></b>
+            <form id="task-form">
+                <label for="task-name">Nome da Tarefa:</label>
+                <input type="text" id="task-name" name="task-name" required>
+                <label for="task-description">Descrição:</label>
+                <textarea id="task-description" name="task-description" rows="4" required></textarea>
+                <label for="due-date">Data de Vencimento:</label>
+                <input type="date" id="due-date" name="due-date" required>
+                <button type="submit">Adicionar</button>
+            </form>
+        </div>
+        <div class="edit-task-form" style="display: none;">
+            <b><h2 style="text-align: center;">Editar Tarefa</h2></b>
+            <form id="edit-task-form">
+                <input type="hidden" id="edit-task-id" name="edit-task-id">
+                <label for="edit-task-name">Nome da Tarefa:</label>
+                <input type="text" id="edit-task-name" name="edit-task-name" required>
+                <label for="edit-task-description">Descrição:</label>
+                <textarea id="edit-task-description" name="edit-task-description" rows="4" required></textarea>
+                <label for="edit-due-date">Data de Vencimento:</label>
+                <input type="date" id="edit-due-date" name="edit-due-date" required>
+                <button type="button" onclick="submitEditForm()">Salvar</button>
+            </form>
+        </div>
+    </main>
+    <script th:src="@{/js/home.js}" type="text/javascript"></script>
+</body>
+
+</html>

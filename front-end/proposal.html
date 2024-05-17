@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Esfera pró soluções</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="./main.js"></script>
+  <link rel="stylesheet" href="./nav.css">
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script src="./proposal.js"></script>
+</head>
+
+<body>
+  <div class="bg-[#DCDCDC] flex overflow-hidden h-screen w-scren">
+    <nav class="bg-[#fff] px-4 select-none w-full shadow-sm fixed top-0 z-40 flex justify-between items-center">
+      <div onclick="toggleSidebar()">
+        <ion-icon name="menu" fontSize=""
+          class="text-3xl text-purple-contrast cursor-pointer hover:text-purple-800 ml-[8px]"></ion-icon>
+      </div>
+      <div class="flex justify-end">
+        <div class="flex items-center py-2 ">
+          <div class="flex items-center mr-4 hover:text-slate-600 cursor-pointer text-primary">
+            <ion-icon name="notifications" class="text-2xl"></ion-icon>
+          </div>
+          <div class=" flex items-center mr-4 hover:text-slate-600 cursor-pointer text-primary">
+            <ion-icon name="settings" class="text-2xl"></ion-icon>
+          </div>
+          <div class="flex items-center mr-4 cursor-pointer text-primary hover:text-slate-600 "
+            onclick="toggleDropdown()">
+            <div class="flex flex-col text-center mr-2">
+              <h2 class="font-bold text-xl mb-0 pb-0 capitalize">Fernando Pereira</h2>
+              <p class="text-secondary italic text-xs	mt-0 pt-0 capitalize">Empresas empresas</p>
+            </div>
+            <ion-icon name="person-circle" class="text-[45px]"></ion-icon>
+          </div>
+        </div>
+        <div class="absolute md:mt-[60px] right-10 bg-[#fff] hidden rounded-b-lg shadow-lg py-2 dropdown">
+          <ul class="text-purple-contrast">
+            <a to="/user/configuration"
+              class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
+              <SettingsIcon fontSize="" class="text-2xl mr-4" />
+              <span class="text-black">Configurações de perfil</span>
+            </a>
+            <a to="/login" class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
+              <EmailIcon fontSize="" class="text-2xl mr-4" />
+              <span class="text-black">Configurações de email</span>
+            </a>
+            <a to="/login" class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
+              <GroupsIcon fontSize="" class="text-2xl mr-4" />
+              <span class="text-black">Equipes</span>
+            </a>
+            <a to="/login" class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
+              <TuneIcon fontSize="" class="text-2xl mr-4" />
+              <span class="text-black">Criar serviços</span>
+            </a>
+            <a to="/login" class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
+              <CloudDownloadIcon fontSize="" class="text-2xl mr-4" />
+              <span class="text-black">Importar dados</span>
+            </a>
+            <a to="/login" class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
+              <DeleteIcon fontSize="" class="text-2xl mr-4" />
+              <span class="text-black">Lixeira</span>
+            </a>
+            <a to="/login" class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
+              <LogoutIcon fontSize="" class="text-2xl mr-4" />
+              <span class="text-black">Sair</span>
+            </a>
+            <a to="/login" class="cursor-pointer hover:bg-purple-highlight  p-2 w-48  select-none flex items-center">
+              <QuestionMarkIcon fontSize="" class="text-2xl mr-4" />
+              <span class="text-black">Obter ajuda</span>
+            </a>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class='bg-[#fff] sticky left-0 top-0 h-screen w-1/5 shadow-md ease-in-out duration-150 select-none sidebar'>
+      <nav class='flex flex-col pt-[61px] justify-between h-full'>
+        <div class='flex flex-col items-center px-2 py-2'>
+          <a href="./home.html"
+            class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out '>
+            <ion-icon name="home" fontSize='' class='text-3xl'> </ion-icon>
+            <span class='ml-3'>Dashboard</span>
+          </a>
+          <a href="./client.html"
+            class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out'>
+            <ion-icon name="people" fontSize='' class='text-3xl'> </ion-icon>
+            <span class='ml-3'>Clientes</span>
+          </a>
+          <a href="./proposal.html"
+            class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out bg-purple-contrast text-white'>
+            <ion-icon name="stats-chart" fontSize='' class='text-3xl text-amber'> </ion-icon>
+            <span class='ml-3'>Propostas</span>
+          </a>
+          <a href="./lead.html"
+            class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out'>
+            <ion-icon name="call" fontSize='' class='text-3xl'></ion-icon>
+            <span class='ml-3'>Ligações</span>
+          </a>
+          <a href='./configuration.html'
+            class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out'>
+            <ion-icon name="settings" fontSize='' class='text-3xl'></ion-icon>
+            <span class='ml-3'>Configurações</span>
+          </a>
+        </div>
+        <div>
+          <hr>
+          </hr>
+          <div class='text-[#98A2B3] text-center py-4 hover:text-gray-600 ease-in-out duration-150 cursor-pointer'>
+            <ion-icon name="help-circle" fontSize='' class='text-xl mr-2'></ion-icon>
+            <span class=''>Ajuda</span>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="w-full h-full pt-[60px]">
+      <div class="flex justify-between items-center px-8 py-4 bg-white">
+        <h1 class="text-xl font-bold text-primary">Propostas</h1>
+        <div class="flex items-center w-[540px]">
+          <input type="text" placeholder="Pesquisar"
+            class="w-full bg-[#F0F0F7] px-3 py-2 rounded-full focus:outline-none mr-[-30px] focus:bg-gray-200">
+          <ion-icon name="search-outline" fontSize=''
+            class='text-lg text-black cursor-pointer hover:text-gray-600 duration-150 ease-in-out'></ion-icon>
+        </div>
+        <button
+          class="bg-gray-100 text-black px-4 py-1 rounded-lg flex items-center font-semibold border hover:bg-gray-200 duration-150">
+          <ion-icon name="download" fontSize='' class="text-lg text-black cursor-pointer pr-2"></ion-icon>
+          Exportar</button>
+      </div>
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+        <thead class="text-xs text-primary uppercase bg-[#F9FAFB]">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              ID
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Cliente
+            </th>
+            <th scope="col" class="px-6 py-3">
+              CPF / CNPJ
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Serviço
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Status
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Descrição
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Data
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Valor
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Anexo
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Ações
+            </th>
+          </tr>
+        </thead>
+        <tr class="bg-white border-b hover:bg-gray-50">
+          <td class="px-6">
+            <span class='align-middle inline-block text-primary font-bold'> 1 </span>
+          </td>
+          <td class="px-6">
+            <span class='align-middle inline-block text-primary font-bold'> Antony </span>
+          </td>
+          <td class="px-6">
+            999.999.999-99
+          </td>
+          <td class="px-6">
+            Consultoria
+          </td>
+          <td class="px-6">
+            <div class="flex items-center">
+              <ion-icon name="close-circle" class="text-red-500 text-2xl mr-1" size="small"></ion-icon>
+              Parado
+            </div>
+          </td>
+          <td class="px-6">
+            Lorem
+          </td>
+          <td class="px-6">
+            01/01/2023
+          </td>
+          <td class="px-6">
+            R$ 130,00
+          </td>
+          <td class="px-6">
+            <div
+              class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center w-full cursor-pointer hover:bg-gray-300">
+              <ion-icon name="document-outline" fontSize='' class='text-lg mx-2'></ion-icon>
+              <span class="text-sm">Ver Anexo</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex items
+                  -center">
+              <div
+                class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
+              </div>
+              <div
+                class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
+              </div>
+          </td>
+        </tr>
+        <tr class="bg-white border-b hover:bg-gray-50">
+          <td class="px-6">
+            <span class='align-middle inline-block text-primary font-bold'> 2 </span>
+          </td>
+          <td class="px-6">
+            <span class='align-middle inline-block text-primary font-bold'> Antony </span>
+          </td>
+          <td class="px-6">
+            999.999.999-99
+          </td>
+          <td class="px-6">
+            Consultoria
+          </td>
+          <td class="px-6">
+            <div class="flex items-center">
+              <ion-icon name="time" class="text-blue-500 text-2xl mr-1" size="small"></ion-icon>
+              Acompanhar
+            </div>
+          </td>
+          <td class="px-6">
+            Lorem
+          </td>
+          <td class="px-6">
+            01/01/2023
+          </td>
+          <td class="px-6">
+            R$ 130,00
+          </td>
+          <td class="px-6">
+            <div
+              class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center w-full cursor-pointer hover:bg-gray-300">
+              <ion-icon name="document-outline" fontSize='' class='text-lg mx-2'></ion-icon>
+              <span class="text-sm">Ver Anexo</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex items
+                  -center">
+              <div
+                class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
+              </div>
+              <div
+                class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
+              </div>
+          </td>
+        </tr>
+        <tr class="bg-white border-b hover:bg-gray-50">
+          <td class="px-6">
+            <span class='align-middle inline-block text-primary font-bold'> 3 </span>
+          </td>
+          <td class="px-6">
+            <span class='align-middle inline-block text-primary font-bold'> Antony </span>
+          </td>
+          <td class="px-6">
+            999.999.999-99
+          </td>
+          <td class="px-6">
+            Consultoria
+          </td>
+          <td class="px-6">
+            <div class="flex items-center">
+              <ion-icon name="checkmark-circle" class="text-green-500 text-2xl mr-1" size="small"></ion-icon>
+              Fechado
+            </div>
+          </td>
+          <td class="px-6">
+            Lorem
+          </td>
+          <td class="px-6">
+            01/01/2023
+          </td>
+          <td class="px-6">
+            R$ 130,00
+          </td>
+          <td class="px-6">
+            <div
+              class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center w-full cursor-pointer hover:bg-gray-300">
+              <ion-icon name="document-outline" fontSize='' class='text-lg mx-2'></ion-icon>
+              <span class="text-sm">Ver Anexo</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex items
+                  -center">
+              <div
+                class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
+              </div>
+              <div
+                class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
+              </div>
+          </td>
+        </tr>
+        <tr class="bg-white border-b hover:bg-gray-50">
+          <td class="px-6">
+            <span class='align-middle inline-block text-primary font-bold'> 4 </span>
+          </td>
+          <td class="px-6">
+            <span class='align-middle inline-block text-primary font-bold'> Antony </span>
+          </td>
+          <td class="px-6">
+            999.999.999-99
+          </td>
+          <td class="px-6">
+            Consultoria
+          </td>
+          <td class="px-6">
+            <div class="flex items-center">
+              <ion-icon name="close-circle" class="text-red-500 text-2xl mr-1" size="small"></ion-icon>
+              Parado
+            </div>
+          </td>
+          <td class="px-6">
+            Lorem
+          </td>
+          <td class="px-6">
+            01/01/2023
+          </td>
+          <td class="px-6">
+            R$ 130,00
+          </td>
+          <td class="px-6">
+            <div
+              class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center w-full cursor-pointer hover:bg-gray-300">
+              <ion-icon name="document-outline" fontSize='' class='text-lg mx-2'></ion-icon>
+              <span class="text-sm">Ver Anexo</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex items
+                  -center">
+              <div
+                class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
+              </div>
+              <div
+                class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
+              </div>
+          </td>
+        </tr>
+        <tr class="bg-white border-b hover:bg-gray-50">
+          <td class="px-6">
+            <span class='align-middle inline-block text-primary font-bold'> 5 </span>
+          </td>
+          <td class="px-6">
+            <span class='align-middle inline-block text-primary font-bold'> Antony </span>
+          </td>
+          <td class="px-6">
+            999.999.999-99
+          </td>
+          <td class="px-6">
+            Consultoria
+          </td>
+          <td class="px-6">
+            <div class="flex items-center">
+              <ion-icon name="briefcase" class="text-orange-400 text-2xl mr-1" size="small"></ion-icon>
+              Negociação
+            </div>
+          </td>
+          <td class="px-6">
+            Lorem
+          </td>
+          <td class="px-6">
+            01/01/2023
+          </td>
+          <td class="px-6">
+            R$ 130,00
+          </td>
+          <td class="px-6">
+            <div
+              class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center w-full cursor-pointer hover:bg-gray-300">
+              <ion-icon name="document-outline" fontSize='' class='text-lg mx-2'></ion-icon>
+              <span class="text-sm">Ver Anexo</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex items
+                  -center">
+              <div
+                class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
+              </div>
+              <div
+                class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300">
+                <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
+              </div>
+          </td>
+        </tr>
+        <tbody>
+      </table>
+      <div id="cadProposal" class="w-screen h-screen absolute top-0 left-0 hidden">
+        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <form action="" method="post"
+          class="bg-white w-[1000px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg">
+          <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Cadastro de Proposta</h1>
+          <ion-icon name="close" fontSize=''
+            class="text-2xl text-black absolute top-2 right-2 cursor-pointer hover:text-white-600 duration-150 ease-in-out text-white"
+            onClick="handleCloseAddProposal()"></ion-icon>
+
+          <div class="flex justify-between py-2">
+            <div class="flex flex-col justify-between">
+              <div class="flex justify-between">
+                <div class="w-full mx-2 h-full">
+                  <label for="name" class="text-sm font-semibold">Nome</label> <br>
+                  <input type="text" name="name" id="name" placeholder="Nome do cliente"
+                    class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                  <label for="date" class="text-sm font-semibold">Data de Conclusão</label> <br>
+                  <input type="date" name="date" id="date" placeholder="Data da proposta"
+                    class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                  <label for="value" class="text-sm font-semibold">Valores</label> <br>
+                  <input type="text" name="value" id="value" placeholder="R$ 9.999,99"
+                    class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                </div>
+                <div class="w-full mx-2 full">
+                  <label for="soluction" class="text-sm font-semibold">Tipo de Solução</label><br>
+                  <select name="soluction" id="soluction" placeholder="Escolha a solução"
+                    class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                    <option value="1">Acompanhamento</option>
+                    <option value="2">Acompanhamento</option>
+                    <option value="3">Consultoria</option>
+                    <option value="4">Treinamento</option>
+                  </select>
+                  <label for="status" class="text-sm font-semibold">Status da Proposta</label><br>
+                  <select name="status" id="status" placeholder="Escolha o Status"
+                    class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                    <option value="1">Negociação</option>
+                    <option value="2">Parado</option>
+                    <option value="3">Fechado</option>
+                    <option value="4">Acompanhar</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mx-2">
+                <label for="value" class="text-sm font-semibold">Anexar Arquivo</label> <br>
+                <input type="file" name="profilePicture" id="profilePicture" class="w-full border-2 py-12 cursor-pointer 
+                    file:block file:text-center 
+                    file:justify-center file:hover:bg-defaultBg 
+                    file:duration-300 file:ease-in-out 
+                    file:mx-auto file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-violet-50 file:text-violet-700
+                    hover:file:bg-violet-100" />
+              </div>
+            </div>
+            <div class="w-full mx-2">
+              <label for="description" class="text-sm font-semibold">Descrição da Proposta</label> <br>
+              <textarea placeholder="Informações da proposta" name="description" id="description"
+                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 hover:bg-gray-200 duration-150 w-[450px] h-[400px]"></textarea>
+            </div>
+          </div>
+
+          <div class="flex justify-between py-2">
+            <div class="float-right py-2 flex mx-2 ml-auto">
+              <input type="submit"
+                class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold cursor-pointer mr-2"
+                value="Salvar">
+              <div class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold cursor-pointer"
+                onClick="handleCloseAddProposal()">Cancelar</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="fixed bottom-10 right-10 " onClick="handleCloseAddProposal()">
+    <svg xmlns="http://www.w3.org/2000/svg"
+      class="h-16 w-16 text-white bg-purple-highlight p-2 rounded-2xl hover:bg-[#5f04c4] duration-150 ease-in-out"
+      fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+    </svg>
+  </button>
+</body>
+
+</html>
