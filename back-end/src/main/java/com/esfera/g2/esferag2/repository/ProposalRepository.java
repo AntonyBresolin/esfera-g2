@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface ProposalRepository extends JpaRepository<Proposal, Long> {
-    Optional<Proposal> findByIdLeadIdLead(Long leadId);
+    Boolean existsByIdLeadIdLead(Long leadId);
     Page<Proposal> findAll(Pageable pageable);
     Page<Proposal> findByIdLeadIdClientNameContainingIgnoreCase(String name, Pageable pageable);
 }

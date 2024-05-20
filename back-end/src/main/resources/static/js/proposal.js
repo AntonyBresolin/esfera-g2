@@ -14,28 +14,28 @@ let sortBy = 'idProposal'; // Ordenação padrão
 
 window.onload = async function () {
     var userId = localStorage.getItem('userId');
-        if (userId) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/user/' + userId, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        var userData = JSON.parse(xhr.responseText);
-                        var userNameDisplay = document.getElementById('userNameDisplay');
-                        var userRoleDisplay = document.getElementById('userRoleDisplay');
-                        if (userNameDisplay && userRoleDisplay) {
-                            userNameDisplay.textContent = userData.name;
-                            userRoleDisplay.textContent = userData.role;
-                        } else {
-                            console.error('Elemento com ID "userNameDisplay" ou "userRoleDisplay" não encontrado.');
-                        }
+    if (userId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/user/' + userId, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var userData = JSON.parse(xhr.responseText);
+                    var userNameDisplay = document.getElementById('userNameDisplay');
+                    var userRoleDisplay = document.getElementById('userRoleDisplay');
+                    if (userNameDisplay && userRoleDisplay) {
+                        userNameDisplay.textContent = userData.name;
+                        userRoleDisplay.textContent = userData.role;
                     } else {
-                        console.error('Erro ao obter dados do usuário: ' + xhr.status);
+                        console.error('Elemento com ID "userNameDisplay" ou "userRoleDisplay" não encontrado.');
                     }
+                } else {
+                    console.error('Erro ao obter dados do usuário: ' + xhr.status);
                 }
-            };
-            xhr.send();
-        }
+            }
+        };
+        xhr.send();
+    }
     await fetchAllProposals(currentPage);
     await fetchAllStatusProposals();
 }
@@ -59,8 +59,8 @@ async function fetchAllProposals(page) {
 async function fetchSearchProposalByClientName(page) {
     const name = document.getElementById('searchProposal').value;
     await fetch(`http://localhost:8080/proposal/search/${name}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
-            method: 'GET',
-        })
+        method: 'GET',
+    })
         .then(response => response.json())
         .then(data => {
             listProposals(data.content);
@@ -99,7 +99,6 @@ function updatePaginationSearch(pageInfo) {
     }
 
 }
-
 function listProposals(proposals) {
     let table = document.getElementById('tableProposals');
     let tbody = table.getElementsByTagName('tbody')[0];
@@ -108,16 +107,15 @@ function listProposals(proposals) {
         let tr = document.createElement('tr');
         tr.className = 'bg-white border-b hover:bg-gray-50';
         let dataFormatada = new Date(data.proposalDate).toLocaleDateString();
-        // Verificar se as propriedades necessárias estão definidas
+
         const idProposal = data.idProposal ? data.idProposal : '';
         const clientName = data.idLead ? data.idLead.idClient.name : '';
-        const clientCpfCnpj = data.idLead ? data.idLead.idClient.cpfCnpj: '';
+        const clientCpfCnpj = data.idLead ? data.idLead.idClient.cpfCnpj : '';
         const service = data.service ? data.service : '';
         const description = data.description ? data.description : '';
-        //const date = data.proposalDate ? data.proposalDate : '';
         const value = data.value ? data.value : '';
         const status = data.idStatusProposal ? data.idStatusProposal.name : '';
-        const file = data.file ? data.file : '';
+        const hasFile = data.file ? true : false;
 
         tr.innerHTML = `
             <td class="px-6">
@@ -131,12 +129,12 @@ function listProposals(proposals) {
             <td class="px-6">${dataFormatada}</td>
             <td class="px-6">${value}</td>
             <td class="px-6">
-            <a href="${file}"
-               target="_blank"> </a>
-                <div class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center w-full cursor-pointer hover:bg-gray-300">
-                    <ion-icon name="document-outline" fontSize='' class='text-lg mx-2'></ion-icon>
-                    <span class="text-sm">Ver Anexo</span>
-                </div>
+                ${hasFile ? `<a onclick="downloadFile('${idProposal}', '${idProposal}')">
+                    <div class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center w-full cursor-pointer hover:bg-gray-300">
+                        <ion-icon name="document-outline" fontSize='' class='text-lg mx-2'></ion-icon>
+                        <span class="text-sm">Download Anexo</span>
+                    </div>
+                </a>` : 'Sem Anexo'}
             </td>
             <td>
                 <div class="flex items-center">
@@ -146,7 +144,7 @@ function listProposals(proposals) {
                         <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
                     </div>
                     <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
-                        onClick="deleteProposal(${idProposal})"
+                        onClick="showDeleteProposalModal(${idProposal})"
                     >
                         <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
                     </div>
@@ -158,28 +156,35 @@ function listProposals(proposals) {
 }
 
 
+
 async function fetchAddProposal() {
     event.preventDefault();
+    const fileInput = document.getElementById('file');
+    const file = fileInput.files[0]; // Obtém o primeiro arquivo selecionado
+
     const data = {
-        idLead: {
-            idLead: document.getElementById('idLead').value,
-        },
-        idStatusProposal: {
-            idStatusProposal: document.getElementById('status').value,
-        },
+        idLead: document.getElementById('idLead').value,
+        idStatusProposal: document.getElementById('status').value,
         service: document.getElementById('service').value,
         proposalDate: document.getElementById('date').value,
         value: document.getElementById('value').value,
         description: document.getElementById('description').value,
-        file: document.getElementById('file').value,
-    }
+    };
+
+    const formData = new FormData(); // Cria um objeto FormData
+    formData.append('idLead', data.idLead);
+    formData.append('idStatusProposal', data.idStatusProposal);
+    formData.append('service', data.service);
+    formData.append('completionDate', data.proposalDate);
+    formData.append('value', data.value);
+    formData.append('description', data.description);
+    formData.append('file', file);
+    formData.append('idUser', localStorage.getItem('userId'));
+
 
     await fetch(`http://localhost:8080/proposal`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        body: formData
     })
         .then(() => {
             alert('Proposta cadastrada com sucesso!');
@@ -210,9 +215,9 @@ async function fetchSearchProposalByName() {
 }
 
 
-
 async function deleteProposal(id) {
-    await fetch(`http://localhost:8080/proposal/${id}`, {
+event.preventDefault();
+    await fetch(`http://localhost:8080/proposal/${sessionStorage.getItem("idProposalToDel")}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -221,6 +226,7 @@ async function deleteProposal(id) {
         .then(() => {
             alert('Proposta excluída com sucesso!');
             fetchAllProposals(currentPage);
+            hideDeleteProposalModal()
         })
         .catch((error) => {
             alert('Erro ao excluir Proposta!');
@@ -278,7 +284,7 @@ function getElementsEditProposal(id) {
         .then(data => {
             if (data && data.idLead && data.idStatusProposal) {
                 idGeralProposal = data.idProposal;
-                document.getElementById('dateEdit').value = data.proposalDate;
+                document.getElementById('dateEdit').value = (new Date(data.proposalDate)).toISOString().substring(0, 10);
                 document.getElementById('valueEdit').value = data.value;
                 document.getElementById('serviceEdit').value = data.service;
                 document.getElementById('statusEdit').value = data.idStatusProposal.idStatusProposal;
@@ -312,36 +318,112 @@ async function fetchAllStatusProposals() {
 
 async function fetchAddEditProposal(event) {
     event.preventDefault();
-    const id = idGeralProposal;
+    const fileInput = document.getElementById('fileEdit');
+    const file = fileInput.files[0]; // Obtém o primeiro arquivo selecionado
+
     const data = {
-        idLead: {
-            idLead: document.getElementById('idLeadEdit').value,
-        },
-        idStatusProposal: {
-            idStatusProposal: document.getElementById('statusEdit').value,
-        },
+        idProposal: idGeralProposal,
+        idLead: document.getElementById('idLeadEdit').value,
+        idStatusProposal: document.getElementById('statusEdit').value,
         service: document.getElementById('serviceEdit').value,
         proposalDate: document.getElementById('dateEdit').value,
         value: document.getElementById('valueEdit').value,
         description: document.getElementById('descriptionEdit').value,
-        file: document.getElementById('fileEdit').value,
+    };
+
+    const formData = new FormData(); // Cria um objeto FormData
+    formData.append('idProposal', data.idProposal);
+    formData.append('idLead', data.idLead);
+    formData.append('idStatusProposal', data.idStatusProposal);
+    formData.append('service', data.service);
+    formData.append('completionDate', data.proposalDate);
+    formData.append('value', data.value);
+    formData.append('description', data.description);
+    formData.append('idUser', localStorage.getItem('userId'));
+
+    if (file) {
+        formData.append('file', file);
     }
 
-    await fetch(`http://localhost:8080/proposal/${id}`, {
+    await fetch(`http://localhost:8080/proposal/${data.idProposal}`, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        body: formData
     })
         .then(() => {
-            alert('Proposta editada com sucesso!');
-            idGeralProposal = null;
+            alert('Proposta atualizada com sucesso!');
+            clearProposalEditFields();
             handleCloseEditProposal();
             fetchAllProposals(currentPage);
         })
         .catch((error) => {
-            alert('Erro ao editar proposta!');
+            alert('Erro ao atualizar proposta!');
             console.error('Error:', error);
+        });
+}
+
+        function showDeleteProposalModal(id) {
+            sessionStorage.setItem("idProposalToDel", id)
+            document.getElementById('deleteProposalModal').classList.remove('hidden');
+        }
+
+        function hideDeleteProposalModal() {
+            sessionStorage.setItem("idProposalToDel", null)
+            document.getElementById('deleteProposalModal').classList.add('hidden');
+        }
+
+
+
+function exportProposals() {
+    fetch('http://localhost:8080/proposal/export')
+        .then(response => response.json())
+        .then(data => {
+            const csvRows = [];
+            const header = ['ID', 'CLIENTE', 'CPF / CNPJ', 'SERVIÇO', 'STATUS', 'DESCRIÇÃO', 'DATA', 'VALOR'];
+            csvRows.push(header.join(','));
+
+            data.forEach(proposal => {
+                const row = [
+                    proposal.idProposal,
+                    proposal.idLead.idClient.name,
+                    proposal.idLead.idClient.cpfCnpj,
+                    proposal.service,
+                    proposal.idStatusProposal.name,
+                    proposal.description,
+                    new Date(proposal.proposalDate).toLocaleDateString(),
+                    proposal.value
+                ];
+                csvRows.push(row.join(','));
+            });
+
+            const csvData = csvRows.join('\n');
+            const blob = new Blob([csvData], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'proposals.csv';
+            link.click();
+        })
+        .catch(error => console.error('Error:', error));
+}
+function downloadFile(fileId, proposalId) {
+    fetch(`http://localhost:8080/proposal/download/${fileId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao baixar o arquivo');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `proposal_${proposalId}.pdf`;
+            document.body.appendChild(a); // Necessário para Firefox
+            a.click();
+            document.body.removeChild(a); // Limpa o elemento
+            setTimeout(() => window.URL.revokeObjectURL(url), 100); // Aguarda um pouco antes de revogar a URL
+        })
+        .catch(error => {
+            console.error('Erro ao baixar o arquivo:', error);
+            alert('Ocorreu um erro ao tentar baixar o arquivo. Por favor, tente novamente.');
         });
 }

@@ -6,10 +6,10 @@
     <title>Esfera pró soluções</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../style/nav.css">
+    <link rel="stylesheet" href="../style/home.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script th:src="@{/js/main.js}" type="text/javascript"></script>
-    <script th:src="@{/style/nav.css}" type="text/css"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
@@ -17,6 +17,17 @@
     <div th:replace="~{menu-component :: navbar-component}"></div>
     <div th:replace="~{menu-component :: sidebar-component(selectedScreen=${selectedScreen})}"></div>
 
+    <div class="w-[83.5vw] h-full absolute mt-[61px] ml-[16.5vw] top-0">
+        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <!-- MENSAGEM DE MANUTENÇÃO -->
+        <div class="w-full h-full absolute top-0 left-0 z-50 flex justify-center items-center">
+            <div class="bg-gray-50 w-[50%] h-[50%] flex flex-col justify-center items-center rounded-lg shadow-lg px-12">
+                <ion-icon class="text-amber-500 text-4xl" name="warning-sharp"></ion-icon>
+                <h1 class="text-3xl font-bold text-black">Em manutenção</h1>
+                <p class="text-black text-center">Desculpe-nos pelo transtorno, estamos trabalhando para melhorar a sua experiência.</p>
+            </div>
+        </div>
+    </div>
     <main style="display: flex; flex-direction: column; padding-top: 61px; width: 100%;">
         <div style="display: flex; justify-content: space-between; width: 100%; flex-grow: 1;">
             <div style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 5px; margin-bottom: 5px; margin-left: 10px; border: 1px solid black; border-radius: 10px; height: 215px;">
@@ -76,355 +87,21 @@
                 <button type="submit">Adicionar</button>
             </form>
         </div>
+        <div class="edit-task-form" style="display: none;">
+            <b><h2 style="text-align: center;">Editar Tarefa</h2></b>
+            <form id="edit-task-form">
+                <input type="hidden" id="edit-task-id" name="edit-task-id">
+                <label for="edit-task-name">Nome da Tarefa:</label>
+                <input type="text" id="edit-task-name" name="edit-task-name" required>
+                <label for="edit-task-description">Descrição:</label>
+                <textarea id="edit-task-description" name="edit-task-description" rows="4" required></textarea>
+                <label for="edit-due-date">Data de Vencimento:</label>
+                <input type="date" id="edit-due-date" name="edit-due-date" required>
+                <button type="button" onclick="submitEditForm()">Salvar</button>
+            </form>
+        </div>
     </main>
-
-    <style>
-        .container {
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .task-column {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #000000;
-            background-color: #ffffff;
-            height: 213px;
-        }
-
-        .task-list {
-            list-style-type: none;
-            padding: 0;
-            max-height: 165px;
-            overflow-y: auto;
-        }
-
-        .task-list li {
-            font-size: 9px;
-        }
-
-        .task {
-            margin-bottom: 0;
-            padding: 10px;
-            padding-top: 6px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-            cursor: pointer;
-            height: 55px;
-            position: relative;
-        }
-
-        .task-buttons {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-        }
-
-        .task:hover {
-            background-color: #f0f0f0;
-        }
-
-        .btn-add-task {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        .task-form {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .task-form label {
-            display: block;
-            margin-bottom: 10px;
-        }
-        .task-form input[type="text"],
-        .task-form textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        .task-form input[type="date"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        .task-form button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
-    
-    <script>
-        // grafico linhas 1
-
-        var data = {
-            labels: ["Novembro", "Dezembro", "Janeiro", "Fevereiro", "Março", "Abril", "Maio"],
-            datasets: [{
-                label: "Ligações",
-                data: [0, 50, 30, 80, 70, 130, 143],
-                borderColor: "purple",
-                fill: false
-            }]
-        };
-
-        var options = {
-            responsive: true,
-            title: {
-                display: true,
-                text: 'Gráfico de Ligações Mensais'
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        };
-
-        var ctx = document.getElementById("lineChart1").getContext("2d");
-
-        var lineChart1 = new Chart(ctx, {
-            type: 'line',
-            data: data,
-            options: options
-        });
-
-        // grafico linhas 2
-
-        var data = {
-            labels: ["Novembro", "Dezembro", "Janeiro", "Fevereiro", "Março", "Abril", "Maio"],
-            datasets: [{
-                label: "Propostas",
-                data: [0, 15, 30, 65, 52, 70, 77],
-                borderColor: "purple",
-                fill: false
-            }]
-        };
-
-        var options = {
-            responsive: true,
-            title: {
-                display: true,
-                text: 'Gráfico de Propostas Mensais'
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        };
-
-        var ctx = document.getElementById("lineChart2").getContext("2d");
-
-        var lineChart2 = new Chart(ctx, {
-            type: 'line',
-            data: data,
-            options: options
-        });
-
-        // grafico barras
-
-        var data = {
-        labels: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-        datasets: [{
-            label: 'Total de ligações',
-            data: [30, 40, 30, 45, 40, 40, 30],
-            backgroundColor: '#8B008B',
-            borderColor: 'black',
-            borderWidth: 1
-            }]
-        };
-
-        var options = {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        };
-
-        var ctx = document.getElementById('barChart').getContext('2d');
-
-        var barChart = new Chart(ctx, {
-            type: 'bar',
-            data: data,
-            options: options
-        });
-
-        // grafico pizza
-
-        var data = {
-            labels: ['50% Fechado', '30% Em Negociação', '20% Perdido'],
-            datasets: [{
-                data: [15, 9, 6],
-                backgroundColor: [
-                    '#BA55D3',
-                    '#A020F0',
-                    '#8B008B'
-                ]
-            }]
-        };
-
-        var options = {
-            responsive: true,
-            title: {
-                display: true,
-                text: 'Gráfico de Pizza'
-            },
-        };
-
-        var ctx = document.getElementById('pieChart').getContext('2d');
-
-        var pieChart = new Chart(ctx, {
-            type: 'pie',
-            data: data,
-            options: options
-        });
-
-        // gerenciador de tarefas
-
-        const addTaskButton = document.getElementById('add-task-btn');
-        const taskForm = document.querySelector('.task-form');
-
-        addTaskButton.addEventListener('click', () => {
-            taskForm.style.display = 'block';
-        });
-
-        document.addEventListener('click', (event) => {
-            if (!taskForm.contains(event.target) && event.target !== addTaskButton) {
-                taskForm.style.display = 'none';
-            }
-        });
-
-        let draggedTask;
-
-        function allowDrop(event) {
-            event.preventDefault();
-        }
-
-        function drag(event) {
-            draggedTask = event.target;
-        }
-
-        function drop(event, targetListId) {
-            event.preventDefault();
-            const targetList = document.getElementById(targetListId);
-            const rect = targetList.getBoundingClientRect();
-            const offsetY = event.clientY - rect.top;
-            const targetTask = findTaskAtOffset(targetList, offsetY);
-            if (targetTask) {
-                targetList.insertBefore(draggedTask, targetTask);
-            } else {
-                targetList.appendChild(draggedTask);
-            }
-        }
-
-        function findTaskAtOffset(list, offsetY) {
-            const tasks = list.querySelectorAll('.task');
-            for (let i = 0; i < tasks.length; i++) {
-                const rect = tasks[i].getBoundingClientRect();
-                if (offsetY < rect.top + rect.height / 2) {
-                    return tasks[i];
-                }
-            }
-            return null;
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const todoList = document.getElementById("todo-list");
-            const inProgressList = document.getElementById("inprogress-list");
-            const doneList = document.getElementById("done-list");
-
-            addTask(todoList, "Tarefa 1", "Descrição da tarefa 1", "2021-06-30");
-            addTask(todoList, "Tarefa 2", "Descrição da tarefa 2", "2021-06-30");
-            addTask(inProgressList, "Tarefa 3", "Descrição da tarefa 3", "2021-06-30");
-            addTask(doneList, "Tarefa 4", "Descrição da tarefa 4", "2021-06-30");
-
-            const taskFormElement = document.getElementById('task-form');
-            taskFormElement.addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                const taskName = document.getElementById('task-name').value;
-                const taskDescription = document.getElementById('task-description').value;
-                const dueDate = document.getElementById('due-date').value;
-
-                if (taskName && taskDescription && dueDate) {
-                    addTask(todoList, taskName, taskDescription, dueDate);
-                } else {
-                    alert('Preencha todos os campos!');
-                }
-
-                document.querySelector('.task-form').style.display = 'none';
-            });
-        });
-
-        function addTask(list, taskName, taskDescription, dueDate) {
-            const task = document.createElement("li");
-            task.className = "task";
-            task.draggable = true;
-            task.addEventListener("dragstart", drag);
-            task.innerHTML = "<b>" + taskName + "</b>" + "<br>" + taskDescription + "<br>" + dueDate;
-            
-            const editButton = document.createElement("button");
-            editButton.innerText = "Editar";
-            editButton.addEventListener("click", () => editTask(task));
-
-            const space = document.createElement("span");
-            space.innerHTML = "&nbsp;";
-
-            const deleteButton = document.createElement("button");
-            deleteButton.innerText = "Excluir";
-            deleteButton.addEventListener("click", () => deleteTask(task));
-
-            const taskButtons = document.createElement("div");
-            taskButtons.className = "task-buttons";
-            taskButtons.appendChild(editButton);
-            taskButtons.appendChild(space);
-            taskButtons.appendChild(deleteButton);
-
-            task.appendChild(taskButtons);
-            
-            list.appendChild(task);
-        }
-
-        function editTask(task) {
-            alert("Editar: " + task.innerText);
-        }
-
-        function deleteTask(task) {
-            task.remove();
-        }
-    </script>
-
+    <script th:src="@{/js/home.js}" type="text/javascript"></script>
 </body>
 
 </html>
