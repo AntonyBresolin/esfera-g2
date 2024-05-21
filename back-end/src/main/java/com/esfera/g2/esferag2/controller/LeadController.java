@@ -51,6 +51,7 @@ public class LeadController {
                     lead.setDuration(leadDetails.getDuration());
                     lead.setDescription(leadDetails.getDescription());
                     lead.setCallTime(leadDetails.getCallTime());
+                    lead.setResult(leadDetails.getResult());
                     return leadRepository.save(lead);
                 })
                 .orElseThrow();
