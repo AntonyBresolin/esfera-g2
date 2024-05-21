@@ -57,9 +57,9 @@ public class DataInitializer implements CommandLineRunner {
         if (statusProposalRepository.count() == 0) {
             // Dados para StatusProposal
             statusProposalRepository.save(new StatusProposal("Fechado"));
-            statusProposalRepository.save(new StatusProposal("Em andamento"));
-            statusProposalRepository.save(new StatusProposal("Aguardando aprovação"));
-            statusProposalRepository.save(new StatusProposal("Reprovado"));
+            statusProposalRepository.save(new StatusProposal("Parado"));
+            statusProposalRepository.save(new StatusProposal("Acompanhar"));
+            statusProposalRepository.save(new StatusProposal("Negociação"));
 
             System.out.println("StatusProposal dummy scripts OK!");
         }
