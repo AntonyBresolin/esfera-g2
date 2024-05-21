@@ -40,12 +40,6 @@ window.onload = async function () {
     await fetchAllLeads(currentPage);
 }
 
-function selectAllCheckboxes(source) {
-    let checkboxes = document.getElementsByName('foo');
-    for (let checkbox of checkboxes) {
-        checkbox.checked = source.checked;
-    }
-}
 
 function handleCloseAddLead() {
     let addLead = document.getElementById('cadLead');
@@ -62,12 +56,7 @@ function listLeads(leads) {
         let dataFormatada = new Date(data.date).toLocaleDateString();
 
         tr.innerHTML = `
-            <td class="px-4 py-4">
-                <input id="${data.idLead}" type="checkbox"
-                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    name="foo" value="${data.idLead}" />
-                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
-            </td>
+            
             <td class="px-6">
                 <span class='align-middle inline-block text-primary font-bold'> ${data.idLead} </span>
             </td>
@@ -81,7 +70,7 @@ function listLeads(leads) {
             <td class="px-6">${data.contact}</td>
             
             <td>
-                <div class="flex items-center">
+                <div class="flex items-center gap-2">
                     <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
                         onClick="handleCloseEditLead(${data.idLead})"
                     >
