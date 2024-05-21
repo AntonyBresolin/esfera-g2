@@ -116,15 +116,29 @@ function listProposals(proposals) {
         const value = data.value ? data.value : '';
         const status = data.idStatusProposal ? data.idStatusProposal.name : '';
         const hasFile = data.file ? true : false;
+        const statusID = data.idStatusProposal.idStatusProposal;
+
+                    let iconHTML = '';
+                    if (statusID == 1) {
+                        iconHTML = '<ion-icon name="checkmark-circle" class="text-green-500 text-2xl mr-1" size="small" ></ion-icon>';
+                    } else if (statusID == 2) {
+                        iconHTML = '<ion-icon name="close-circle" class="text-red-500 text-2xl mr-1" size="small"></ion-icon>';
+                    } else if (statusID == 3) {
+                        iconHTML = '<ion-icon name="time" class="text-blue-500 text-2xl mr-1" size="small"></ion-icon>';
+                    } else if (statusID == 4) {
+                        iconHTML = '<ion-icon name="briefcase" class="text-orange-400 text-2xl mr-1" size="small"></ion-icon>';
+                    }
+
 
         tr.innerHTML = `
+
             <td class="px-6">
                 <span class='align-middle inline-block text-primary font-bold'>${idProposal}</span>
             </td>
             <td class="px-6">${clientName}</td>
             <td class="px-6">${clientCpfCnpj}</td>
             <td class="px-6">${service}</td>
-            <td class="px-6">${status}</td>
+            <td class="px-6"><div class='flex items-center h-full w-full'> ${iconHTML} ${status}</div></td>
             <td class="px-6">${description}</td>
             <td class="px-6">${dataFormatada}</td>
             <td class="px-6">${value}</td>
