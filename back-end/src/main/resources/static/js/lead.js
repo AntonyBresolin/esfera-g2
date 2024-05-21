@@ -41,6 +41,7 @@ window.onload = async function () {
 }
 
 
+
 function handleCloseAddLead() {
     let addLead = document.getElementById('cadLead');
     addLead.classList.toggle('hidden');
@@ -54,31 +55,30 @@ function listLeads(leads) {
         let tr = document.createElement('tr');
         tr.className = 'bg-white border-b hover:bg-gray-50';
         let dataFormatada = new Date(data.date).toLocaleDateString();
+        let resultIcon = getResultIcon(data.result.result);
 
         tr.innerHTML = `
-            
-            <td class="px-6">
-                <span class='align-middle inline-block text-primary font-bold'> ${data.idLead} </span>
+            <td class="px-6 py-3">
+                <span class='align-middle inline-block text-primary font-bold'>${data.idLead}</span>
             </td>
-        
-            <td class="px-6">${data.idClient.name}</td>
-            <td class="px-6">${data.result.result}</td>
-             <td class="px-6">${data.description}</td>
-             <td class="px-6" >${dataFormatada}</td>
-            <td class="px-6">${data.callTime}</td>
-             <td class="px-6">${data.duration}</td>
-            <td class="px-6">${data.contact}</td>
-            
-            <td>
+            <td class="px-6 py-3">${data.idClient.name}</td>
+            <td class="px-6 py-3 flex items-center gap-2">
+                ${resultIcon}
+                <span>${data.result.result}</span>
+            </td>
+            <td class="px-6 py-3">${data.description}</td>
+            <td class="px-6 py-3">${dataFormatada}</td>
+            <td class="px-6 py-3">${data.callTime}</td>
+            <td class="px-6 py-3">${data.duration}</td>
+            <td class="px-6 py-3">${data.contact}</td>
+            <td class="px-6 py-3">
                 <div class="flex items-center gap-2">
                     <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
-                        onClick="handleCloseEditLead(${data.idLead})"
-                    >
+                        onClick="handleCloseEditLead(${data.idLead})">
                         <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
                     </div>
                     <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
-                        onClick="showDeleteLeadModal(${data.idLead})"
-                    >
+                        onClick="showDeleteLeadModal(${data.idLead})">
                         <ion-icon name="trash" fontSize='' class='text-lg'></ion-icon>
                     </div>
                 </div>
@@ -292,7 +292,7 @@ function getElementsEditLead(id) {
                 document.getElementById('clientIdEdit').value = data.idClient.idClient;
                 document.getElementById('cpfCnpjEdit').value = data.idClient.cpfCnpj;
                 document.getElementById('resultEdit').value = data.result.idLeadResult;
-                idGeralLead = data.idClient.idClient;
+                idGeralLead = data.idLead;
             }
         })
 
@@ -340,11 +340,11 @@ async function fetchAddEditLead() {
         },
         body: JSON.stringify(data)
     })
-        .then(() => {
+        .then((response) => {
             alert('Lead editado com sucesso!');
             idGeralLead = null;
             handleCloseEditLead();
-            fetchAllLeads();
+            fetchAllLeads(0);
         })
         .catch((error) => {
             alert('Erro ao editar lead!');
@@ -396,6 +396,21 @@ async function exportLeads() {
         }
     } catch (error) {
         console.error('Erro ao exportar leads:', error);
+    }
+}
+
+function getResultIcon(result) {
+    switch (result) {
+        case 'Atendido':
+            return '<ion-icon name="checkmark-circle" class="text-green-500 text-2xl"></ion-icon>';
+        case 'Desligado':
+            return '<ion-icon name="close-circle" class="text-red-500 text-2xl"></ion-icon>';
+        case 'Cx. Postal':
+            return '<ion-icon name="help-circle" class="text-blue-500 text-2xl"></ion-icon>';
+        case 'Ocupado':
+            return '<ion-icon name="remove-circle-outline" class="text-orange-500 text-2xl"></ion-icon>';
+        default:
+            return '';
     }
 }
 
