@@ -3,6 +3,7 @@ package com.esfera.g2.esferag2.model;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 @Entity
@@ -94,5 +95,11 @@ public class Client {
         this.company = company;
         this.role = role;
         this.date = date;
+    }
+
+
+    public String getFormattedDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        return formatter.format(this.date);
     }
 }
