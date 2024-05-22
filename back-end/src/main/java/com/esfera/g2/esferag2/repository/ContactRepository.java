@@ -12,4 +12,5 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
     List<Contact> findByClient(Client idClient);
     List<Contact> findAllByClientIn(List<Client> clients);
     List<Contact> findAllByClient(Client client);
+    List<Contact> findContactsByClientIdClient(Long id);
 }
