@@ -62,9 +62,11 @@ function listLeads(leads) {
                 <span class='align-middle inline-block text-primary font-bold'>${data.idLead}</span>
             </td>
             <td class="px-6 py-3">${data.idClient.name}</td>
-            <td class="px-6 py-3 flex items-center gap-2">
-                ${resultIcon}
-                <span>${data.result.result}</span>
+            <td class="px-6 py-3">
+                <div class="flex items-center justify-center gap-2">
+                    ${resultIcon}
+                    <span>${data.result.result}</span>
+                </div>
             </td>
             <td class="px-6 py-3">${data.description}</td>
             <td class="px-6 py-3">${dataFormatada}</td>
@@ -221,8 +223,19 @@ async function fetchSearchClientByCpfCnpj() {
                 option.textContent = client.name;
                 clientSelect.appendChild(option);
             });
+            clientSelect.addEventListener('change', changeContactPhone);
         })
         .catch(error => console.error('Erro ao buscar nome do cliente:', error));
+}
+
+
+async function changeContactPhone() {
+    await fetch(`http://localhost:8080/contact/clientId/${document.getElementById('clientSelect').value}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('contact').value = data.data;
+        })
+        .catch(error => console.error('Erro ao buscar telefone do cliente:', error));
 }
 
 

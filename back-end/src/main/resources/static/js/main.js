@@ -64,6 +64,10 @@ function setShowHelpFlagAndRedirect() {
 
 function toggleDropdown() {
     document.querySelector('.dropdown').classList.toggle('hidden');
+    document.querySelector('#dropdownHeader').classList.toggle('bg-purple-800');
+    document.querySelector('#dropdownMain').classList.toggle('text-white');
+    document.querySelector('#dropdownMain').classList.toggle('hover:text-gray-200');
+    document.querySelector('#userRoleDisplay').classList.toggle('text-white');
 }
 
 const toggleSidebar = () => {
