@@ -151,7 +151,7 @@ function listProposals(proposals) {
                 </a>` : 'Sem Anexo'}
             </td>
             <td>
-                <div class="flex items-center">
+                <div class="flex items-center gap-2">
                     <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
                         onClick="handleCloseEditProposal(${idProposal})"
                     >
