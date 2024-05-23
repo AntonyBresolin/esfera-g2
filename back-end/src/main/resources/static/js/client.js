@@ -71,6 +71,7 @@ function listClients(clients) {
     clients.forEach(data => {
         let tr = document.createElement('tr');
         tr.className = 'bg-white border-b hover:bg-gray-50'
+        tbody.appendChild(tr);
         tr.innerHTML = `
       <td class="px-4 py-4"><input id="${data.client.idClient}" type="checkbox"
       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -84,13 +85,14 @@ function listClients(clients) {
       <td class="px-6">${data.client.cpfCnpj}</td>
       <td class="px-6">${data.contact[3].data}</td>
       <td class="px-6">
-        <a class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center w-full cursor-pointer hover:bg-gray-300"
+      ${data.contact[2].data ? `<a class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center justify-center w-full cursor-pointer hover:bg-gray-300"
         href="https://wa.me/${data.contact[2].data}"
         target="_blank"
         >
-          <ion-icon name="call" fontSize='' class='text-lg mx-2'></ion-icon>
+          <ion-icon name="logo-whatsapp" fontSize='' class='text-lg mx-2'></ion-icon>
           <span class="text-sm">Enviar Mensagem</span>
-        </a>
+        </a>` : `<p class="text-center">Whatsapp não cadastrado</p>`}
+        
       </td>
       <td>
         <div class="flex items-center gap-2">
@@ -107,7 +109,6 @@ function listClients(clients) {
         </div>
       </td>
     `;
-        tbody.appendChild(tr);
     });
 }
 

@@ -24,6 +24,17 @@ public class ContactController {
         return contactRepository.findById(id).orElseThrow();
     }
 
+    @GetMapping("/clientId/{clientId}")
+    public Contact getContactsByClientId(@PathVariable Long clientId) {
+        List<Contact> contacts = contactRepository.findContactsByClientIdClient(clientId);
+            for (Contact contact : contacts) {
+                if (contact.getIdTypeContact().getType().equals("whatsapp")) {
+                    return contact;
+                }
+            }
+        throw new RuntimeException("No whatsapp contact found for client with id " + clientId);
+    }
+
     @PostMapping
     public Contact createContact(@RequestBody Contact contact) {
         return contactRepository.save(contact);
