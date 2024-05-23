@@ -102,7 +102,7 @@ public class ProposalController {
                                    @RequestParam("idUser") Long idUser,
                                    @RequestParam("completionDate") String completionDateStr,
                                    @RequestParam("service") String service,
-                                   @RequestParam("value") String value,
+                                   @RequestParam("value") Double value,
                                    @RequestParam("description") String description,
                                    @RequestParam("idStatusProposal") Long idStatusProposal,
                                    @RequestPart(value = "file", required = false) MultipartFile file) {
@@ -114,13 +114,13 @@ public class ProposalController {
 
                     // Converter a string para Timestamp
                     Timestamp completionDate = Timestamp.valueOf(completionDateStr + " 00:00:00");
-                    double valueTratado = (value.isEmpty() ? Double.parseDouble(value) : 0.0);
+
 
                     proposal.setIdLead(lead);
                     proposal.setIdUser(user);
                     proposal.setProposalDate(completionDate);
                     proposal.setService(service);
-                    proposal.setValue(valueTratado);
+                    proposal.setValue(value);
                     proposal.setDescription(description);
                     proposal.setIdStatusProposal(statusProposal);
 
