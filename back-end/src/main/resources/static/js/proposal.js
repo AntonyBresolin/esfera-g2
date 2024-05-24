@@ -139,7 +139,7 @@ function listProposals(proposals) {
             <td class="px-6 py-3">${clientCpfCnpj}</td>
             <td class="px-6 py-3">${service}</td>
             <td class="px-6 py-3"><div class='flex items-center h-full w-full'> ${iconHTML} ${status}</div></td>
-            <td class="px-6 py-3">${description}</td>
+            <td class="px-6 py-3"><div class="truncate ...">${description}</div></td>
             <td class="px-6 py-3">${dataFormatada}</td>
             <td class="px-6 py-3">${value}</td>
             <td class="px-6 py-3">
@@ -147,7 +147,7 @@ function listProposals(proposals) {
                     
                         <ion-icon name="document-outline" fontSize='' class='text-lg mx-2'></ion-icon>
                         <span class="text-sm">Download Anexo</span>
-                    </div>` : `<p class="text-center">Sem Anexo</p>`}
+                    </div>` : `<p class="">Sem Anexo</p>`}
             </td>
             <td>
                 <div class="flex items-center gap-2">

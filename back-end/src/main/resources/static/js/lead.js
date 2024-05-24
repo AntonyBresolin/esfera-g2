@@ -63,7 +63,7 @@ function listLeads(leads) {
             </td>
             <td class="px-6 py-3">${data.idClient.name}</td>
             <td class="px-6 py-3">
-                <div class="flex items-center justify-center gap-2">
+                <div class="flex items-center gap-2">
                     ${resultIcon}
                     <span>${data.result.result}</span>
                 </div>
