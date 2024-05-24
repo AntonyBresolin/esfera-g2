@@ -132,24 +132,23 @@ function listProposals(proposals) {
 
         tr.innerHTML = `
 
-            <td class="px-6 py-3">
+            <td class="pl-6 py-3">
                 <span class='align-middle inline-block text-primary font-bold'>${idProposal}</span>
             </td>
             <td class="px-6 py-3">${clientName}</td>
             <td class="px-6 py-3">${clientCpfCnpj}</td>
             <td class="px-6 py-3">${service}</td>
             <td class="px-6 py-3"><div class='flex items-center h-full w-full'> ${iconHTML} ${status}</div></td>
-            <td class="px-6 py-3">${description}</td>
+            <td class="px-6 py-3"><div class="truncate ...">${description}</div></td>
             <td class="px-6 py-3">${dataFormatada}</td>
             <td class="px-6 py-3">${value}</td>
             <td class="px-6 py-3">
                 ${hasFile ? `<div class="bg-gray-200 px-2 py-2 rounded-lg text-black font-bold flex items-center justify-center w-full cursor-pointer hover:bg-gray-300" onclick="downloadFile('${idProposal}', '${idProposal}')">
                     
-                        <ion-icon name="document-outline" fontSize='' class='text-lg mx-2'></ion-icon>
-                        <span class="text-sm">Download Anexo</span>
-                    </div>` : `<p class="text-center">Sem Anexo</p>`}
+                        <ion-icon name="document" fontSize='' class='text-lg mx-2'></ion-icon>
+                    </div>` : `<p class="">Sem Anexo</p>`}
             </td>
-            <td>
+            <td class="px-6 py-3">
                 <div class="flex items-center gap-2">
                     <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
                         onClick="handleCloseEditProposal(${idProposal})"
