@@ -21,7 +21,7 @@ public class Proposal {
     @Column(nullable = false)
     private double value;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 5000)
     private String description;
 
     @Column(length = 209715200)
