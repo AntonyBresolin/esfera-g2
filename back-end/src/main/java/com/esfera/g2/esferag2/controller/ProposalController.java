@@ -22,6 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/proposal")
@@ -36,6 +39,32 @@ public class ProposalController {
     @Autowired
     private StatusProposalRepository statusProposalRepository;
 
+    private static final Logger logger = Logger.getLogger(ProposalController.class.getName());
+
+    @GetMapping("/faturamento")
+    public ResponseEntity<Map<String, Object>> getFaturamento() {
+        try {
+            Double totalFaturamento = proposalRepository.sumValue();
+            Double faturamentoMesAnterior = proposalRepository.sumValueLastMonth();
+
+            if (totalFaturamento == null) totalFaturamento = 0.0;
+            if (faturamentoMesAnterior == null) faturamentoMesAnterior = 0.0;
+
+            double crescimentoPercentual = 0;
+            if (faturamentoMesAnterior > 0) {
+                crescimentoPercentual = ((totalFaturamento - faturamentoMesAnterior) / faturamentoMesAnterior) * 100;
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("totalFaturamento", totalFaturamento);
+            response.put("crescimentoPercentual", crescimentoPercentual);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.severe("Erro ao calcular o faturamento: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
     @GetMapping("/export")
     public ResponseEntity<?> exportProposals() {

@@ -17,17 +17,6 @@
     <div th:replace="~{menu-component :: navbar-component}"></div>
     <div th:replace="~{menu-component :: sidebar-component(selectedScreen=${selectedScreen})}"></div>
 
-    <div class="w-[83.5vw] h-full absolute mt-[61px] ml-[16.5vw] top-0">
-        <div class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
-        <!-- MENSAGEM DE MANUTENÇÃO -->
-        <div class="w-full h-full absolute top-0 left-0 z-50 flex justify-center items-center">
-            <div class="bg-gray-50 w-[50%] h-[50%] flex flex-col justify-center items-center rounded-lg shadow-lg px-12">
-                <ion-icon class="text-amber-500 text-4xl" name="warning-sharp"></ion-icon>
-                <h1 class="text-3xl font-bold text-black">Em manutenção</h1>
-                <p class="text-black text-center">Desculpe-nos pelo transtorno, estamos trabalhando para melhorar a sua experiência.</p>
-            </div>
-        </div>
-    </div>
     <main style="display: flex; flex-direction: column; padding-top: 61px; width: 100%;">
         <div style="display: flex; justify-content: space-between; width: 100%; flex-grow: 1;">
             <div style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 5px; margin-bottom: 5px; margin-left: 10px; border: 1px solid black; border-radius: 10px; height: 215px;">
@@ -38,17 +27,17 @@
                 <canvas id="lineChart2" style="width: 100%; height: 85%;"></canvas>
                 <p style="text-align: center; height: 15%;">+10% em comparação ao mês anterior</p>
             </div>
-            <div style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 10px; margin-bottom: 5px; margin-left: 5px; border: 1px solid black; border-radius: 10px; height: 215px;">
+            <div id="faturamento-container" style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 10px; margin-bottom: 5px; margin-left: 5px; border: 1px solid black; border-radius: 10px; height: 215px;">
                 <b><p style="text-align: center; height: 33.3%; line-height: 100px;">Faturamento</p></b>
-                <b><p style="font-size: 50px; text-align: center; height: 33.3%;">R$34.000</p></b>
-                <p style="text-align: center; height: 33.3%;">+10% em comparação ao mês anterior</p>
+                <b><p id="faturamento-total" style="font-size: 50px; text-align: center; height: 33.3%;">R$0.00</p></b>
+                <p id="faturamento-crescimento" style="text-align: center; height: 33.3%;">+0% em comparação ao mês anterior</p>
             </div>
         </div>
         <div style="display: flex; justify-content: space-between; width: 100%; flex-grow: 1;">
             <div style="background-color: white; flex-grow: 1; width: 50%; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 10px; border: 1px solid black; border-radius: 10px; height: 215px;">
                 <canvas id="barChart" style="width: 100%; height: 100%;"></canvas>
             </div>
-            <div style="background-color: white; flex-grow: 1; width: 50%; margin: 5px 10px; border: 1px solid black; border-radius: 10px; height: 215px; display: flex; justify-content: center;">
+            <div style="background-color: white; flex-grow: 1; width: 50%; margin: 5px 10px; margin-left: 5px; border: 1px solid black; border-radius: 10px; height: 215px; display: flex; justify-content: center;">
                 <canvas id="pieChart" style="width: 80%; height: 80%;"></canvas>
                 <!-- <b><p style="line-height: 200px; margin-left: 10px;">30 Ligações</p></b> -->
             </div>
