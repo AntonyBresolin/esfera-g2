@@ -80,7 +80,8 @@ function listClients(clients) {
       <td class="px-6">
         <span class='align-middle inline-block text-primary font-bold'> ${data.client.name} </span>
       </td>
-      <td class="px-6">${data.address.city}</td>
+      
+      <td class="px-6">${data.address.city ? data.address.city : ""}</td>
       <td class="px-6">${data.contact[2].data}</td>
       <td class="px-6">${data.client.cpfCnpj}</td>
       <td class="px-6">${data.contact[3].data}</td>

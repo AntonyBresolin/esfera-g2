@@ -183,7 +183,7 @@ async function fetchAddProposal() {
         description: document.getElementById('description').value,
     };
 
-    const formData = new FormData(); // Cria um objeto FormData
+    const formData = new FormData();
     formData.append('idLead', data.idLead);
     formData.append('idStatusProposal', data.idStatusProposal);
     formData.append('service', data.service);
