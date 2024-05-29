@@ -10,6 +10,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // grafico linhas 1
 
+window.onload = function () {
+    setLeadsByDayOfTheWeak();
+}
+
 var data = {
     labels: ["Novembro", "Dezembro", "Janeiro", "Fevereiro", "Março", "Abril", "Maio"],
     datasets: [{
@@ -80,16 +84,6 @@ var lineChart2 = new Chart(ctx, {
 
 // grafico barras
 
-var data = {
-labels: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-datasets: [{
-    label: 'Total de ligações',
-    data: [30, 40, 30, 45, 40, 40, 30],
-    backgroundColor: '#8B008B',
-    borderColor: 'black',
-    borderWidth: 1
-    }]
-};
 
 var options = {
     scales: {
@@ -101,13 +95,6 @@ var options = {
     }
 };
 
-var ctx = document.getElementById('barChart').getContext('2d');
-
-var barChart = new Chart(ctx, {
-    type: 'bar',
-    data: data,
-    options: options
-});
 
 // grafico pizza
 
@@ -170,7 +157,7 @@ function drop(event, targetListId) {
     const rect = targetList.getBoundingClientRect();
     const offsetY = event.clientY - rect.top;
     const targetTask = findTaskAtOffset(targetList, offsetY);
-    
+
     if (draggedTask && targetTask) {
         targetList.insertBefore(draggedTask, targetTask);
     } else if (draggedTask) {
@@ -189,7 +176,7 @@ function findTaskAtOffset(list, offsetY) {
     return null;
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const todoList = document.getElementById("todo-list");
     const inProgressList = document.getElementById("inprogress-list");
     const doneList = document.getElementById("done-list");
@@ -200,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function() {
     addTask(doneList, "Tarefa 4", "Descrição da tarefa 4", "2021-06-30");
 
     const taskFormElement = document.getElementById('task-form');
-    taskFormElement.addEventListener('submit', function(event) {
+    taskFormElement.addEventListener('submit', function (event) {
         event.preventDefault();
 
         const taskName = document.getElementById('task-name').value;
@@ -285,7 +272,7 @@ function addTask(list, taskName, taskDescription, dueDate) {
     const editButton = document.createElement("button");
     editButton.className = "edit-button";
     editButton.innerText = "Editar";
-    editButton.addEventListener("click", function() {
+    editButton.addEventListener("click", function () {
         openEditForm(task);
     });
 
@@ -294,7 +281,7 @@ function addTask(list, taskName, taskDescription, dueDate) {
 
     const deleteButton = document.createElement("button");
     deleteButton.innerText = "Excluir";
-    deleteButton.addEventListener("click", function() {
+    deleteButton.addEventListener("click", function () {
         deleteTask(task);
     });
 
@@ -305,15 +292,47 @@ function addTask(list, taskName, taskDescription, dueDate) {
     taskButtons.appendChild(deleteButton);
 
     task.appendChild(taskButtons);
-    
+
     list.appendChild(task);
 }
 
-document.getElementById('edit-task-form').addEventListener('submit', function(event) {
+document.getElementById('edit-task-form').addEventListener('submit', function (event) {
     event.preventDefault();
     submitEditForm();
 });
 
 function deleteTask(task) {
     task.remove();
+}
+
+
+async function setLeadsByDayOfTheWeak() {
+    await fetch('http://localhost:8080/lead/graph/leadsweek', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => response.json())
+        .then(data => {
+
+                var ctx = document.getElementById('barChart').getContext('2d');
+                var dataLead = {
+
+                    labels: data.dateLead,
+                    datasets: [{
+                        label: 'Total de ligações',
+                        data: data.leadCount,
+                        backgroundColor: '#8B008B',
+                        borderColor: 'black',
+                        borderWidth: 1
+                    }]
+                };
+
+                var barChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: dataLead,
+                    options: options
+                });
+            }
+        )
 }

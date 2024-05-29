@@ -6,12 +6,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 
 @Repository
 public interface LeadRepository extends JpaRepository<Lead, Long> {
     Boolean existsByIdClientIdClient(Long leadId);
     Page<Lead> findAll(Pageable pageable);
+
+    Long countLeadsByDateBetween(Timestamp start, Timestamp end);
 
     Page<Lead> findLeadsByIdClientNameContainingIgnoreCase(String name, Pageable pageable);
 }

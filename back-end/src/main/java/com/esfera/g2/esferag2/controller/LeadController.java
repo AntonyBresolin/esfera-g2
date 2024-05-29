@@ -1,5 +1,6 @@
 package com.esfera.g2.esferag2.controller;
 
+import com.esfera.g2.esferag2.model.DateLeadForWeak;
 import com.esfera.g2.esferag2.model.Lead;
 import com.esfera.g2.esferag2.repository.LeadRepository;
 import com.esfera.g2.esferag2.repository.ProposalRepository;
@@ -8,6 +9,10 @@ import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 @RestController
 @RequestMapping("/lead")
@@ -81,4 +86,50 @@ public class LeadController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return leadRepository.findLeadsByIdClientNameContainingIgnoreCase(name, pageable);
     }
+
+    @GetMapping("/graph/leadsweek")
+    public DateLeadForWeak getLeadsForWeak() {
+        ArrayList<Long> leads = new ArrayList<>();
+        ArrayList<String> dates = new ArrayList<>();
+
+
+        Timestamp startOfTheDay = new Timestamp(getFirstTimeOfTheDay().getTimeInMillis());
+        Timestamp endOfTheDay = new Timestamp(getLastTimeOfTheDay().getTimeInMillis());
+
+        for (int i = 0; i < 7; i++) {
+            leads.add(leadRepository.countLeadsByDateBetween(startOfTheDay, endOfTheDay));
+            dates.add(startOfTheDay.toString().substring(0, 10));
+
+            startOfTheDay = new Timestamp(startOfTheDay.getTime() + 86400000);
+            endOfTheDay = new Timestamp(endOfTheDay.getTime() + 86400000);
+        }
+
+        return new DateLeadForWeak(leads, dates);
+    }
+
+    private Calendar getFirstTimeOfTheDay(){
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timestamp);
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        return calendar;
+    }
+
+    private Calendar getLastTimeOfTheDay(){
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timestamp);
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+
+        return calendar;
+    }
+
+
 }
