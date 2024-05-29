@@ -1,3 +1,13 @@
+document.addEventListener("DOMContentLoaded", function() {
+    fetch('/proposal/faturamento')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('faturamento-total').innerText = `R$${data.totalFaturamento.toFixed(2)}`;
+            document.getElementById('faturamento-crescimento').innerText = `${data.crescimentoPercentual.toFixed(2)}% em comparação ao mês anterior`;
+        })
+        .catch(error => console.error('Erro ao buscar os dados de faturamento:', error));
+});
+
 // grafico linhas 1
 
 window.onload = function () {
