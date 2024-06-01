@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,4 +36,7 @@ public interface ProposalRepository extends JpaRepository<Proposal, Long> {
         LocalDate startOfThisMonth = now.withDayOfMonth(1);
         return sumValue(Timestamp.valueOf(startOfLastMonth.atStartOfDay()), Timestamp.valueOf(startOfThisMonth.atStartOfDay()));
     }
+
+    @Query("SELECT sp.name, COUNT(p) FROM Proposal p JOIN p.idStatusProposal sp GROUP BY sp.name")
+    List<Object[]> countProposalsByStatus();
 }

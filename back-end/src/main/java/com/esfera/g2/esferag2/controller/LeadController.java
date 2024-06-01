@@ -4,6 +4,8 @@ import com.esfera.g2.esferag2.model.DateLeadForWeak;
 import com.esfera.g2.esferag2.model.Lead;
 import com.esfera.g2.esferag2.repository.LeadRepository;
 import com.esfera.g2.esferag2.repository.ProposalRepository;
+import com.esfera.g2.esferag2.service.LeadService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 @RestController
 @RequestMapping("/lead")
@@ -22,6 +25,14 @@ public class LeadController {
     private LeadRepository leadRepository;
     @Autowired
     private ProposalRepository proposalRepository;
+    @Autowired
+    private LeadService leadService;
+
+    @GetMapping("/statistics")
+    public ResponseEntity<List<Object[]>> getLeadStatistics() {
+        List<Object[]> statistics = leadService.getLeadStatistics();
+        return ResponseEntity.ok(statistics);
+    }
 
     @GetMapping("/export")
     public ResponseEntity<?> exportLeads() {

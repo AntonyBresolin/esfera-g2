@@ -96,35 +96,116 @@ var options = {
 };
 
 
-// grafico pizza
+// grafico pizza (Propostas)
 
-var data = {
-    labels: ['50% Fechado', '30% Em Negociação', '20% Perdido'],
-    datasets: [{
-        data: [15, 9, 6],
-        backgroundColor: [
+async function fetchAndUpdateChartProposal() {
+    try {
+        const response = await axios.get('/proposal/statistics');
+        const statistics = response.data;
+
+        const labels = statistics.map(item => item[0]);
+        const data = statistics.map(item => item[1]);
+
+        const backgroundColors = [
             '#BA55D3',
             '#A020F0',
-            '#8B008B'
-        ]
-    }]
-};
+            '#8B008B',
+            '#FF69B4',
+            '#DA70D6'
+        ];
 
-var options = {
-    responsive: true,
-    title: {
-        display: true,
-        text: 'Gráfico de Pizza'
-    },
-};
+        const chartData = {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors.slice(0, data.length)
+            }]
+        };
 
-var ctx = document.getElementById('pieChart').getContext('2d');
+        const ctx = document.getElementById('pieChart1').getContext('2d');
 
-var pieChart = new Chart(ctx, {
-    type: 'pie',
-    data: data,
-    options: options
-});
+        if (window.pieChart instanceof Chart) {
+            window.pieChart.data = chartData;
+            window.pieChart.update();
+        } else {
+            window.pieChart = new Chart(ctx, {
+                type: 'pie',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Gráfico de Pizza'
+                    }
+                }
+            });
+        }
+
+        const totalProposals = data.reduce((a, b) => a + b, 0);
+        document.getElementById('totalProposals').innerText = `${totalProposals} Propostas`;
+
+    } catch (error) {
+        console.error('Erro ao buscar dados: ', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', fetchAndUpdateChartProposal);
+
+// grafico pizza (Ligações)
+
+async function fetchAndUpdateChartCalls() {
+    try {
+        const response = await axios.get('/lead/statistics');
+        const statistics = response.data;
+
+        const labels = statistics.map(item => item[0]);
+        const data = statistics.map(item => item[1]);
+
+        const backgroundColors = [
+            '#BA55D3',
+            '#A020F0',
+            '#8B008B',
+            '#FF69B4',
+            '#DA70D6'
+        ];
+
+        const chartDataCalls = {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors.slice(0, data.length)
+            }]
+        };
+
+        const ctxCalls = document.getElementById('pieChart2').getContext('2d');
+
+        if (window.pieChartCalls instanceof Chart) {
+            window.pieChartCalls.data = chartDataCalls;
+            window.pieChartCalls.update();
+        } else {
+            window.pieChartCalls = new Chart(ctxCalls, {
+                type: 'pie',
+                data: chartDataCalls,
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Gráfico de Pizza (Ligações)'
+                    }
+                }
+            });
+        }
+
+        const totalCalls = data.reduce((a, b) => a + b, 0);
+        document.getElementById('totalCalls').innerText = `${totalCalls} Ligações`;
+
+    } catch (error) {
+        console.error('Erro ao buscar dados: ', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', fetchAndUpdateChartCalls);
+
 
 // gerenciador de tarefas
 
