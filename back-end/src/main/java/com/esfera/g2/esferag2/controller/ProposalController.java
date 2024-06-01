@@ -8,6 +8,8 @@ import com.esfera.g2.esferag2.repository.LeadRepository;
 import com.esfera.g2.esferag2.repository.ProposalRepository;
 import com.esfera.g2.esferag2.repository.StatusProposalRepository;
 import com.esfera.g2.esferag2.repository.UserRepository;
+import com.esfera.g2.esferag2.service.ProposalService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -38,6 +41,8 @@ public class ProposalController {
     private UserRepository userRepository;
     @Autowired
     private StatusProposalRepository statusProposalRepository;
+    @Autowired
+    private ProposalService proposalService;
 
     private static final Logger logger = Logger.getLogger(ProposalController.class.getName());
 
@@ -64,6 +69,12 @@ public class ProposalController {
             logger.severe("Erro ao calcular o faturamento: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<List<Object[]>> getProposalStatistics() {
+        List<Object[]> statistics = proposalService.getProposalStatistics();
+        return ResponseEntity.ok(statistics);
     }
 
     @GetMapping("/export")
