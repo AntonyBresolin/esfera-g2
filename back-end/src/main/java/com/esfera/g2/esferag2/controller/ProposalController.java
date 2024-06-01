@@ -118,7 +118,6 @@ public class ProposalController {
 
         Proposal proposal = new Proposal();
         proposal.setIdLead(lead);
-        proposal.setIdUser(user);
         proposal.setProposalDate(completionDate);
         proposal.setService(service);
         proposal.setValue(valueTratado);
@@ -157,7 +156,6 @@ public class ProposalController {
 
 
                     proposal.setIdLead(lead);
-                    proposal.setIdUser(user);
                     proposal.setProposalDate(completionDate);
                     proposal.setService(service);
                     proposal.setValue(value);

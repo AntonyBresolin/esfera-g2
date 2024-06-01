@@ -11,6 +11,13 @@ import java.util.List;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
     List<Client> findByNameContainingIgnoreCase(String name);
+
+    Page<Client> findAllByUserIdUser(Long idUser, Pageable pageable);
     List<Client> findClientsByCpfCnpj(String cpfCnpj);
-    Page<Client> findClientsByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Client> findClientsByNameContainingIgnoreCaseAndUserIdUser(String name, Long idUser, Pageable pageable);
+
+    Client findByIdClientAndUserIdUser(Long idClient, Long idUser);
+
+    List<Client> findClientsByUserIdUser(Long idUser);
+
 }
