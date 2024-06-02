@@ -388,7 +388,7 @@ function deleteTask(task) {
 
 
 async function setLeadsByDayOfTheWeak() {
-    await fetch('http://localhost:8080/lead/graph/leadsweek', {
+    await fetch('http://localhost:8080/lead/graph/leadsweek/'+localStorage.getItem('userId'), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
