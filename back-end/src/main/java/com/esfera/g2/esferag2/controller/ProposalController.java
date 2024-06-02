@@ -77,28 +77,30 @@ public class ProposalController {
         return ResponseEntity.ok(statistics);
     }
 
-    @GetMapping("/export")
-    public ResponseEntity<?> exportProposals() {
-        return ResponseEntity.ok(proposalRepository.findAll());
+    @GetMapping("/export/{idUser}")
+    public ResponseEntity<?> exportProposals(@PathVariable Long idUser) {
+        return ResponseEntity.ok(proposalRepository.findByIdLeadIdClientUserIdUser(idUser));
     }
+    //
 
-    @GetMapping("/all")
+    @GetMapping("/all/{idUser}")
     public Page<Proposal> getAllProposals(
+            @PathVariable Long idUser,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "idProposal") String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return proposalRepository.findAll(pageable);
+        return proposalRepository.findByIdLeadIdClientUserIdUser(idUser, pageable);
     }
 
-    @GetMapping("/{id}")
-    public Proposal getProposalById(@PathVariable Long id) {
-        return proposalRepository.findById(id).orElseThrow();
+    @GetMapping("/{id}/{idUser}")
+    public Proposal getProposalById(@PathVariable Long id,
+                                    @PathVariable Long idUser) {
+        return proposalRepository.findByIdProposalAndIdLeadIdClientUserIdUser(id, idUser);
     }
 
     @PostMapping(consumes = "multipart/form-data")
     public Proposal createProposal(@RequestParam("idLead") Long idLead,
-                                   @RequestParam("idUser") Long idUser,
                                    @RequestParam("completionDate") String completionDateStr,
                                    @RequestParam("service") String service,
                                    @RequestParam("value") String value,
@@ -109,7 +111,6 @@ public class ProposalController {
             throw new IllegalArgumentException("O campo idClient e a data de conclusão são obrigatórios.");
         }
         Lead lead = leadRepository.findById(idLead).orElseThrow();
-        User user = userRepository.findById(idUser).orElseThrow();
         StatusProposal statusProposal = statusProposalRepository.findById(idStatusProposal).orElseThrow();
 
         // Converter a string para Timestamp
@@ -185,19 +186,21 @@ public class ProposalController {
         }
     }
 
-    @GetMapping("/search/{name}")
+    @GetMapping("/search/{name}/{idUser}")
     public Page<Proposal> getAllProposalsByClientName(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "idProposal") String sortBy,
-            @PathVariable String name) {
+            @PathVariable String name,
+            @PathVariable Long idUser) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return proposalRepository.findByIdLeadIdClientNameContainingIgnoreCase(name, pageable);
+        return proposalRepository.findByIdLeadIdClientNameContainingIgnoreCaseAndIdLeadIdClientUserIdUser(name, idUser, pageable);
     }
 
-    @GetMapping("/download/{id}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) {
-        Proposal proposal = proposalRepository.findById(id).orElseThrow();
+    @GetMapping("/download/{id}/{idUser}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable Long id,
+                                               @PathVariable Long idUser) {
+        Proposal proposal = proposalRepository.findByIdProposalAndIdLeadIdClientUserIdUser(id, idUser);
         byte[] file = proposal.getFile();
 
         if (file == null) {

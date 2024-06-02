@@ -47,7 +47,7 @@ function handleCloseAddProposal() {
 
 
 async function fetchAllProposals(page) {
-    await fetch(`http://localhost:8080/proposal/all?page=${page}&size=${pageSize}&sort=${sortBy}`)
+    await fetch(`http://localhost:8080/proposal/all/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`)
         .then(response => response.json())
         .then(data => {
             listProposals(data.content);
@@ -58,7 +58,7 @@ async function fetchAllProposals(page) {
 
 async function fetchSearchProposalByClientName(page) {
     const name = document.getElementById('searchProposal').value;
-    await fetch(`http://localhost:8080/proposal/search/${name}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
+    await fetch(`http://localhost:8080/proposal/search/${name}/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
         method: 'GET',
     })
         .then(response => response.json())
@@ -212,7 +212,7 @@ async function fetchAddProposal() {
 
 async function fetchSearchProposalByName() {
     const id = document.getElementById('idLead').value;
-    await fetch(`http://localhost:8080/lead/${id}`, {
+    await fetch(`http://localhost:8080/lead/${id}/${localStorage.getItem('userId')}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -286,7 +286,7 @@ function clearProposalEditFields() {
 }
 
 function getElementsEditProposal(id) {
-    fetch(`http://localhost:8080/proposal/${id}`)
+    fetch(`http://localhost:8080/proposal/${id}/${localStorage.getItem('userId')}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -357,7 +357,7 @@ async function fetchAddEditProposal(event) {
         formData.append('file', file);
     }
 
-    await fetch(`http://localhost:8080/proposal/${data.idProposal}`, {
+    await fetch(`http://localhost:8080/proposal/${data.idProposal}/${localStorage.getItem('userId')}`, {
         method: 'PUT',
         body: formData
     })
@@ -386,7 +386,7 @@ async function fetchAddEditProposal(event) {
 
 
 function exportProposals() {
-    fetch('http://localhost:8080/proposal/export')
+    fetch('http://localhost:8080/proposal/export/'+localStorage.getItem('userId'))
         .then(response => response.json())
         .then(data => {
             const csvRows = [];
@@ -417,7 +417,7 @@ function exportProposals() {
         .catch(error => console.error('Error:', error));
 }
 function downloadFile(fileId, proposalId) {
-    fetch(`http://localhost:8080/proposal/download/${fileId}`)
+    fetch(`http://localhost:8080/proposal/download/${fileId}/${localStorage.getItem('userId')}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Erro ao baixar o arquivo');
