@@ -34,23 +34,25 @@ public class LeadController {
         return ResponseEntity.ok(statistics);
     }
 
-    @GetMapping("/export")
-    public ResponseEntity<?> exportLeads() {
-        return ResponseEntity.ok(leadRepository.findAll());
+    @GetMapping("/export/{idUser}")
+    public ResponseEntity<?> exportLeads(@PathVariable Long idUser) {
+        return ResponseEntity.ok(leadRepository.findLeadsByIdClientUserIdUser(idUser));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/all/{idUser}")
     public Page<Lead> getAllLeads(
+            @PathVariable Long idUser,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "idLead") String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return leadRepository.findAll(pageable);
+        return leadRepository.findAllByIdClientUserIdUser(idUser, pageable);
     }
 
-    @GetMapping("/{id}")
-    public Lead getLeadById(@PathVariable Long id) {
-        return leadRepository.findById(id).orElseThrow();
+    @GetMapping("/{id}/{idUser}")
+    public Lead getLeadById(@PathVariable Long id,
+                            @PathVariable Long idUser) {
+        return leadRepository.findByIdLeadAndIdClientUserIdUser(id, idUser);
     }
 
     @PostMapping
@@ -89,17 +91,18 @@ public class LeadController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/name/{name}")
+    @GetMapping("/name/{name}/{idUser}")
     public Page<Lead> getLeadsByContact(@PathVariable String name,
+                                        @PathVariable Long idUser,
                                         @RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "20") int size,
                                         @RequestParam(defaultValue = "idLead") String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return leadRepository.findLeadsByIdClientNameContainingIgnoreCase(name, pageable);
+        return leadRepository.findLeadsByIdClientNameContainingIgnoreCaseAndIdClientUserIdUser(name, idUser, pageable);
     }
 
-    @GetMapping("/graph/leadsweek")
-    public DateLeadForWeak getLeadsForWeak() {
+    @GetMapping("/graph/leadsweek/{idUser}")
+    public DateLeadForWeak getLeadsForWeakByUser(@PathVariable Long idUser) {
         ArrayList<Long> leads = new ArrayList<>();
         ArrayList<String> dates = new ArrayList<>();
 
@@ -108,7 +111,7 @@ public class LeadController {
         Timestamp endOfTheDay = new Timestamp(getLastTimeOfTheDay().getTimeInMillis());
 
         for (int i = 0; i < 7; i++) {
-            leads.add(leadRepository.countLeadsByDateBetween(startOfTheDay, endOfTheDay));
+            leads.add(leadRepository.countByDateBetweenAndIdClientUserIdUser(startOfTheDay, endOfTheDay, idUser));
             dates.add(startOfTheDay.toString().substring(0, 10));
 
             startOfTheDay = new Timestamp(startOfTheDay.getTime() + 86400000);

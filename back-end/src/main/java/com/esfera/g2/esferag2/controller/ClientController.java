@@ -44,9 +44,10 @@ public class ClientController {
                 .orElseThrow();
     }
 
-    @GetMapping("/cpf/{cpfCnpj}")
-    public List<Client> getClientsByCpfCnpj(@PathVariable String cpfCnpj) {
-        return clientRepository.findClientsByCpfCnpj(cpfCnpj);
+    @GetMapping("/cpf/{cpfCnpj}/{idUser}")
+    public List<Client> getClientsByCpfCnpj(@PathVariable String cpfCnpj,
+                                            @PathVariable Long idUser) {
+        return clientRepository.findClientsByCpfCnpjAndUserIdUser(cpfCnpj, idUser);
     }
 
     @DeleteMapping("/{id}")

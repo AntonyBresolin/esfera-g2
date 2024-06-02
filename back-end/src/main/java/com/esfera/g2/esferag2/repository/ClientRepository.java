@@ -13,7 +13,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     List<Client> findByNameContainingIgnoreCase(String name);
 
     Page<Client> findAllByUserIdUser(Long idUser, Pageable pageable);
-    List<Client> findClientsByCpfCnpj(String cpfCnpj);
+    List<Client> findClientsByCpfCnpjAndUserIdUser(String cpfCnpj, Long idUser);
     Page<Client> findClientsByNameContainingIgnoreCaseAndUserIdUser(String name, Long idUser, Pageable pageable);
 
     Client findByIdClientAndUserIdUser(Long idClient, Long idUser);
