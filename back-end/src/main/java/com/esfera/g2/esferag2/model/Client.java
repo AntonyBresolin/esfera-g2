@@ -25,6 +25,19 @@ public class Client {
 
     private Timestamp date;
 
+    @ManyToOne
+    @JoinColumn(name = "user_idUser")
+    private User user;
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Timestamp getDate() {
         return date;
     }
@@ -89,14 +102,14 @@ public class Client {
     public Client() {
     }
 
-    public Client(String name, String cpfCnpj, String company, String role, Timestamp date) {
+    public Client(String name, String cpfCnpj, String company, String role, Timestamp date, User user) {
         this.name = name;
         this.cpfCnpj = cpfCnpj;
         this.company = company;
         this.role = role;
         this.date = date;
+        this.user = user;
     }
-
 
     public String getFormattedDate() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");

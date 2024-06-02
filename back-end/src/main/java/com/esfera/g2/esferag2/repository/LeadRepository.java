@@ -16,9 +16,16 @@ public interface LeadRepository extends JpaRepository<Lead, Long> {
     Boolean existsByIdClientIdClient(Long leadId);
     Page<Lead> findAll(Pageable pageable);
 
-    Long countLeadsByDateBetween(Timestamp start, Timestamp end);
+    Long countByDateBetweenAndIdClientUserIdUser(Timestamp start, Timestamp end, Long idUser);
 
-    Page<Lead> findLeadsByIdClientNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Lead> findLeadsByIdClientNameContainingIgnoreCaseAndIdClientUserIdUser(String name, Long idUser, Pageable pageable);
+
+
+    Page<Lead> findAllByIdClientUserIdUser(Long idUser, Pageable pageable);
+
+    Lead findByIdLeadAndIdClientUserIdUser(Long id, Long idUser);
+
+    List<Lead> findLeadsByIdClientUserIdUser(Long idUser);
 
     @Query("SELECT r.result, COUNT(l) FROM Lead l JOIN l.result r GROUP BY r.result")
     List<Object[]> countLeadsByResult();

@@ -1,13 +1,7 @@
 package com.esfera.g2.esferag2.controller;
 
-import com.esfera.g2.esferag2.model.Address;
-import com.esfera.g2.esferag2.model.Client;
-import com.esfera.g2.esferag2.model.ClientAddressContactDTO;
-import com.esfera.g2.esferag2.model.Contact;
-import com.esfera.g2.esferag2.repository.AddressRepository;
-import com.esfera.g2.esferag2.repository.ClientRepository;
-import com.esfera.g2.esferag2.repository.ContactRepository;
-import com.esfera.g2.esferag2.repository.LeadRepository;
+import com.esfera.g2.esferag2.model.*;
+import com.esfera.g2.esferag2.repository.*;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -38,6 +32,8 @@ public class ClientAddressContactDTOController {
     private ContactRepository contactRepository;
     @Autowired
     private TypeContactController typeContactController;
+    @Autowired
+    private UserRepository userRepository;
 
 
     //Validation's
@@ -61,13 +57,14 @@ public class ClientAddressContactDTOController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("/all/{idUser}")
     public Page<ClientAddressContactDTO> listAllClientAddressContact(
+            @PathVariable Long idUser,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "idClient") String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<Client> clientsPage = clientRepository.findAll(pageable);
+        Page<Client> clientsPage = clientRepository.findAllByUserIdUser(idUser, pageable);
 
         // Obtém os IDs dos clientes apenas na página atual
         List<Long> clientIds = clientsPage.getContent().stream()
@@ -98,9 +95,10 @@ public class ClientAddressContactDTOController {
     }
 
 
-    @PostMapping("/import")
-    public ResponseEntity<?> addClientAddressContact(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/import/{idUser}")
+    public ResponseEntity<?> addClientAddressContact(@RequestParam("file") MultipartFile file, @PathVariable Long idUser) {
         try {
+            User user = userRepository.findById(idUser).orElseThrow();
             Reader reader = new InputStreamReader(file.getInputStream());
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
 
@@ -125,7 +123,7 @@ public class ClientAddressContactDTOController {
                 String street = record.get("rua");
                 String number = record.get("numero");
 
-                Client client = new Client(name, cpf, company, role, new Timestamp(System.currentTimeMillis()));
+                Client client = new Client(name, cpf, company, role, new Timestamp(System.currentTimeMillis()), user);
                 clientRepository.save(client);
 
                 Address address = new Address(zipCode, country, state, city, street, number);
@@ -146,15 +144,16 @@ public class ClientAddressContactDTOController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteClientAddressContact(@PathVariable Long id) {
-        if (!clientRepository.existsById(id)) {
+    @DeleteMapping("/delete/{idClientDTO}/{idUser}")
+    public ResponseEntity<?> deleteClientAddressContact(@PathVariable Long idClientDTO,
+                                                        @PathVariable Long idUser) {
+        if (!clientRepository.existsById(idClientDTO)) {
             return ResponseEntity.badRequest().body("Cliente não encontrado!");
-        } else if (leadRepository.existsByIdClientIdClient(id)) {
+        } else if (leadRepository.existsByIdClientIdClient(idClientDTO)) {
             return new ResponseEntity<>("Existem leads associados a este cliente, não é possível deletar", HttpStatus.CONFLICT);
         }
         try {
-            Client c = clientRepository.findById(id).orElseThrow();
+            Client c = clientRepository.findByIdClientAndUserIdUser(idClientDTO, idUser);
 
             for (Address address : addressRepository.findByClient(c)) {
                 addressRepository.deleteById(address.getIdAddress());
@@ -163,7 +162,7 @@ public class ClientAddressContactDTOController {
                 contactRepository.deleteById(contact.getIdContact());
             }
 
-            clientRepository.deleteById(id);
+            clientRepository.deleteById(c.getIdClient());
             return ResponseEntity.status(200).body("Deletado com sucesso!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao deletar!");
@@ -171,12 +170,12 @@ public class ClientAddressContactDTOController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteClientAddressContacts(@RequestBody List<Long> ids) {
+    public ResponseEntity<?> deleteClientAddressContacts(@RequestBody List<Long> ids, @RequestParam Long idUser) {
         List<Long> deleteds = new ArrayList<>();
         List<Long> notDeletedDueToLeads = new ArrayList<>();
 
         for (Long id : ids) {
-            ResponseEntity<?> response = deleteClientAddressContact(id);
+            ResponseEntity<?> response = deleteClientAddressContact(id, idUser);
             if (response.getStatusCode() == HttpStatus.CONFLICT) {
                 notDeletedDueToLeads.add(id);
             } else if (!response.getStatusCode().is2xxSuccessful()) {
@@ -229,26 +228,27 @@ public class ClientAddressContactDTOController {
         return clientAddressContactDTO;
     }
 
-    @GetMapping("/{id}")
-    public ClientAddressContactDTO getClientAddressContactById(@PathVariable Long id) {
-        Client client = clientRepository.findById(id).orElseThrow();
-        Address address = addressRepository.findByClient(client).get(0);
-        List<Contact> contacts = contactRepository.findByClient(client);
-        ClientAddressContactDTO clientAddressContactDTO = new ClientAddressContactDTO();
-        clientAddressContactDTO.setClient(client);
-        clientAddressContactDTO.setAddress(address);
-        clientAddressContactDTO.setContact(contacts);
-        return clientAddressContactDTO;
+    @GetMapping("/{id}/{idUser}")
+    public ClientAddressContactDTO getClientAddressContactById(@PathVariable Long id, @PathVariable Long idUser) {
+            Client client = clientRepository.findByIdClientAndUserIdUser(id, idUser);
+            Address address = addressRepository.findByClient(client).get(0);
+            List<Contact> contacts = contactRepository.findByClient(client);
+            ClientAddressContactDTO clientAddressContactDTO = new ClientAddressContactDTO();
+            clientAddressContactDTO.setClient(client);
+            clientAddressContactDTO.setAddress(address);
+            clientAddressContactDTO.setContact(contacts);
+            return clientAddressContactDTO;
     }
 
-    @GetMapping("/name/{name}")
+    @GetMapping("/name/{name}/{idUser}")
     public Page<ClientAddressContactDTO> getClientAddressContactByName(@PathVariable String name,
+                                                                       @PathVariable Long idUser,
                                                                        @RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "20") int size,
                                                                        @RequestParam(defaultValue = "idClient") String sortBy
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<Client> clientsPage = clientRepository.findClientsByNameContainingIgnoreCase(name, pageable);
+        Page<Client> clientsPage = clientRepository.findClientsByNameContainingIgnoreCaseAndUserIdUser(name, idUser, pageable);
 
         // Obtém os IDs dos clientes apenas na página atual
         List<Long> clientIds = clientsPage.getContent().stream()

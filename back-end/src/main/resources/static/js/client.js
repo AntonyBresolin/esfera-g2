@@ -114,7 +114,7 @@ function listClients(clients) {
 }
 
 async function fetchAllClients(page) {
-    await fetch(`http://localhost:8080/client-address-contact/all?page=${page}&size=${pageSize}&sortBy=${sortBy}`)
+    await fetch(`http://localhost:8080/client-address-contact/all/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sortBy=${sortBy}`)
         .then(response => response.json())
         .then(data => {
             listClients(data.content);
@@ -147,6 +147,9 @@ async function fetchAddClient(event) {
             company: document.getElementById('company').value,
             role: document.getElementById('role').value,
             date: document.getElementById('date').value,
+            user: {
+                idUser: Number(localStorage.getItem("userId"))
+            }
         },
         contact: [
             {
@@ -187,6 +190,7 @@ async function fetchAddClient(event) {
             country: document.getElementById('country').value
         }
     };
+    console.log(data);
 
     if (!validarDocumento(data.client.cpfCnpj)) {
         alert('CPF ou CNPJ inválido!');
@@ -237,8 +241,8 @@ async function fetchImportClientData() {
 
 
     formData.append('file', fileInput.files[0]);
-
-    await fetch('http://localhost:8080/client-address-contact/import', {
+console.log(localStorage.getItem("userId"));
+    await fetch('http://localhost:8080/client-address-contact/import/'+Number(localStorage.getItem("userId")), {
         method: 'POST',
         body: formData
     })
@@ -401,7 +405,7 @@ function clearClientCadFields() {
 }
 
 function getElementsEditClient(idClient) {
-    fetch(`http://localhost:8080/client-address-contact/${idClient}`)
+    fetch(`http://localhost:8080/client-address-contact/${idClient}/${localStorage.getItem('userId')}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -444,6 +448,9 @@ function fetchEditClient(event) {
             company: document.getElementById('companyEdit').value,
             role: document.getElementById('roleEdit').value,
             date: document.getElementById('dateEdit').value,
+            user: {
+                idUser: Number(localStorage.getItem("userId"))
+            }
         },
         contact: [
             {
@@ -506,7 +513,7 @@ function fetchEditClient(event) {
 
 async function fetchSearchClientByName(page) {
     const name = document.getElementById('searchClient').value;
-    await fetch(`http://localhost:8080/client-address-contact/name/${name}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
+    await fetch(`http://localhost:8080/client-address-contact/name/${name}/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

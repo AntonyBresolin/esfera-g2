@@ -17,8 +17,15 @@ import java.util.Optional;
 @Repository
 public interface ProposalRepository extends JpaRepository<Proposal, Long> {
     Boolean existsByIdLeadIdLead(Long leadId);
-    Page<Proposal> findAll(Pageable pageable);
-    Page<Proposal> findByIdLeadIdClientNameContainingIgnoreCase(String name, Pageable pageable);
+
+    Page<Proposal> findByIdLeadIdClientUserIdUser(Long idUser, Pageable pageable);
+
+    List<Proposal> findByIdLeadIdClientUserIdUser(Long idUser);
+
+    Page<Proposal> findByIdLeadIdClientNameContainingIgnoreCaseAndIdLeadIdClientUserIdUser(String name, Long idUser, Pageable pageable);
+
+    Proposal findByIdProposalAndIdLeadIdClientUserIdUser(Long id, Long idUser);
+
 
     @Query("SELECT SUM(p.value) FROM Proposal p WHERE p.proposalDate >= :startDate AND p.proposalDate < :endDate")
     Double sumValue(@Param("startDate") Timestamp startDate, @Param("endDate") Timestamp endDate);

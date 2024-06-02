@@ -28,10 +28,6 @@ public class Proposal {
     private byte[] file;
 
     @ManyToOne
-    @JoinColumn(name = "User_idUser")
-    private User idUser;
-
-    @ManyToOne
     @JoinColumn(name = "Statusproposal_idStatusproposal")
     private StatusProposal idStatusProposal;
 
@@ -93,14 +89,6 @@ public class Proposal {
 
     public void setIdLead(Lead idLead) {
         this.idLead = idLead;
-    }
-
-    public User getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(User idUser) {
-        this.idUser = idUser;
     }
 
     public StatusProposal getIdStatusProposal() {

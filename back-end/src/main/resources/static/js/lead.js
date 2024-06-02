@@ -91,7 +91,7 @@ function listLeads(leads) {
 }
 
 async function fetchAllLeads(page) {
-    await fetch(`http://localhost:8080/lead/all?page=${page}&size=${pageSize}&sort=${sortBy}`)
+    await fetch(`http://localhost:8080/lead/all/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`)
         .then(response => response.json())
         .then(data => {
             listLeads(data.content);
@@ -190,7 +190,7 @@ async function fetchSearchLeadByClientCpfCnpj(page) {
 
     const name = document.getElementById('searchByNamePesquisar').value;
 
-    await fetch(`http://localhost:8080/lead/name/${name}?page=${page}&size=${pageSize}&sort=${sortBy}`,
+    await fetch(`http://localhost:8080/lead/name/${name}/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`,
         {
             method: 'GET',
         })
@@ -205,7 +205,7 @@ async function fetchSearchLeadByClientCpfCnpj(page) {
 async function fetchSearchClientByCpfCnpj() {
     const cpfCnpj = document.getElementById('cpfCnpjSearchByCPF').value;
 
-    await fetch(`http://localhost:8080/client/cpf/`+cpfCnpj, {
+    await fetch(`http://localhost:8080/client/cpf/`+cpfCnpj+"/"+localStorage.getItem('userId'), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -288,7 +288,7 @@ function clearLeadEditFields() {
 }
 
 function getElementsEditLead(id) {
-    fetch(`http://localhost:8080/lead/${id}`)
+    fetch(`http://localhost:8080/lead/${id}/${localStorage.getItem('userId')}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -374,7 +374,7 @@ function showDeleteLeadModal(idLead) {
 
 async function exportLeads() {
     try {
-        const response = await fetch('http://localhost:8080/lead/export');
+        const response = await fetch('http://localhost:8080/lead/export/'+localStorage.getItem('userId'));
         const leads = await response.json();
 
         if (leads && leads.length > 0) {
