@@ -28,9 +28,9 @@ public class LeadController {
     @Autowired
     private LeadService leadService;
 
-    @GetMapping("/statistics")
-    public ResponseEntity<List<Object[]>> getLeadStatistics() {
-        List<Object[]> statistics = leadService.getLeadStatistics();
+    @GetMapping("/statistics/{idUser}")
+    public ResponseEntity<List<Object[]>> getLeadStatistics(@PathVariable Long idUser) {
+        List<Object[]> statistics = leadService.getLeadStatistics(idUser);
         return ResponseEntity.ok(statistics);
     }
 

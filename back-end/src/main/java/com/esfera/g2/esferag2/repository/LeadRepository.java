@@ -5,11 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface LeadRepository extends JpaRepository<Lead, Long> {
@@ -27,6 +27,6 @@ public interface LeadRepository extends JpaRepository<Lead, Long> {
 
     List<Lead> findLeadsByIdClientUserIdUser(Long idUser);
 
-    @Query("SELECT r.result, COUNT(l) FROM Lead l JOIN l.result r GROUP BY r.result")
-    List<Object[]> countLeadsByResult();
+    @Query("SELECT r.result, COUNT(l) FROM Lead l JOIN l.result r JOIN l.idClient c JOIN c.user u WHERE u.idUser = :idUser GROUP BY r.result")
+    List<Object[]> countLeadsByResult(@Param("idUser") Long idUser);
 }
