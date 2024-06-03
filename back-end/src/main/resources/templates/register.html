@@ -1,24 +1,70 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html  lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Register</title>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Registro</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
-<h2>Register</h2>
-<div th:if="${error}">
-    <p style="color: red" th:text="${error}"></p>
+<div class="flex h-screen w-screen">
+  <div class="w-full h-full bg-purple-900"></div>
+  <div class="w-full h-full bg-gray-200 flex flex-col items-center justify-center">
+    <form class="bg-white px-24 py-10 rounded-2xl shadow-md" method="post" th:action="@{/register}">
+      <div class="flex flex-col items-center justify-center w-full">
+        <h1 class="text-4xl font-bold text-purple-900 mb-8">Registro</h1>
+        <div class="flex flex-col">
+          <div th:if="${error}">
+            <p style="color: red" th:text="${error}"></p>
+          </div>
+          <div th:if="${success}">
+            <p style="color: green" th:text="${success}"></p>
+          </div>
+          <label class="">Nome:</label>
+          <input type="text" name="username" id="username" placeholder='Digite seu nome' class="
+                  w-full p-2 my-2 rounded-md border border-gray-300 shadow-md focus:outline-none
+                  focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+                  disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+                  invalid:text-pink-600
+                  focus:invalid:border-pink-500 focus:invalid:ring-pink-500" />
+          <label>Senha:</label>
+          <input type="password" name="password" id="password" placeholder='Digite sua senha' class="
+                  w-full p-2 my-2 rounded-md border border-gray-300 shadow-md focus:outline-none
+                  focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+                  disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+                  invalid:text-pink-600
+                  focus:invalid:border-pink-500 focus:invalid:ring-pink-500" />
+          <label>Email:</label>
+          <input type="text" name="email" id="email" placeholder='Digite seu email' class="
+                  w-full p-2 my-2 rounded-md border border-gray-300 shadow-md focus:outline-none
+                  focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+                  disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+                  invalid:text-pink-600
+                  focus:invalid:border-pink-500 focus:invalid:ring-pink-500" />
+          <label>Telefone:</label>
+          <input type="text" name="phone" id="phone" placeholder='Digite seu telefone' class="
+                  w-full p-2 my-2 rounded-md border border-gray-300 shadow-md focus:outline-none
+                  focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+                  disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+                  invalid:text-pink-600
+                  focus:invalid:border-pink-500 focus:invalid:ring-pink-500" />
+          <label>Cargo:</label>
+          <input type="text" name="role" id="role" placeholder='Digite seu cargo' class="
+                  w-full p-2 my-2 rounded-md border border-gray-300 shadow-md focus:outline-none
+                  focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+                  disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+                  invalid:text-pink-600
+                  focus:invalid:border-pink-500 focus:invalid:ring-pink-500" />
+          <button type="submit" class="bg-purple-900 text-white rounded-lg p-2 m-2 hover:bg-purple-700 duration-150 ease-in-out">Registrar-se</button>
+          <a href="/login" style="align-self: center; width: fit-content;">Já tem uma conta?</a>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
-<div th:if="${success}">
-    <p style="color: green" th:text="${success}"></p>
-</div>
-<form th:action="@{/register}" method="post">
-    <input type="text" name="username" placeholder="Username">
-    <input type="password" name="password" placeholder="Password">
-    <input type="text" name="email" placeholder="Email">
-    <input type="text" name="phone" placeholder="Phone">
-    <input type="text" name="role" placeholder="Role">
-    <button type="submit">Register</button>
-</form>
 </body>
+
 </html>

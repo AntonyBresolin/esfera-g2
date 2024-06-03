@@ -1,7 +1,5 @@
 package com.esfera.g2.esferag2.model;
 
-
-import java.sql.Timestamp;
 import java.util.List;
 
 public class DateLeadForWeak {

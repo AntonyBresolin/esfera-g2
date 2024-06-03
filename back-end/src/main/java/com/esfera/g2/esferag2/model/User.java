@@ -2,7 +2,6 @@ package com.esfera.g2.esferag2.model;
 
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity

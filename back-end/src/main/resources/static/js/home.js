@@ -1,11 +1,16 @@
 document.addEventListener("DOMContentLoaded", function() {
-    fetch('/proposal/faturamento')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('faturamento-total').innerText = `R$${data.totalFaturamento.toFixed(2)}`;
-            document.getElementById('faturamento-crescimento').innerText = `${data.crescimentoPercentual.toFixed(2)}% em comparação ao mês anterior`;
-        })
-        .catch(error => console.error('Erro ao buscar os dados de faturamento:', error));
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+        fetch('/proposal/faturamento/' + userId)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('faturamento-total').innerText = `R$${data.totalFaturamento.toFixed(2)}`;
+                document.getElementById('faturamento-crescimento').innerText = `${data.crescimentoPercentual.toFixed(2)}% em comparação ao mês anterior`;
+            })
+            .catch(error => console.error('Erro ao buscar os dados de faturamento:', error));
+    } else {
+        console.error('User ID não encontrado no local storage.');
+    }
 });
 
 // grafico linhas 1
@@ -99,8 +104,9 @@ var options = {
 // grafico pizza (Propostas)
 
 async function fetchAndUpdateChartProposal() {
+    userId = localStorage.getItem('userId');
     try {
-        const response = await axios.get('/proposal/statistics');
+        const response = await axios.get('/proposal/statistics/' + userId);
         const statistics = response.data;
 
         const labels = statistics.map(item => item[0]);
@@ -154,8 +160,9 @@ document.addEventListener('DOMContentLoaded', fetchAndUpdateChartProposal);
 // grafico pizza (Ligações)
 
 async function fetchAndUpdateChartCalls() {
+    userId = localStorage.getItem('userId');
     try {
-        const response = await axios.get('/lead/statistics');
+        const response = await axios.get('/lead/statistics/' + userId);
         const statistics = response.data;
 
         const labels = statistics.map(item => item[0]);

@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import com.esfera.g2.esferag2.controller.ClientController;
 import com.esfera.g2.esferag2.model.Client;
-import org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -16,7 +15,7 @@ public class ClientTests {
     ClientController clientController = new ClientController();
     @Test
     public void addClient() {
-        Client client = new Client("John Doe", "11122233344", "Biopark", "Televendedor", Timestamp.valueOf(LocalDate.of(2021, 1, 1).atStartOfDay()));
+        Client client = new Client("John Doe", "11122233344", "Biopark", "Televendedor", Timestamp.valueOf(LocalDate.of(2021, 1, 1).atStartOfDay()), null);
         assertEquals("John Doe", client.getName());
         assertEquals("11122233344", client.getCpfCnpj());
         assertEquals("Biopark", client.getCompany());

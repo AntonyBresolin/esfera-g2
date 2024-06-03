@@ -13,7 +13,7 @@ public class LeadService {
     @Autowired
     private LeadRepository leadRepository;
 
-    public List<Object[]> getLeadStatistics() {
-        return leadRepository.countLeadsByResult();
+    public List<Object[]> getLeadStatistics(Long idUser) {
+        return leadRepository.countLeadsByResult(idUser);
     }
 }

@@ -46,11 +46,12 @@ public class ProposalController {
 
     private static final Logger logger = Logger.getLogger(ProposalController.class.getName());
 
-    @GetMapping("/faturamento")
-    public ResponseEntity<Map<String, Object>> getFaturamento() {
+    @GetMapping("/faturamento/{idUser}")
+    public ResponseEntity<Map<String, Object>> getFaturamento(@PathVariable Long idUser) {
         try {
-            Double totalFaturamento = proposalRepository.sumValue();
-            Double faturamentoMesAnterior = proposalRepository.sumValueLastMonth();
+            Double totalFaturamento = proposalRepository.sumValue(idUser);
+            Double faturamentoMesAnterior = proposalRepository.sumValueLastMonth(idUser);
+            System.out.println("totalFaturamento: " + totalFaturamento);
 
             if (totalFaturamento == null) totalFaturamento = 0.0;
             if (faturamentoMesAnterior == null) faturamentoMesAnterior = 0.0;
@@ -71,9 +72,9 @@ public class ProposalController {
         }
     }
 
-    @GetMapping("/statistics")
-    public ResponseEntity<List<Object[]>> getProposalStatistics() {
-        List<Object[]> statistics = proposalService.getProposalStatistics();
+    @GetMapping("/statistics/{idUser}")
+    public ResponseEntity<List<Object[]>> getProposalStatistics(@PathVariable Long idUser) {
+        List<Object[]> statistics = proposalService.getProposalStatistics(idUser);
         return ResponseEntity.ok(statistics);
     }
 
