@@ -17,40 +17,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 window.onload = function () {
     setLeadsByDayOfTheWeak();
+    setLeadsByDayOfTheMonth();
 }
 
-var data = {
-    labels: ["Novembro", "Dezembro", "Janeiro", "Fevereiro", "Março", "Abril", "Maio"],
-    datasets: [{
-        label: "Ligações",
-        data: [0, 50, 30, 80, 70, 130, 143],
-        borderColor: "purple",
-        fill: false
-    }]
-};
 
-var options = {
-    responsive: true,
-    title: {
-        display: true,
-        text: 'Gráfico de Ligações Mensais'
-    },
-    scales: {
-        yAxes: [{
-            ticks: {
-                beginAtZero: true
-            }
-        }]
-    }
-};
-
-var ctx = document.getElementById("lineChart1").getContext("2d");
-
-var lineChart1 = new Chart(ctx, {
-    type: 'line',
-    data: data,
-    options: options
-});
 
 // grafico linhas 2
 
@@ -418,6 +388,38 @@ async function setLeadsByDayOfTheWeak() {
 
                 var barChart = new Chart(ctx, {
                     type: 'bar',
+                    data: dataLead,
+                    options: options
+                });
+            }
+        )
+}
+
+
+async function setLeadsByDayOfTheMonth() {
+    await fetch('http://localhost:8080/lead/graph/leadsmonth/'+localStorage.getItem('userId'), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => response.json())
+        .then(data => {
+                var ctx = document.getElementById('lineChart1').getContext('2d');
+                var dataLead = {
+
+                    labels: data.dateLead,
+                    datasets: [{
+                        label: 'Total de ligações',
+                        data: data.leadCount,
+                        backgroundColor: '#8B008B',
+                        borderWidth: 1,
+                        borderColor: "purple",
+                        fill: false
+                    }]
+                };
+
+                var barChart = new Chart(ctx, {
+                    type: 'line',
                     data: dataLead,
                     options: options
                 });

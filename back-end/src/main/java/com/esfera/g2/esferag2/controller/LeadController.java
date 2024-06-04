@@ -101,14 +101,32 @@ public class LeadController {
         return leadRepository.findLeadsByIdClientNameContainingIgnoreCaseAndIdClientUserIdUser(name, idUser, pageable);
     }
 
+    @GetMapping("/graph/leadsmonth/{idUser}")
+    public DateLeadForWeak getLeadsForMonthByUser(@PathVariable Long idUser) {
+        ArrayList<Long> leads = new ArrayList<>();
+        ArrayList<String> dates = new ArrayList<>();
+
+        Timestamp startOfTheDay = new Timestamp(getFirstTimeOfTheDay(-30).getTimeInMillis());
+        Timestamp endOfTheDay = new Timestamp(getLastTimeOfTheDay(-30).getTimeInMillis());
+
+        for (int i = 0; i < 30; i++) {
+            leads.add(leadRepository.countByDateBetweenAndIdClientUserIdUser(startOfTheDay, endOfTheDay, idUser));
+            dates.add(startOfTheDay.toString().substring(0, 10));
+
+            startOfTheDay = new Timestamp(startOfTheDay.getTime() + 86400000);
+            endOfTheDay = new Timestamp(endOfTheDay.getTime() + 86400000);
+        }
+
+        return new DateLeadForWeak(leads, dates);
+    }
     @GetMapping("/graph/leadsweek/{idUser}")
     public DateLeadForWeak getLeadsForWeakByUser(@PathVariable Long idUser) {
         ArrayList<Long> leads = new ArrayList<>();
         ArrayList<String> dates = new ArrayList<>();
 
 
-        Timestamp startOfTheDay = new Timestamp(getFirstTimeOfTheDay().getTimeInMillis());
-        Timestamp endOfTheDay = new Timestamp(getLastTimeOfTheDay().getTimeInMillis());
+        Timestamp startOfTheDay = new Timestamp(getFirstTimeOfTheDay(-7).getTimeInMillis());
+        Timestamp endOfTheDay = new Timestamp(getLastTimeOfTheDay(-7).getTimeInMillis());
 
         for (int i = 0; i < 7; i++) {
             leads.add(leadRepository.countByDateBetweenAndIdClientUserIdUser(startOfTheDay, endOfTheDay, idUser));
@@ -121,11 +139,11 @@ public class LeadController {
         return new DateLeadForWeak(leads, dates);
     }
 
-    private Calendar getFirstTimeOfTheDay(){
+    private Calendar getFirstTimeOfTheDay(int dayLess){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(timestamp);
-        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        calendar.add(Calendar.DAY_OF_MONTH, dayLess);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -133,11 +151,11 @@ public class LeadController {
         return calendar;
     }
 
-    private Calendar getLastTimeOfTheDay(){
+    private Calendar getLastTimeOfTheDay(int dayLess){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(timestamp);
-        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        calendar.add(Calendar.DAY_OF_MONTH, dayLess);
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);
