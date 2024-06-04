@@ -42,6 +42,6 @@ public interface ProposalRepository extends JpaRepository<Proposal, Long> {
         return sumValue(Timestamp.valueOf(startOfLastMonth.atStartOfDay()), Timestamp.valueOf(startOfThisMonth.atStartOfDay()), idUser);
     }
 
-    @Query("SELECT sp.name, COUNT(p) FROM Proposal p JOIN p.idLead l JOIN l.idClient c JOIN p.idStatusProposal sp JOIN c.user u WHERE u.idUser = :idUser GROUP BY sp.name")
-    List<Object[]> countProposalsByStatus(@Param("idUser") Long idUser);
+    @Query("SELECT sp.name, COUNT(p) FROM Proposal p JOIN p.idLead l JOIN l.idClient c JOIN p.idStatusProposal sp JOIN c.user u WHERE u.idUser = :idUser AND (CASE WHEN :period = 'day' THEN DATE(p.proposalDate) = CURRENT_DATE WHEN :period = 'week' THEN YEARWEEK(p.proposalDate, 1) = YEARWEEK(CURRENT_DATE, 1) WHEN :period = 'month' THEN YEAR(p.proposalDate) = YEAR(CURRENT_DATE) AND MONTH(p.proposalDate) = MONTH(CURRENT_DATE) ELSE TRUE END) GROUP BY sp.name")
+    List<Object[]> countProposalsByStatus(@Param("idUser") Long idUser, @Param("period") String period);
 }

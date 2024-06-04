@@ -74,9 +74,14 @@ var options = {
 // grafico pizza (Propostas)
 
 async function fetchAndUpdateChartProposal() {
-    userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('userId');
+    const periodSelect = document.getElementById('periodSelect');
+    const period = periodSelect.value || 'all';
+
     try {
-        const response = await axios.get('/proposal/statistics/' + userId);
+        const response = await axios.get(`/proposal/statistics/${userId}`, {
+            params: { period: period }
+        });
         const statistics = response.data;
 
         const labels = statistics.map(item => item[0]);
@@ -125,14 +130,22 @@ async function fetchAndUpdateChartProposal() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', fetchAndUpdateChartProposal);
+document.addEventListener('DOMContentLoaded', () => {
+    fetchAndUpdateChartProposal();
+    document.getElementById('periodSelect').addEventListener('change', fetchAndUpdateChartProposal);
+});
 
 // grafico pizza (Ligações)
 
 async function fetchAndUpdateChartCalls() {
-    userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('userId');
+    const periodSelect = document.getElementById('periodSelectCalls');
+    const period = periodSelect.value || 'all';
+
     try {
-        const response = await axios.get('/lead/statistics/' + userId);
+        const response = await axios.get(`/lead/statistics/${userId}`, {
+            params: { period: period }
+        });
         const statistics = response.data;
 
         const labels = statistics.map(item => item[0]);
@@ -181,8 +194,10 @@ async function fetchAndUpdateChartCalls() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', fetchAndUpdateChartCalls);
-
+document.addEventListener('DOMContentLoaded', () => {
+    fetchAndUpdateChartCalls();
+    document.getElementById('periodSelectCalls').addEventListener('change', fetchAndUpdateChartCalls);
+});
 
 // gerenciador de tarefas
 

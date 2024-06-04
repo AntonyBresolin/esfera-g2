@@ -29,8 +29,8 @@ public class LeadController {
     private LeadService leadService;
 
     @GetMapping("/statistics/{idUser}")
-    public ResponseEntity<List<Object[]>> getLeadStatistics(@PathVariable Long idUser) {
-        List<Object[]> statistics = leadService.getLeadStatistics(idUser);
+    public ResponseEntity<List<Object[]>> getLeadStatistics(@PathVariable Long idUser, @RequestParam(required = false, defaultValue = "all") String period) {
+        List<Object[]> statistics = leadService.getLeadStatistics(idUser, period);
         return ResponseEntity.ok(statistics);
     }
 

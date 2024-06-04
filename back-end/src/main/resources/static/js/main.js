@@ -11,27 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
         window.history.replaceState({path: newUrl}, '', newUrl);
     }
-});
 
-var currentDate = new Date();
-var sessionEndDate = new Date(localStorage.getItem('sessionEnd'));
-
-if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate) {
-} else {
-    localStorage.removeItem('loggedIn');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('sessionEnd');
-    window.location.href = '/login';
-}
-
-function logout() {
-    localStorage.removeItem('loggedIn');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('sessionEnd');
-    window.location.href = '/login';
-}
-
-window.onload = function() {
     var userId = localStorage.getItem('userId');
     if (userId) {
         var xhr = new XMLHttpRequest();
@@ -55,7 +35,25 @@ window.onload = function() {
         };
         xhr.send();
     }
-};
+});
+
+var currentDate = new Date();
+var sessionEndDate = new Date(localStorage.getItem('sessionEnd'));
+
+if (localStorage.getItem('loggedIn') === 'true' && currentDate <= sessionEndDate) {
+} else {
+    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('sessionEnd');
+    window.location.href = '/login';
+}
+
+function logout() {
+    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('sessionEnd');
+    window.location.href = '/login';
+}
 
 function setShowHelpFlagAndRedirect() {
     sessionStorage.setItem('showHelp', 'true');
