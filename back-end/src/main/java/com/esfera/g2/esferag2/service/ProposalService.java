@@ -13,7 +13,7 @@ public class ProposalService {
     @Autowired
     private ProposalRepository proposalRepository;
 
-    public List<Object[]> getProposalStatistics(Long idUser) {
-        return proposalRepository.countProposalsByStatus(idUser);
+    public List<Object[]> getProposalStatistics(Long idUser, String period) {
+        return proposalRepository.countProposalsByStatus(idUser, period);
     }
 }

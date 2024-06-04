@@ -73,8 +73,8 @@ public class ProposalController {
     }
 
     @GetMapping("/statistics/{idUser}")
-    public ResponseEntity<List<Object[]>> getProposalStatistics(@PathVariable Long idUser) {
-        List<Object[]> statistics = proposalService.getProposalStatistics(idUser);
+    public ResponseEntity<List<Object[]>> getProposalStatistics(@PathVariable Long idUser, @RequestParam(required = false, defaultValue = "all") String period) {
+        List<Object[]> statistics = proposalService.getProposalStatistics(idUser, period);
         return ResponseEntity.ok(statistics);
     }
 
