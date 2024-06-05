@@ -64,18 +64,15 @@
                 <div class="container">
                     <div class="task-column" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;" ondrop="drop(event, 'todo-list')" ondragover="allowDrop(event)">
                         <h2>A Fazer</h2>
-                        <ul id="todo-list" class="task-list">
-                        </ul>
+                        <ul id="todo-list" class="task-list" data-status="todo-list"></ul>
                     </div>
                     <div class="task-column" ondrop="drop(event, 'inprogress-list')" ondragover="allowDrop(event)">
                         <h2>Em Progresso</h2>
-                        <ul id="inprogress-list" class="task-list">
-                        </ul>
+                        <ul id="inprogress-list" class="task-list" data-status="inprogress-list"></ul>
                     </div>
                     <div class="task-column" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;" ondrop="drop(event, 'done-list')" ondragover="allowDrop(event)">
                         <h2>Concluído</h2>
-                        <ul id="done-list" class="task-list">
-                        </ul>
+                        <ul id="done-list" class="task-list" data-status="done-list"></ul>
                     </div>
                 </div>
                 <button id="add-task-btn" class="btn-add-task">Adicionar Tarefa</button>
