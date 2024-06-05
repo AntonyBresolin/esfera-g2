@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 window.onload = function () {
     setLeadsByDayOfTheWeak();
+    fetchTasks(localStorage.getItem('userId'));
 }
 
 var data = {
@@ -238,57 +239,57 @@ addTaskButton.addEventListener('click', () => {
     taskForm.style.display = 'block';
 });
 
-document.addEventListener('click', (event) => {
-    if (!taskForm.contains(event.target) && event.target !== addTaskButton) {
-        taskForm.style.display = 'none';
-    }
-});
-
-let draggedTask;
+function updateTaskStatus(taskId, status) {
+    fetch(`/task/${taskId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: status })
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.error('Error updating task status');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
 
 function allowDrop(event) {
     event.preventDefault();
 }
 
 function drag(event) {
-    draggedTask = event.target.closest('.task');
+    event.dataTransfer.setData("text", event.target.dataset.id);
 }
 
-function drop(event, targetListId) {
+function drop(event, columnId) {
     event.preventDefault();
-    const targetList = document.getElementById(targetListId);
-    const rect = targetList.getBoundingClientRect();
-    const offsetY = event.clientY - rect.top;
-    const targetTask = findTaskAtOffset(targetList, offsetY);
+    const taskId = event.dataTransfer.getData("text");
+    const taskElement = document.querySelector(`.task[data-id='${taskId}']`);
+    const oldColumnId = taskElement.dataset.status;
+    const newStatus = columnId;
+    if (oldColumnId !== newStatus) {
+        taskElement.dataset.status = newStatus;
+        const newTaskList = document.getElementById(newStatus);
+        newTaskList.appendChild(taskElement);
 
-    if (draggedTask && targetTask) {
-        targetList.insertBefore(draggedTask, targetTask);
-    } else if (draggedTask) {
-        targetList.appendChild(draggedTask);
+        fetch(`/task/${taskId}/status?status=${newStatus}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update task status');
+            }
+        })
+        .catch(error => console.error('Error updating task status:', error));
     }
-}
-
-function findTaskAtOffset(list, offsetY) {
-    const tasks = list.querySelectorAll('.task');
-    for (let i = 0; i < tasks.length; i++) {
-        const rect = tasks[i].getBoundingClientRect();
-        if (offsetY < rect.top + rect.height / 2) {
-            return tasks[i];
-        }
-    }
-    return null;
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    const todoList = document.getElementById("todo-list");
-    const inProgressList = document.getElementById("inprogress-list");
-    const doneList = document.getElementById("done-list");
-
-    addTask(todoList, "Tarefa 1", "Descrição da tarefa 1", "2021-06-30");
-    addTask(todoList, "Tarefa 2", "Descrição da tarefa 2", "2021-06-30");
-    addTask(inProgressList, "Tarefa 3", "Descrição da tarefa 3", "2021-06-30");
-    addTask(doneList, "Tarefa 4", "Descrição da tarefa 4", "2021-06-30");
-
     const taskFormElement = document.getElementById('task-form');
     taskFormElement.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -296,87 +297,152 @@ document.addEventListener("DOMContentLoaded", function () {
         const taskName = document.getElementById('task-name').value;
         const taskDescription = document.getElementById('task-description').value;
         const dueDate = document.getElementById('due-date').value;
+        const userId = localStorage.getItem('userId');
 
-        if (taskName && taskDescription && dueDate) {
-            addTask(todoList, taskName, taskDescription, dueDate);
-        } else {
-            alert('Preencha todos os campos!');
-        }
+        const taskData = {
+            name: taskName,
+            description: taskDescription,
+            dueDate: dueDate,
+            user: { idUser: userId },
+            status: "todo-list"
+        };
 
-        document.querySelector('.task-form').style.display = 'none';
+        console.log(taskData);
+
+        fetch('/task', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(taskData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to create task');
+            }
+            return response.json();
+        })
+        .then(data => {
+            addTaskToList(data);
+            taskForm.style.display = 'none';
+        })
+        .catch(error => console.error('Error:', error));
     });
 });
 
-function openEditForm(task) {
-    const editForm = document.querySelector('.edit-task-form');
-    const editTaskId = editForm.querySelector('#edit-task-id');
-    const editTaskName = editForm.querySelector('#edit-task-name');
-    const editTaskDescription = editForm.querySelector('#edit-task-description');
-    const editDueDate = editForm.querySelector('#edit-due-date');
-
-    if (task.dataset.id) {
-        editTaskId.value = task.dataset.id;
-        editTaskName.value = task.querySelector('b').innerText;
-        editTaskDescription.value = task.querySelector('.task-description').innerText;
-        editDueDate.value = task.querySelector('.due-date').innerText;
-
-        editForm.style.display = 'block';
-    } else {
-        console.error("Valor de data-id da tarefa não encontrado.");
-    }
+function fetchTasks(userId) {
+    fetch(`/task/all/${userId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch tasks');
+            }
+            return response.json();
+        })
+        .then(data => {
+            data.forEach(task => addTaskToList(task));
+        })
+        .catch(error => console.error('Error:', error));
 }
 
-document.addEventListener('click', (event) => {
+function openEditForm(taskElement) {
     const editForm = document.querySelector('.edit-task-form');
-    const editButtons = document.querySelectorAll('.edit-button');
-    let isEditButton = false;
+    const taskId = taskElement.dataset.id;
+    const taskName = taskElement.querySelector('b').innerText;
+    const taskDescription = taskElement.querySelector('.task-description').innerText;
+    const dueDate = taskElement.querySelector('.due-date').innerText;
 
-    editButtons.forEach((button) => {
-        if (button.contains(event.target)) {
-            isEditButton = true;
-        }
-    });
+    document.getElementById('edit-task-id').value = taskId;
+    document.getElementById('edit-task-name').value = taskName;
+    document.getElementById('edit-task-description').value = taskDescription;
 
-    if (!editForm.contains(event.target) && !isEditButton) {
-        closeEditForm();
-    }
-});
+    const [day, month, year] = dueDate.split('-');
+    const formattedDueDate = `${year}-${month}-${day}`;
+    document.getElementById('edit-due-date').value = formattedDueDate;
+
+    editForm.style.display = 'block';
+}
 
 function submitEditForm() {
-    const editTaskId = document.getElementById('edit-task-id').value;
-    const editTaskName = document.getElementById('edit-task-name').value;
-    const editTaskDescription = document.getElementById('edit-task-description').value;
-    const editDueDate = document.getElementById('edit-due-date').value;
+    const taskId = document.getElementById('edit-task-id').value;
+    const taskName = document.getElementById('edit-task-name').value;
+    const taskDescription = document.getElementById('edit-task-description').value;
+    const dueDate = document.getElementById('edit-due-date').value;
+    const taskStatus = document.querySelector(`.task[data-id='${taskId}']`).dataset.status;
+    const userId = localStorage.getItem('userId');
 
-    const task = document.querySelector(`.task[data-id="${editTaskId}"]`);
-    task.querySelector('b').innerText = editTaskName;
-    task.querySelector('.task-description').innerText = editTaskDescription;
-    task.querySelector('.due-date').innerText = editDueDate;
+    const taskData = {
+        idTask: taskId,
+        name: taskName,
+        description: taskDescription,
+        dueDate: dueDate,
+        status: taskStatus,
+        idUser: { idUser: userId }
+    };
 
-    closeEditForm();
+    fetch(`/task/${taskId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(taskData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateTaskInList(data);
+        document.querySelector('.edit-task-form').style.display = 'none';
+    })
+    .catch(error => console.error('Error updating task:', error));
 }
 
-function closeEditForm() {
-    const editForm = document.querySelector('.edit-task-form');
-    editForm.style.display = 'none';
+function updateTaskInList(task) {
+    const taskElement = document.querySelector(`.task[data-id='${task.idTask}']`);
+    if (taskElement) {
+        taskElement.querySelector('b').innerText = task.name;
+        taskElement.querySelector('.task-description').innerText = task.description;
+        taskElement.querySelector('.due-date').innerText = formatDate(task.dueDate);
+    }
 }
 
-function addTask(list, taskName, taskDescription, dueDate) {
-    const task = document.createElement("li");
-    task.className = "task";
-    task.draggable = true;
-    task.dataset.id = taskName.replace(/\s+/g, '-').toLowerCase();
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate() + 1).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+}
 
-    const taskHTML = "<b>" + taskName + "</b><br><span class='task-description'>" + taskDescription + "</span><br><span class='due-date'>" + dueDate + "</span>";
-    task.innerHTML = taskHTML;
+function addTaskToList(task) {
+    const statusMap = {
+        "todo-list": "todo-list",
+        "inprogress-list": "inprogress-list",
+        "done-list": "done-list"
+    };
 
-    task.addEventListener("dragstart", drag);
+    const taskListId = statusMap[task.status];
+    const taskList = document.getElementById(taskListId);
+
+    if (!taskList) {
+        console.error(`Task list element with ID '${taskListId}' not found`);
+        return;
+    }
+
+    const taskElement = document.createElement("li");
+    taskElement.className = "task";
+    taskElement.draggable = true;
+    taskElement.dataset.id = task.idTask;
+    taskElement.dataset.status = task.status;
+
+    const formattedDate = formatDate(task.dueDate);
+    const taskHTML = "<b>" + task.name + "</b><br><span class='task-description'>" + task.description + "</span><br><span class='due-date'>" + formattedDate + "</span>";
+    taskElement.innerHTML = taskHTML;
+
+    taskElement.addEventListener("dragstart", drag);
 
     const editButton = document.createElement("button");
     editButton.className = "edit-button";
     editButton.innerText = "Editar";
     editButton.addEventListener("click", function () {
-        openEditForm(task);
+        openEditForm(taskElement);
     });
 
     const space = document.createElement("span");
@@ -385,7 +451,7 @@ function addTask(list, taskName, taskDescription, dueDate) {
     const deleteButton = document.createElement("button");
     deleteButton.innerText = "Excluir";
     deleteButton.addEventListener("click", function () {
-        deleteTask(task);
+        deleteTask(taskElement);
     });
 
     const taskButtons = document.createElement("div");
@@ -394,23 +460,28 @@ function addTask(list, taskName, taskDescription, dueDate) {
     taskButtons.appendChild(space);
     taskButtons.appendChild(deleteButton);
 
-    task.appendChild(taskButtons);
+    taskElement.appendChild(taskButtons);
 
-    list.appendChild(task);
+    taskList.appendChild(taskElement);
 }
 
-document.getElementById('edit-task-form').addEventListener('submit', function (event) {
-    event.preventDefault();
-    submitEditForm();
-});
-
-function deleteTask(task) {
-    task.remove();
+function deleteTask(taskElement) {
+    const taskId = taskElement.dataset.id;
+    fetch(`/task/${taskId}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (response.ok) {
+            taskElement.remove();
+        } else {
+            console.error('Error deleting task');
+        }
+    });
 }
 
 
 async function setLeadsByDayOfTheWeak() {
-    await fetch('http://localhost:8080/lead/graph/leadsweek/'+localStorage.getItem('userId'), {
+    await fetch('http://localhost:8080/lead/graph/leadsweek/' + localStorage.getItem('userId'), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
