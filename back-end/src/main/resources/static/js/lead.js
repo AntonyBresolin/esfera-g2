@@ -40,11 +40,20 @@ window.onload = async function () {
     await fetchAllLeads(currentPage);
 }
 
-
-
 function handleCloseAddLead() {
     let addLead = document.getElementById('cadLead');
     addLead.classList.toggle('hidden');
+}
+
+function formatarData(data) {
+    const dataObj = new Date(data);
+    dataObj.setUTCHours(0, 0, 0, 0);
+
+    const dia = String(dataObj.getUTCDate()).padStart(2, '0');
+    const mes = String(dataObj.getUTCMonth() + 1).padStart(2, '0');
+    const ano = dataObj.getUTCFullYear();
+
+    return `${dia}/${mes}/${ano}`;
 }
 
 function listLeads(leads) {
@@ -54,7 +63,7 @@ function listLeads(leads) {
     leads.forEach(data => {
         let tr = document.createElement('tr');
         tr.className = 'bg-white border-b hover:bg-gray-50';
-        let dataFormatada = new Date(data.date).toLocaleDateString();
+        let dataFormatada = formatarData(data.date);
         let resultIcon = getResultIcon(data.result.result);
 
         tr.innerHTML = `

@@ -13,8 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -106,37 +108,58 @@ public class LeadController {
         ArrayList<Long> leads = new ArrayList<>();
         ArrayList<String> dates = new ArrayList<>();
 
-        Timestamp startOfTheDay = new Timestamp(getFirstTimeOfTheDay(-30).getTimeInMillis());
-        Timestamp endOfTheDay = new Timestamp(getLastTimeOfTheDay(-30).getTimeInMillis());
+        Calendar startOfTheDay = getFirstTimeOfTheDay(-31);
+        Calendar endOfTheDay = getLastTimeOfTheDay(-31);
+
+        startOfTheDay.add(Calendar.DAY_OF_MONTH, 1);
+        endOfTheDay.add(Calendar.DAY_OF_MONTH, 1);
 
         for (int i = 0; i < 30; i++) {
-            leads.add(leadRepository.countByDateBetweenAndIdClientUserIdUser(startOfTheDay, endOfTheDay, idUser));
-            dates.add(startOfTheDay.toString().substring(0, 10));
+            leads.add(leadRepository.countByDateBetweenAndIdClientUserIdUser(
+                new Timestamp(startOfTheDay.getTimeInMillis()),
+                new Timestamp(endOfTheDay.getTimeInMillis()),
+                idUser
+            ));
 
-            startOfTheDay = new Timestamp(startOfTheDay.getTime() + 86400000);
-            endOfTheDay = new Timestamp(endOfTheDay.getTime() + 86400000);
+            startOfTheDay.add(Calendar.DAY_OF_MONTH, 1);
+            endOfTheDay.add(Calendar.DAY_OF_MONTH, 1);
+            
+            dates.add(formatarData(startOfTheDay.getTime()));
         }
 
         return new DateLeadForWeak(leads, dates);
     }
+
     @GetMapping("/graph/leadsweek/{idUser}")
     public DateLeadForWeak getLeadsForWeakByUser(@PathVariable Long idUser) {
         ArrayList<Long> leads = new ArrayList<>();
         ArrayList<String> dates = new ArrayList<>();
 
+        Calendar startOfTheDay = getFirstTimeOfTheDay(-8);
+        Calendar endOfTheDay = getLastTimeOfTheDay(-8);
 
-        Timestamp startOfTheDay = new Timestamp(getFirstTimeOfTheDay(-7).getTimeInMillis());
-        Timestamp endOfTheDay = new Timestamp(getLastTimeOfTheDay(-7).getTimeInMillis());
+        startOfTheDay.add(Calendar.DAY_OF_MONTH, 1);
+        endOfTheDay.add(Calendar.DAY_OF_MONTH, 1);
 
         for (int i = 0; i < 7; i++) {
-            leads.add(leadRepository.countByDateBetweenAndIdClientUserIdUser(startOfTheDay, endOfTheDay, idUser));
-            dates.add(startOfTheDay.toString().substring(0, 10));
+            leads.add(leadRepository.countByDateBetweenAndIdClientUserIdUser(
+                new Timestamp(startOfTheDay.getTimeInMillis()),
+                new Timestamp(endOfTheDay.getTimeInMillis()),
+                idUser
+            ));
 
-            startOfTheDay = new Timestamp(startOfTheDay.getTime() + 86400000);
-            endOfTheDay = new Timestamp(endOfTheDay.getTime() + 86400000);
+            startOfTheDay.add(Calendar.DAY_OF_MONTH, 1);
+            endOfTheDay.add(Calendar.DAY_OF_MONTH, 1);
+
+            dates.add(formatarData(startOfTheDay.getTime()));
         }
 
         return new DateLeadForWeak(leads, dates);
+    }
+
+    private String formatarData(Date data) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(data);
     }
 
     private Calendar getFirstTimeOfTheDay(int dayLess){
