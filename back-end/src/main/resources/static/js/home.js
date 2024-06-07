@@ -21,8 +21,6 @@ window.onload = function () {
     fetchTasks(localStorage.getItem('userId'));
 }
 
-
-
 // grafico linhas 2
 
 var data = {
@@ -202,11 +200,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // gerenciador de tarefas
 
+function closeFormsOnClickOutside(event) {
+    const taskForm = document.querySelector('.task-form');
+    const editForm = document.querySelector('.edit-task-form');
+    
+    if (taskForm.style.display === 'block' && !taskForm.contains(event.target)) {
+        taskForm.style.display = 'none';
+    }
+    if (editForm.style.display === 'block' && !editForm.contains(event.target)) {
+        editForm.style.display = 'none';
+    }
+}
+
+document.addEventListener('click', closeFormsOnClickOutside);
+
 const addTaskButton = document.getElementById('add-task-btn');
 const taskForm = document.querySelector('.task-form');
 
 addTaskButton.addEventListener('click', () => {
     taskForm.style.display = 'block';
+    event.stopPropagation();
 });
 
 function updateTaskStatus(taskId, status) {
@@ -330,6 +343,7 @@ function openEditForm(taskElement) {
     document.getElementById('edit-due-date').value = formattedDueDate;
 
     editForm.style.display = 'block';
+    event.stopPropagation();
 }
 
 function submitEditForm() {
@@ -375,9 +389,12 @@ function updateTaskInList(task) {
 
 function formatDate(dateString) {
     const date = new Date(dateString);
-    const day = String(date.getDate() + 1).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
+    date.setUTCHours(0, 0, 0, 0);
+
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const year = date.getUTCFullYear();
+
     return `${day}-${month}-${year}`;
 }
 
@@ -464,7 +481,7 @@ async function setLeadsByDayOfTheWeak() {
 
                     labels: data.dateLead,
                     datasets: [{
-                        label: 'Total de ligações',
+                        label: 'Total de ligações (Últimos 7 dias)',
                         data: data.leadCount,
                         backgroundColor: '#8B008B',
                         borderColor: 'black',
@@ -495,7 +512,7 @@ async function setLeadsByDayOfTheMonth() {
 
                     labels: data.dateLead,
                     datasets: [{
-                        label: 'Total de ligações',
+                        label: 'Total de ligações (Últimos 30 dias)',
                         data: data.leadCount,
                         backgroundColor: '#8B008B',
                         borderWidth: 1,

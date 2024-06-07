@@ -239,9 +239,7 @@ async function fetchImportClientData() {
     loading.classList.toggle('hidden');
     fileDiv.classList.toggle('hidden');
 
-
     formData.append('file', fileInput.files[0]);
-console.log(localStorage.getItem("userId"));
     await fetch('http://localhost:8080/client-address-contact/import/'+Number(localStorage.getItem("userId")), {
         method: 'POST',
         body: formData
@@ -268,7 +266,7 @@ async function deleteClient() {
     let warning = document.getElementById('warnings');
     let warningMessage = document.getElementById('warningMessage');
     let warningTitle = document.getElementById('warningTitle');
-    await fetch(`http://localhost:8080/client-address-contact/delete/${sessionStorage.getItem('idClientToDel')}`, {
+    await fetch(`http://localhost:8080/client-address-contact/delete/${sessionStorage.getItem('idClientToDel')}/${localStorage.getItem('userId')}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -320,7 +318,7 @@ async function deleteSelectedClients() {
     }
 
     try {
-        const response = await fetch('http://localhost:8080/client-address-contact/delete', {
+        const response = await fetch(`http://localhost:8080/client-address-contact/delete/${localStorage.getItem('userId')}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

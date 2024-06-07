@@ -138,6 +138,7 @@ public class ClientAddressContactDTOController {
 
                 contactRepository.saveAll(contacts);
             }
+            csvParser.close();
             return ResponseEntity.status(201).body("Arquivo CSV processado com sucesso!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao processar o arquivo CSV!");
@@ -169,8 +170,8 @@ public class ClientAddressContactDTOController {
         }
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteClientAddressContacts(@RequestBody List<Long> ids, @RequestParam Long idUser) {
+    @DeleteMapping("/delete/{idUser}")
+    public ResponseEntity<?> deleteClientAddressContacts(@RequestBody List<Long> ids, @PathVariable Long idUser) {
         List<Long> deleteds = new ArrayList<>();
         List<Long> notDeletedDueToLeads = new ArrayList<>();
 

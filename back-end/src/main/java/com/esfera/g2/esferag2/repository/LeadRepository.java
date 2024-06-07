@@ -13,13 +13,13 @@ import java.util.List;
 
 @Repository
 public interface LeadRepository extends JpaRepository<Lead, Long> {
-    Boolean existsByIdClientIdClient(Long leadId);
+    Boolean existsByIdClientIdClient(Long idClient);
+    
     Page<Lead> findAll(Pageable pageable);
 
     Long countByDateBetweenAndIdClientUserIdUser(Timestamp start, Timestamp end, Long idUser);
 
     Page<Lead> findLeadsByIdClientNameContainingIgnoreCaseAndIdClientUserIdUser(String name, Long idUser, Pageable pageable);
-
 
     Page<Lead> findAllByIdClientUserIdUser(Long idUser, Pageable pageable);
 

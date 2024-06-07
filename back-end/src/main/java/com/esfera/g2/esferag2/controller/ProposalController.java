@@ -3,11 +3,9 @@ package com.esfera.g2.esferag2.controller;
 import com.esfera.g2.esferag2.model.Lead;
 import com.esfera.g2.esferag2.model.Proposal;
 import com.esfera.g2.esferag2.model.StatusProposal;
-import com.esfera.g2.esferag2.model.User;
 import com.esfera.g2.esferag2.repository.LeadRepository;
 import com.esfera.g2.esferag2.repository.ProposalRepository;
 import com.esfera.g2.esferag2.repository.StatusProposalRepository;
-import com.esfera.g2.esferag2.repository.UserRepository;
 import com.esfera.g2.esferag2.service.ProposalService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +35,6 @@ public class ProposalController {
     private ProposalRepository proposalRepository;
     @Autowired
     private LeadRepository leadRepository;
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     private StatusProposalRepository statusProposalRepository;
     @Autowired
@@ -150,7 +146,6 @@ public class ProposalController {
         return proposalRepository.findById(id)
                 .map(proposal -> {
                     Lead lead = leadRepository.findById(idLead).orElseThrow();
-                    User user = userRepository.findById(idUser).orElseThrow();
                     StatusProposal statusProposal = statusProposalRepository.findById(idStatusProposal).orElseThrow();
 
                     // Converter a string para Timestamp

@@ -357,7 +357,7 @@ async function fetchAddEditProposal(event) {
         formData.append('file', file);
     }
 
-    await fetch(`http://localhost:8080/proposal/${data.idProposal}/${localStorage.getItem('userId')}`, {
+    await fetch(`http://localhost:8080/proposal/${data.idProposal}`, {
         method: 'PUT',
         body: formData
     })
