@@ -2,14 +2,14 @@ package com.esfera.g2.esferag2.model;
 
 import java.util.List;
 
-public class DateLeadForWeak {
+public class DateLeadForTime {
     private List<Long> leadCount;
     private List<String> dateLead;
 
-    public DateLeadForWeak() {
+    public DateLeadForTime() {
     }
 
-    public DateLeadForWeak(List<Long> leadCount, List<String> dateLead) {
+    public DateLeadForTime(List<Long> leadCount, List<String> dateLead) {
         this.leadCount = leadCount;
         this.dateLead = dateLead;
     }
