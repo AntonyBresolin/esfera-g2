@@ -5,6 +5,7 @@ import java.util.List;
 public class DateLeadForWeak {
     private List<Long> leadCount;
     private List<String> dateLead;
+    private double crescimentoPercentual;
 
     public DateLeadForWeak() {
     }
@@ -12,6 +13,12 @@ public class DateLeadForWeak {
     public DateLeadForWeak(List<Long> leadCount, List<String> dateLead) {
         this.leadCount = leadCount;
         this.dateLead = dateLead;
+    }
+
+    public DateLeadForWeak(List<Long> leadCount, List<String> dateLead, double crescimentoPercentual) {
+        this.leadCount = leadCount;
+        this.dateLead = dateLead;
+        this.crescimentoPercentual = crescimentoPercentual;
     }
 
     public List<Long> getLeadCount() {
@@ -28,5 +35,13 @@ public class DateLeadForWeak {
 
     public void setDateLead(List<String> dateLead) {
         this.dateLead = dateLead;
+    }
+
+    public double getCrescimentoPercentual() {
+        return crescimentoPercentual;
+    }
+
+    public void setCrescimentoPercentual(double crescimentoPercentual) {
+        this.crescimentoPercentual = crescimentoPercentual;
     }
 }

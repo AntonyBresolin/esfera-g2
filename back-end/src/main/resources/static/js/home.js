@@ -13,48 +13,14 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// grafico linhas 1
+// grafico linhas
 
 window.onload = function () {
     setLeadsByDayOfTheWeak();
     setLeadsByDayOfTheMonth();
+    setProposalsByDayOfTheMonth();
     fetchTasks(localStorage.getItem('userId'));
 }
-
-// grafico linhas 2
-
-var data = {
-    labels: ["Novembro", "Dezembro", "Janeiro", "Fevereiro", "Março", "Abril", "Maio"],
-    datasets: [{
-        label: "Propostas",
-        data: [0, 15, 30, 65, 52, 70, 77],
-        borderColor: "purple",
-        fill: false
-    }]
-};
-
-var options = {
-    responsive: true,
-    title: {
-        display: true,
-        text: 'Gráfico de Propostas Mensais'
-    },
-    scales: {
-        yAxes: [{
-            ticks: {
-                beginAtZero: true
-            }
-        }]
-    }
-};
-
-var ctx = document.getElementById("lineChart2").getContext("2d");
-
-var lineChart2 = new Chart(ctx, {
-    type: 'line',
-    data: data,
-    options: options
-});
 
 // grafico barras
 
@@ -508,6 +474,7 @@ async function setLeadsByDayOfTheMonth() {
     }).then(response => response.json())
         .then(data => {
                 var ctx = document.getElementById('lineChart1').getContext('2d');
+                document.getElementById('crescimento-ligacoes').innerText = `${data.crescimentoPercentual.toFixed(2)}% em comparação ao mês anterior`;
                 var dataLead = {
 
                     labels: data.dateLead,
@@ -526,6 +493,38 @@ async function setLeadsByDayOfTheMonth() {
                     data: dataLead,
                     options: options
                 });
-            }
-        )
+        })
+}
+
+
+async function setProposalsByDayOfTheMonth() {
+    await fetch('http://localhost:8080/proposal/graph/proposalsmonth/'+localStorage.getItem('userId'), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => response.json())
+        .then(data => {
+                var ctx = document.getElementById('lineChart2').getContext('2d');
+                document.getElementById('crescimento-propostas').innerText = `${data.crescimentoPercentualProposal.toFixed(2)}% em comparação ao mês anterior`;
+                console.log(data)
+                var dataLead = {
+
+                    labels: data.dateProposal,
+                    datasets: [{
+                        label: 'Total de Propostas (Últimos 30 dias)',
+                        data: data.proposalCount,
+                        backgroundColor: '#8B008B',
+                        borderWidth: 1,
+                        borderColor: "purple",
+                        fill: false
+                    }]
+                };
+
+                var barChart = new Chart(ctx, {
+                    type: 'line',
+                    data: dataLead,
+                    options: options
+                });
+        })
 }

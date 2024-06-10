@@ -107,6 +107,16 @@ public class LeadController {
     public DateLeadForWeak getLeadsForMonthByUser(@PathVariable Long idUser) {
         ArrayList<Long> leads = new ArrayList<>();
         ArrayList<String> dates = new ArrayList<>();
+        Double totalFaturamento = leadRepository.sumValue(idUser);   
+        Double faturamentoMesAnterior = leadRepository.sumValueLastMonth(idUser);
+        double crescimentoPercentual = 0;
+
+        if (totalFaturamento == null) totalFaturamento = 0.0;
+        if (faturamentoMesAnterior == null) faturamentoMesAnterior = 0.0;
+
+        if (faturamentoMesAnterior > 0) {
+            crescimentoPercentual = ((totalFaturamento - faturamentoMesAnterior) / faturamentoMesAnterior) * 100;
+        }
 
         Calendar startOfTheDay = getFirstTimeOfTheDay(-31);
         Calendar endOfTheDay = getLastTimeOfTheDay(-31);
@@ -127,7 +137,7 @@ public class LeadController {
             dates.add(formatarData(startOfTheDay.getTime()));
         }
 
-        return new DateLeadForWeak(leads, dates);
+        return new DateLeadForWeak(leads, dates, crescimentoPercentual);
     }
 
     @GetMapping("/graph/leadsweek/{idUser}")
