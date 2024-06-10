@@ -1,8 +1,7 @@
 package com.esfera.g2.esferag2.controller;
 
-import com.esfera.g2.esferag2.model.DateLeadForTime;
+import com.esfera.g2.esferag2.model.DateLeadForWeak;
 import com.esfera.g2.esferag2.model.Lead;
-import com.esfera.g2.esferag2.model.ProgressTime;
 import com.esfera.g2.esferag2.repository.LeadRepository;
 import com.esfera.g2.esferag2.repository.ProposalRepository;
 import com.esfera.g2.esferag2.service.LeadService;
@@ -15,7 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/lead")
@@ -102,7 +104,7 @@ public class LeadController {
     }
 
     @GetMapping("/graph/leadsmonth/{idUser}")
-    public ProgressTime getLeadsForMonthByUser(@PathVariable Long idUser) {
+    public DateLeadForWeak getLeadsForMonthByUser(@PathVariable Long idUser) {
         ArrayList<Long> leads = new ArrayList<>();
         ArrayList<String> dates = new ArrayList<>();
 
@@ -124,23 +126,12 @@ public class LeadController {
 
             dates.add(formatarData(startOfTheDay.getTime()));
         }
-        Double leadsAtual = (double) leads.stream().mapToLong(Long::longValue).sum();
-        Double leadsMesAnterior = leadRepository.countByDateBetweenAndIdClientUserIdUser(
-            new Timestamp(getFirstTimeOfTheDay(-61).getTimeInMillis()),
-            new Timestamp(getLastTimeOfTheDay(-31).getTimeInMillis()),
-            idUser
-        ).doubleValue();
 
-        System.out.println("leadsAtual: " + leadsAtual);
-        System.out.println("leadsMesAnterior: " + leadsMesAnterior);
-        System.out.println("comparMonth: " + comparMonth(leadsAtual, leadsMesAnterior));
-
-        return new ProgressTime(new DateLeadForTime(leads, dates), comparMonth(leadsAtual, leadsMesAnterior));
-
+        return new DateLeadForWeak(leads, dates);
     }
 
     @GetMapping("/graph/leadsweek/{idUser}")
-    public DateLeadForTime getLeadsForWeakByUser(@PathVariable Long idUser) {
+    public DateLeadForWeak getLeadsForWeakByUser(@PathVariable Long idUser) {
         ArrayList<Long> leads = new ArrayList<>();
         ArrayList<String> dates = new ArrayList<>();
 
@@ -163,7 +154,7 @@ public class LeadController {
             dates.add(formatarData(startOfTheDay.getTime()));
         }
 
-        return new DateLeadForTime(leads, dates);
+        return new DateLeadForWeak(leads, dates);
     }
 
     private String formatarData(Date data) {
@@ -194,20 +185,5 @@ public class LeadController {
 
         return calendar;
     }
-
-    private Double comparMonth(Double leadsAtual, Double leadsMesAnterior) {
-        double crescimentoPercentual = 0;
-
-        if (leadsAtual == null) leadsAtual = 0.0;
-        if (leadsMesAnterior == null) leadsMesAnterior = 0.0;
-
-        if (leadsMesAnterior > 0) {
-            crescimentoPercentual = ((leadsAtual - leadsMesAnterior) / leadsMesAnterior) * 100;
-        } else {
-            crescimentoPercentual = leadsAtual * 100;
-        }
-        return crescimentoPercentual;
-    }
-
 
 }

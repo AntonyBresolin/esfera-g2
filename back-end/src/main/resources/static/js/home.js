@@ -510,18 +510,16 @@ async function setLeadsByDayOfTheMonth() {
                 var ctx = document.getElementById('lineChart1').getContext('2d');
                 var dataLead = {
 
-                    labels: data.dateLeadForTime.dateLead,
+                    labels: data.dateLead,
                     datasets: [{
                         label: 'Total de ligações (Últimos 30 dias)',
-                        data: data.dateLeadForTime.leadCount,
+                        data: data.leadCount,
                         backgroundColor: '#8B008B',
                         borderWidth: 1,
                         borderColor: "purple",
                         fill: false
                     }]
                 };
-                var progressLabel = document.getElementById("lineChart1_ligacao");
-                progressLabel.innerText = data.progress + "% em comparação ao mês anterior";
 
                 var barChart = new Chart(ctx, {
                     type: 'line',
