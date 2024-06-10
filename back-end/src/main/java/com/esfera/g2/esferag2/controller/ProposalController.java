@@ -1,5 +1,6 @@
 package com.esfera.g2.esferag2.controller;
 
+import com.esfera.g2.esferag2.model.DateProposalForWeak;
 import com.esfera.g2.esferag2.model.Lead;
 import com.esfera.g2.esferag2.model.Proposal;
 import com.esfera.g2.esferag2.model.StatusProposal;
@@ -22,6 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +52,6 @@ public class ProposalController {
         try {
             Double totalFaturamento = proposalRepository.sumValue(idUser);
             Double faturamentoMesAnterior = proposalRepository.sumValueLastMonth(idUser);
-            System.out.println("totalFaturamento: " + totalFaturamento);
 
             if (totalFaturamento == null) totalFaturamento = 0.0;
             if (faturamentoMesAnterior == null) faturamentoMesAnterior = 0.0;
@@ -94,6 +98,74 @@ public class ProposalController {
     public Proposal getProposalById(@PathVariable Long id,
                                     @PathVariable Long idUser) {
         return proposalRepository.findByIdProposalAndIdLeadIdClientUserIdUser(id, idUser);
+    }
+
+    @GetMapping("/graph/proposalsmonth/{idUser}")
+    public DateProposalForWeak getProposalsForMonthByUser(@PathVariable Long idUser) {
+        ArrayList<Long> proposals = new ArrayList<>();
+        ArrayList<String> proposalsDates = new ArrayList<>();
+        Double totalFaturamento = proposalRepository.sumValue2(idUser);   
+        Double faturamentoMesAnterior = proposalRepository.sumValueLastMonth2(idUser);
+        double crescimentoPercentualPropostas = 0;
+
+        if (totalFaturamento == null) totalFaturamento = 0.0;
+        if (faturamentoMesAnterior == null) faturamentoMesAnterior = 0.0;
+
+        if (faturamentoMesAnterior > 0) {
+            crescimentoPercentualPropostas = ((totalFaturamento - faturamentoMesAnterior) / faturamentoMesAnterior) * 100;
+        }
+
+        Calendar startOfTheDay = getFirstTimeOfTheDay(-30);
+        Calendar endOfTheDay = getLastTimeOfTheDay(-30);
+
+        startOfTheDay.add(Calendar.DAY_OF_MONTH, 1);
+        endOfTheDay.add(Calendar.DAY_OF_MONTH, 1);
+
+        for (int i = 0; i < 30; i++) {
+            proposals.add(proposalRepository.countByProposalDateBetweenAndIdLeadIdClientUserIdUser(
+                new Timestamp(startOfTheDay.getTimeInMillis()),
+                new Timestamp(endOfTheDay.getTimeInMillis()),
+                idUser
+            ));
+
+            proposalsDates.add(formatarData(startOfTheDay.getTime()));
+
+            startOfTheDay.add(Calendar.DAY_OF_MONTH, 1);
+            endOfTheDay.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        return new DateProposalForWeak(proposals, proposalsDates, crescimentoPercentualPropostas);
+    }
+
+    private String formatarData(Date data) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(data);
+    }
+
+    private Calendar getFirstTimeOfTheDay(int dayLess){
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timestamp);
+        calendar.add(Calendar.DAY_OF_MONTH, dayLess);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 000);
+
+        return calendar;
+    }
+
+    private Calendar getLastTimeOfTheDay(int dayLess){
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timestamp);
+        calendar.add(Calendar.DAY_OF_MONTH, dayLess);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+
+        return calendar;
     }
 
     @PostMapping(consumes = "multipart/form-data")

@@ -16,6 +16,8 @@ import java.util.List;
 public interface ProposalRepository extends JpaRepository<Proposal, Long> {
     Boolean existsByIdLeadIdLead(Long leadId);
 
+    long countByProposalDateBetweenAndIdLeadIdClientUserIdUser(Timestamp start, Timestamp end, Long userId);
+
     Page<Proposal> findByIdLeadIdClientUserIdUser(Long idUser, Pageable pageable);
 
     List<Proposal> findByIdLeadIdClientUserIdUser(Long idUser);
@@ -40,6 +42,23 @@ public interface ProposalRepository extends JpaRepository<Proposal, Long> {
         LocalDate startOfLastMonth = now.minusMonths(1).withDayOfMonth(1);
         LocalDate startOfThisMonth = now.withDayOfMonth(1);
         return sumValue(Timestamp.valueOf(startOfLastMonth.atStartOfDay()), Timestamp.valueOf(startOfThisMonth.atStartOfDay()), idUser);
+    }
+
+    @Query("SELECT COUNT(p.idProposal) FROM Proposal p JOIN p.idLead l JOIN l.idClient c JOIN c.user u WHERE p.proposalDate >= :startDate AND p.proposalDate < :endDate AND u.idUser = :idUser")
+    Double sumValue2(@Param("startDate") Timestamp startDate, @Param("endDate") Timestamp endDate, @Param("idUser") Long idUser);
+
+    default Double sumValue2(Long idUser) {
+        LocalDate now = LocalDate.now();
+        LocalDate startOfMonth = now.withDayOfMonth(1);
+        LocalDate startOfNextMonth = startOfMonth.plusMonths(1);
+        return sumValue2(Timestamp.valueOf(startOfMonth.atStartOfDay()), Timestamp.valueOf(startOfNextMonth.atStartOfDay()), idUser);
+    }
+
+    default Double sumValueLastMonth2(Long idUser) {
+        LocalDate now = LocalDate.now();
+        LocalDate startOfLastMonth = now.minusMonths(1).withDayOfMonth(1);
+        LocalDate startOfThisMonth = now.withDayOfMonth(1);
+        return sumValue2(Timestamp.valueOf(startOfLastMonth.atStartOfDay()), Timestamp.valueOf(startOfThisMonth.atStartOfDay()), idUser);
     }
 
     @Query("SELECT sp.name, COUNT(p) FROM Proposal p JOIN p.idLead l JOIN l.idClient c JOIN p.idStatusProposal sp JOIN c.user u WHERE u.idUser = :idUser AND (CASE WHEN :period = 'day' THEN DATE(p.proposalDate) = CURRENT_DATE WHEN :period = 'week' THEN YEARWEEK(p.proposalDate, 1) = YEARWEEK(CURRENT_DATE, 1) WHEN :period = 'month' THEN YEAR(p.proposalDate) = YEAR(CURRENT_DATE) AND MONTH(p.proposalDate) = MONTH(CURRENT_DATE) ELSE TRUE END) GROUP BY sp.name")
