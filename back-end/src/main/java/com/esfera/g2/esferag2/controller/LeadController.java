@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,6 +50,17 @@ public class LeadController {
             @RequestParam(defaultValue = "idLead") String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return leadRepository.findAllByIdClientUserIdUser(idUser, pageable);
+    }
+
+    @GetMapping("/all/today/{idUser}")
+    public Page<Lead> getAllLeadsToday(
+            @PathVariable Long idUser,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "idLead") String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        LocalDate currentDate = LocalDate.now();
+        return leadRepository.findAllByIdClientUserIdUserAndDate(idUser, currentDate, pageable);
     }
 
     @GetMapping("/{id}/{idUser}")

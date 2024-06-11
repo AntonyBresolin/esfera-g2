@@ -48,4 +48,9 @@ public interface LeadRepository extends JpaRepository<Lead, Long> {
     @Query("SELECT r.result, COUNT(l) FROM Lead l JOIN l.result r JOIN l.idClient c JOIN c.user u WHERE u.idUser = :idUser AND (CASE WHEN :period = 'day' THEN DATE(l.date) = CURRENT_DATE WHEN :period = 'week' THEN YEARWEEK(l.date, 1) = YEARWEEK(CURRENT_DATE, 1) WHEN :period = 'month' THEN YEAR(l.date) = YEAR(CURRENT_DATE) AND MONTH(l.date) = MONTH(CURRENT_DATE) ELSE TRUE END) GROUP BY r.result")
     List<Object[]> countLeadsByResult(@Param("idUser") Long idUser, @Param("period") String period);
 
+    @Query("SELECT l FROM Lead l JOIN l.idClient c JOIN c.user u WHERE u.idUser = :idUser AND DATE(l.date) = :date")
+    Page<Lead> findAllByIdClientUserIdUserAndDate(
+            @Param("idUser") Long idUser, 
+            @Param("date") LocalDate date, 
+            Pageable pageable);
 }

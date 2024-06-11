@@ -99,8 +99,31 @@ function listLeads(leads) {
     });
 }
 
+function updateLastLeadView(choice) {
+    const lastLeadView = document.getElementById('lastLeadView');
+    lastLeadView.textContent = choice;
+}
+
 async function fetchAllLeads(page) {
+    updateLastLeadView('all');
+    
     await fetch(`http://localhost:8080/lead/all/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`)
+        .then(response => response.json())
+        .then(data => {
+            listLeads(data.content);
+            updatePagination(data);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+async function fetchAllLeadsToday(page) {
+    updateLastLeadView('today');
+    
+    const userId = localStorage.getItem('userId');
+    const currentDate = new Date().toISOString().split('T')[0];
+    const url = `http://localhost:8080/lead/all/today/${userId}?page=${page}&size=${pageSize}&sort=${sortBy}&date=${currentDate}`;
+    
+    await fetch(url)
         .then(response => response.json())
         .then(data => {
             listLeads(data.content);
@@ -115,11 +138,22 @@ function updatePagination(pageInfo) {
     const paginationElement = document.getElementById('pagination');
     paginationElement.innerHTML = '';
 
-    if (currentPage > 0) {
-        paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchAllLeads(${currentPage - 1})">Anterior</button>`;
-    }
-    if (currentPage < totalPages - 1) {
-        paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchAllLeads(${currentPage + 1})">Próximo</button>`;
+    const lastLeadView = document.getElementById('lastLeadView').textContent;
+
+    if (lastLeadView === 'all') {
+        if (currentPage > 0) {
+            paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchAllLeads(${currentPage - 1})">Anterior</button>`;
+        }
+        if (currentPage < totalPages - 1) {
+            paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchAllLeads(${currentPage + 1})">Próximo</button>`;
+        }
+    } else if (lastLeadView === 'today') {
+        if (currentPage > 0) {
+            paginationElement.innerHTML += `<button class="font-semibold mx-2 float-right" onClick="fetchAllLeadsToday(${currentPage - 1})">Anterior</button>`;
+        }
+        if (currentPage < totalPages - 1) {
+            paginationElement.innerHTML += `<button class="font-semibold mx-2" onClick="fetchAllLeadsToday(${currentPage + 1})">Próximo</button>`;
+        }
     }
 }
 
