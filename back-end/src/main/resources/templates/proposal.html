@@ -120,14 +120,16 @@
                             <label for="service" class="text-sm font-semibold">Tipo de Solução</label><br>
                             <select name="service" id="service"
                                     class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                                <option value="" selected disabled>Escolha uma solução</option>
                                 <option value="Acompanhamento">Acompanhamento</option>
                                 <option value="Consultoria">Consultoria</option>
                                 <option value="Treinamento">Treinamento</option>
                             </select>
 
-                            <label for="status" class="text-sm font-semibold">Status da Proposta</label><br>
-                            <select name="status" id="status"
+                            <label for="status" class="text-sm font-semibold">Status da Proposta<span class="text-red-600">*</span></label><br>
+                            <select name="status" id="status" required
                                     class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px]">
+                                <option value="" selected disabled>Escolha um status</option>
                             </select>
 
                         </div>

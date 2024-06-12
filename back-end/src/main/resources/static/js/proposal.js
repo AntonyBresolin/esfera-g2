@@ -259,10 +259,11 @@ function handleCloseEditProposal(idProposal) {
 }
 
 function clearProposalFields() {
-    document.getElementById('date').value = '';
+    const today = new Date();
+    document.getElementById('date').value = formatDate(today);
     document.getElementById('value').value = '';
-    document.getElementById('service').value = 'Acompanhamento';
-    document.getElementById('status').value = '1';
+    document.getElementById('service').value = '';
+    document.getElementById('status').value = '';
     document.getElementById('file').value = '';
     document.getElementById('idLead').value = '';
     document.getElementById('idClient').value = '';
@@ -275,8 +276,8 @@ function clearProposalFields() {
 function clearProposalEditFields() {
     document.getElementById('dateEdit').value = '';
     document.getElementById('valueEdit').value = '';
-    document.getElementById('serviceEdit').value = 'Acompanhamento';
-    document.getElementById('statusEdit').value = '1';
+    document.getElementById('serviceEdit').value = '';
+    document.getElementById('statusEdit').value = '';
     document.getElementById('fileEdit').value = '';
     document.getElementById('idLeadEdit').value = '';
     document.getElementById('idClientEdit').value = '';
@@ -327,6 +328,17 @@ async function fetchAllStatusProposals() {
         .catch(error => console.error('Error:', error));
 }
 
+function formatDate(date) {
+    let day = ("0" + date.getDate()).slice(-2);
+    let month = ("0" + (date.getMonth() + 1)).slice(-2);
+    let year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const today = new Date();
+    document.getElementById('date').value = formatDate(today);
+});
 
 async function fetchAddEditProposal(event) {
     event.preventDefault();

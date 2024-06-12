@@ -38,6 +38,7 @@ window.onload = async function () {
         xhr.send();
     }
     await fetchAllLeads(currentPage);
+    await fetchAllStatusProposals();
 }
 
 function handleCloseAddLead() {
@@ -84,6 +85,10 @@ function listLeads(leads) {
             <td class="px-6 py-3">${data.contact}</td>
             <td class="px-6 py-3">
                 <div class="flex items-center gap-2">
+                    <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
+                        onClick="handleAddProposal(${data.idLead})">
+                        <ion-icon name="add" fontSize='' class='text-lg'></ion-icon>
+                    </div>
                     <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
                         onClick="handleCloseEditLead(${data.idLead})">
                         <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
@@ -308,15 +313,27 @@ function handleCloseEditLead(idLead) {
     }
 }
 
+function getCurrentTime() {
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+
+    return `${hours}:${minutes}`;
+}
+
 function clearLeadFields() {
-    document.getElementById('date').value = '';
+    const today = new Date();
+    document.getElementById('date').value = formatDate(today);
     document.getElementById('contact').value = '';
-    document.getElementById('callTime').value = '';
+    document.getElementById('callTime').value = getCurrentTime();
     document.getElementById('duration').value = '';
     document.getElementById('description').value = '';
-    document.getElementById('clientSelect').value = '1';
+    document.getElementById('clientSelect').value = '';
     document.getElementById('cpfCnpjSearchByCPF').value = '';
-    document.getElementById('result').value = '1'; // Define o resultado padrão para "Atendeu"
+    document.getElementById('result').value = ''; // Define o resultado padrão para "Atendeu"
 }
 
 function clearLeadEditFields() {
@@ -327,8 +344,21 @@ function clearLeadEditFields() {
     document.getElementById('descriptionEdit').value = '';
     document.getElementById('clientIdEdit').value = '';
     document.getElementById('cpfCnpjEdit').value = '';
-    document.getElementById('resultEdit').value = '1'; // Define o resultado padrão para "Atendeu"
+    document.getElementById('resultEdit').value = ''; // Define o resultado padrão para "Atendeu"
 }
+
+function formatDate(date) {
+    let day = ("0" + date.getDate()).slice(-2);
+    let month = ("0" + (date.getMonth() + 1)).slice(-2);
+    let year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const today = new Date();
+    document.getElementById('date').value = formatDate(today);
+    document.getElementById('callTime').value = getCurrentTime();
+});
 
 function getElementsEditLead(id) {
     fetch(`http://localhost:8080/lead/${id}/${localStorage.getItem('userId')}`)
@@ -356,6 +386,101 @@ function getElementsEditLead(id) {
             console.error('Error fetching lead data:', error);
         });
 
+}
+
+function handleAddProposal(idLead) {
+    let addLeadModal = document.getElementById('addProposalModal');
+    addLeadModal.classList.toggle('hidden');
+
+    if (!addLeadModal.classList.contains('hidden')) {
+        prepareAddProposalModal(idLead);
+    }
+}
+
+function handleCloseAddProposal() {
+    let addLeadModal = document.getElementById('addProposalModal');
+    addLeadModal.classList.add('hidden');
+}
+
+async function fetchAllStatusProposals() {
+    var selection = document.getElementById("status");
+    await fetch('http://localhost:8080/statusProposal')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(value => {
+                selection.innerHTML += `<option value="${value.idStatusProposal}">${value.name}</option>`
+            })
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function prepareAddProposalModal(idLead) {
+    const today = new Date();
+    document.getElementById('idLead').value = idLead;
+    fetchSearchProposalByName();
+    document.getElementById('dateProposal').value = formatDate(today);
+    document.getElementById('value').value = '';
+    document.getElementById('service').value = '';
+    document.getElementById('status').value = '';
+    document.getElementById('file').value = '';
+    document.getElementById('idClient').value = '';
+    document.getElementById('name').value = '';
+    document.getElementById('description').value = '';
+}
+
+async function fetchSearchProposalByName() {
+    const id = document.getElementById('idLead').value;
+    await fetch(`http://localhost:8080/lead/${id}/${localStorage.getItem('userId')}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('name').value = data.idClient.name;
+            document.getElementById('idClient').value = data.idClient.idClient;
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+async function fetchAddProposal() {
+    event.preventDefault();
+    const fileInput = document.getElementById('file');
+    const file = fileInput.files[0]; // Obtém o primeiro arquivo selecionado
+
+    const data = {
+        idLead: document.getElementById('idLead').value,
+        idStatusProposal: document.getElementById('status').value,
+        service: document.getElementById('service').value,
+        proposalDate: document.getElementById('dateProposal').value,
+        value: document.getElementById('value').value,
+        description: document.getElementById('descriptionProposal').value,
+    };
+
+    const formData = new FormData();
+    formData.append('idLead', data.idLead);
+    formData.append('idStatusProposal', data.idStatusProposal);
+    formData.append('service', data.service);
+    formData.append('completionDate', data.proposalDate);
+    formData.append('value', data.value);
+    formData.append('description', data.description);
+    formData.append('file', file);
+    formData.append('idUser', localStorage.getItem('userId'));
+
+
+    await fetch(`http://localhost:8080/proposal`, {
+        method: 'POST',
+        body: formData
+    })
+        .then(() => {
+            alert('Proposta cadastrada com sucesso!');
+            handleCloseAddProposal();
+        })
+        .catch((error) => {
+            alert('Erro ao cadastrar proposta!');
+            console.error('Error:', error);
+        });
 }
 
 async function fetchAllStatusLeads() {

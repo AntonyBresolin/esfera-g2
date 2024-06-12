@@ -222,6 +222,91 @@
 
         </form>
     </div>
+    <div id="addLeadModal" class="w-screen h-screen hidden absolute top-0 left-0">
+        <div onClick="handleCloseAddLead()" class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
+        <form action="" method="post"
+              class="bg-white w-[760px] h-[600px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg "
+              onSubmit="fetchAddLead(event)">
+            <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold">Cadastro de Ligações</h1>
+            <ion-icon name="close" fontSize=''
+                      class="text-2xl absolute top-2 right-2 cursor-pointer hover:text-gray-600 duration-150 ease-in-out text-white"
+                      onClick="handleCloseAddLead()"></ion-icon>
+            <div class="flex flex-col">
+                <div class="flex justify-between py-2">
+                    <div class="w-50 mx-2 flex justify-between items-center">
+                        <div>
+                            <label for="cpfCnpjSearchByCPF" class="text-sm font-semibold">CPF/CNPJ<span class="text-red-600">*</span></label> <br>
+                            <input type="number" name="cpfCnpjSearchByCPF" id="cpfCnpjSearchByCPF"
+                                   placeholder="CPF/CNPJ do cliente"
+                                   class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                        </div>
+                        <div class="bg-purple-contrast text-white px-2 py-1 rounded-lg font-semibold cursor-pointer ml-4 mt-6"
+                             onClick="fetchSearchClientByCpfCnpj()">
+                            Pesquisar
+                        </div>
+                    </div>
+                    <div class="w-80">
+                        <label for="clientSelect" class="text-sm font-semibold">Selecione o cliente<span class="text-red-600">*</span></label> <br>
+                        <select name="clientSelect" id="clientSelect" required
+                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-[250px] mr-2">
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-between py-2">
+                    <div class="w-full mx-2">
+                        <label for="result" class="text-sm font-semibold">Resultado<span class="text-red-600">*</span></label><br>
+                        <select name="result" id="result" required
+                                class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                            <option value="" selected disabled>Escolha o resultado</option>
+                            <option value="1">Atendeu</option>
+                            <option value="2">Desligou</option>
+                            <option value="3">Caixa Postal</option>
+                            <option value="4">Ocupado</option>
+                        </select>
+                    </div>
+                </div>       
+                <div class="flex justify-between py-2">
+                    <div class="w-full mx-2">
+                        <label for="dateLead" class="text-sm font-semibold">Data da Ligação<span class="text-red-600">*</span></label><br>
+                        <input type="date" name="dateLead" id="dateLead" placeholder="Data da Ligacao" required
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="contact" class="text-sm font-semibold">Contato</label> <br>
+                        <input type="tel" name="contact" id="contact" placeholder="(xx) xxxxx-xxxx"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+                <div class="flex justify-between py-2">
+                    <div class="w-full mx-2">
+                        <label for="callTime" class="text-sm font-semibold">Horário da Ligação</label> <br>
+                        <input type="time" name="callTime" id="callTime" placeholder="00:00"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                    <div class="w-full mx-2">
+                        <label for="duration" class="text-sm font-semibold">Duração da Ligação</label> <br>
+                        <input type="time" name="duration" id="duration" placeholder="00:00"
+                               class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full">
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-between py-2">
+                <div class="w-full">
+                    <label for="description" class="text-sm font-semibold px-2">Descrição</label> <br>
+                    <textarea name="description" id="description" placeholder="Informações da Ligação" class="p-1 rounded-lg border-2 border-gray-200 focus:outline-none bg-[#F0F0F7] focus:bg-gray-200 w-full
+                          resize-none h-32 wr-2" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="float-right py-2 flex">
+                <input type="submit"
+                       class="bg-purple-contrast text-white px-4 py-2 rounded-lg font-semibold cursor-pointer"
+                       value="Salvar">
+                <div class="bg-gray-200 text-black px-4 py-2 rounded-lg font-semibold cursor-pointer select-none ml-2"
+                     onClick="handleCloseAddLead()">Cancelar
+                </div>
+            </div>
+        </form>
+    </div>
     <div id="editClient" class="w-screen h-screen hidden absolute top-0 left-0">
         <div onClick="handleCloseEditClient()"
              class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>

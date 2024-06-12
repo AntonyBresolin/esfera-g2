@@ -98,6 +98,11 @@ function listClients(clients) {
       <td>
         <div class="flex items-center gap-2">
           <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
+            onClick="handleAddLead(${data.client.cpfCnpj}, ${data.contact[2].data})"
+          >
+            <ion-icon name="add" fontSize='' class='text-lg'></ion-icon>
+          </div>
+          <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
           onClick="handleCloseEditClient(${data.client.idClient})"
           >
             <ion-icon name="create" fontSize='' class='text-lg'></ion-icon>
@@ -433,6 +438,116 @@ function getElementsEditClient(idClient) {
         })
         .catch(error => {
             console.error('Error fetching client data:', error);
+        });
+}
+
+async function fetchSearchClientByCpfCnpj() {
+    const cpfCnpj = document.getElementById('cpfCnpjSearchByCPF').value;
+
+    await fetch(`http://localhost:8080/client/cpf/`+cpfCnpj+"/"+localStorage.getItem('userId'), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Limpar as opções anteriores
+            const clientSelect = document.getElementById('clientSelect');
+            clientSelect.innerHTML = '';
+
+            data.forEach(client => {
+                const option = document.createElement('option');
+                option.value = client.idClient;
+                option.textContent = client.name;
+                clientSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Erro ao buscar nome do cliente:', error));
+}
+
+function handleAddLead(cpfCnpj, phone) {
+    let addLeadModal = document.getElementById('addLeadModal');
+    addLeadModal.classList.toggle('hidden');
+
+    if (!addLeadModal.classList.contains('hidden')) {
+        prepareAddLeadModal(cpfCnpj, phone);
+    }
+}
+
+function handleCloseAddLead() {
+    let addLeadModal = document.getElementById('addLeadModal');
+    addLeadModal.classList.add('hidden');
+}
+
+function formatDate(date) {
+    let day = ("0" + date.getDate()).slice(-2);
+    let month = ("0" + (date.getMonth() + 1)).slice(-2);
+    let year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const today = new Date();
+    document.getElementById('dateLead').value = formatDate(today);
+});
+
+function getCurrentTime() {
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+
+    return `${hours}:${minutes}`;
+}
+
+function prepareAddLeadModal(cpfCnpj, phone) {
+    const today = new Date();
+    document.getElementById('cpfCnpjSearchByCPF').value = cpfCnpj;
+    fetchSearchClientByCpfCnpj()
+    document.getElementById('dateLead').value = formatDate(today);
+    document.getElementById('contact').value = phone;
+    document.getElementById('callTime').value = getCurrentTime();
+    document.getElementById('duration').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('clientSelect').value = '';
+    document.getElementById('result').value = '';
+}
+
+async function fetchAddLead() {
+    event.preventDefault();
+    const data = {
+        contact: document.getElementById('contact').value,
+        date: document.getElementById('dateLead').value,
+        callTime: document.getElementById('callTime').value,
+        duration: document.getElementById('duration').value,
+        description: document.getElementById('description').value,
+        result: {
+            idLeadResult: document.getElementById('result').value,
+        },
+        idClient: {
+            idClient: document.getElementById('clientSelect').value
+        }
+    };
+
+    console.log(JSON.stringify(data));
+
+    await fetch('http://localhost:8080/lead', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(() => {
+            alert('Lead cadastrado com sucesso!');
+            handleCloseAddLead();
+        })
+        .catch((error) => {
+            alert('Erro ao cadastrar lead!');
+            console.error('Error:', error);
         });
 }
 
