@@ -494,26 +494,31 @@ async function setLeadsByDayOfTheMonth() {
         }
     }).then(response => response.json())
         .then(data => {
-                var ctx = document.getElementById('lineChart1').getContext('2d');
-                document.getElementById('crescimento-ligacoes').innerText = `${data.crescimentoPercentual.toFixed(2)}% em comparação ao mês anterior`;
-                var dataLead = {
+            var ctx = document.getElementById('lineChart1').getContext('2d');
 
-                    labels: data.dateLead,
-                    datasets: [{
-                        label: 'Total de ligações (Últimos 30 dias)',
-                        data: data.leadCount,
-                        backgroundColor: '#8B008B',
-                        borderWidth: 1,
-                        borderColor: "purple",
-                        fill: false
-                    }]
-                };
+            var gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+            gradient.addColorStop(0, 'rgba(139, 0, 139, 0.5)');
+            gradient.addColorStop(1, 'rgba(139, 0, 139, 0)');
 
-                var barChart = new Chart(ctx, {
-                    type: 'line',
-                    data: dataLead,
-                    options: options
-                });
+            document.getElementById('crescimento-ligacoes').innerText = `${data.crescimentoPercentual.toFixed(2)}% em comparação ao mês anterior`;
+            var dataLead = {
+                labels: data.dateLead,
+                datasets: [{
+                    label: 'Total de ligações (Últimos 30 dias)',
+                    data: data.leadCount,
+                    backgroundColor: gradient,
+                    borderWidth: 1,
+                    borderColor: "purple",
+                    fill: true
+                }]
+            };
+
+            var barChart = new Chart(ctx, {
+                type: 'line',
+                data: dataLead,
+                options: options
+            });
+
         })
 }
 
@@ -526,25 +531,29 @@ async function setProposalsByDayOfTheMonth() {
         }
     }).then(response => response.json())
         .then(data => {
-                var ctx = document.getElementById('lineChart2').getContext('2d');
-                document.getElementById('crescimento-propostas').innerText = `${data.crescimentoPercentualProposal.toFixed(2)}% em comparação ao mês anterior`;
-                var dataLead = {
+            var ctx = document.getElementById('lineChart2').getContext('2d');
+            var gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+            gradient.addColorStop(0, 'rgba(139, 0, 139, 0.5)');  
+            gradient.addColorStop(1, 'rgba(139, 0, 139, 0)');
 
-                    labels: data.dateProposal,
-                    datasets: [{
-                        label: 'Total de Propostas (Últimos 30 dias)',
-                        data: data.proposalCount,
-                        backgroundColor: '#8B008B',
-                        borderWidth: 1,
-                        borderColor: "purple",
-                        fill: false
-                    }]
-                };
+            document.getElementById('crescimento-propostas').innerText = `${data.crescimentoPercentualProposal.toFixed(2)}% em comparação ao mês anterior`;
+            var dataLead = {
+                labels: data.dateProposal,
+                datasets: [{
+                    label: 'Total de Propostas (Últimos 30 dias)',
+                    data: data.proposalCount,
+                    backgroundColor: gradient,
+                    borderWidth: 1,
+                    borderColor: "purple",
+                    fill: true
+                }]
+            };
 
-                var barChart = new Chart(ctx, {
-                    type: 'line',
-                    data: dataLead,
-                    options: options
-                });
+            var barChart = new Chart(ctx, {
+                type: 'line',
+                data: dataLead,
+                options: options
+            });
+
         })
 }
