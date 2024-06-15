@@ -4,8 +4,19 @@ document.addEventListener("DOMContentLoaded", function() {
         fetch('/proposal/faturamento/' + userId)
             .then(response => response.json())
             .then(data => {
+                let labelAumento = document.getElementById('faturamento-crescimento');
                 document.getElementById('faturamento-total').innerText = `R$${data.totalFaturamento.toFixed(2)}`;
-                document.getElementById('faturamento-crescimento').innerText = `${data.crescimentoPercentual.toFixed(2)}% em comparação ao mês anterior`;
+
+                if (data.crescimentoPercentual >= 0) {
+                    labelAumento.innerHTML = `  <p class="font-bold text-xl">&#8593;${data.crescimentoPercentual.toFixed(2)}%
+                                            <p class="text-sm">em comparação ao mês anterior</p>`;
+                    labelAumento.classList.add('text-emerald-700');
+                } else if (data.crescimentoPercentual < 0) {
+                    labelAumento.innerHTML = `  <p class="font-bold text-xl">&#8595;${data.crescimentoPercentual.toFixed(2)}%
+                                            <p class="text-sm">em comparação ao mês anterior</p>`;
+                    labelAumento.classList.add('text-red-600');
+                }
+
             })
             .catch(error => console.error('Erro ao buscar os dados de faturamento:', error));
     } else {

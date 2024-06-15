@@ -29,22 +29,22 @@
 
     <main style="display: flex; flex-direction: column; padding-top: 61px; width: 100%;">
         <div style="display: flex; justify-content: space-between; width: 100%; flex-grow: 1;">
-            <div style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 5px; margin-bottom: 5px; margin-left: 10px; border: 1px solid black; border-radius: 10px; height: 215px;">
+            <div class="shadow-sm" style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 5px; margin-bottom: 5px; margin-left: 10px; border-radius: 10px; height: 215px;">
                 <canvas id="lineChart1" style="width: 100%; height: 85%;"></canvas>
                 <p id="crescimento-ligacoes" style="text-align: center; height: 15%;">+0% em comparação ao mês anterior</p>
             </div>
-            <div style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border: 1px solid black; border-radius: 10px; height: 215px;">
+            <div class="shadow-sm" style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border-radius: 10px; height: 215px;">
                 <canvas id="lineChart2" style="width: 100%; height: 85%;"></canvas>
                 <p id="crescimento-propostas" style="text-align: center; height: 15%;">+0% em comparação ao mês anterior</p>
             </div>
-            <div id="faturamento-container" style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 10px; margin-bottom: 5px; margin-left: 5px; border: 1px solid black; border-radius: 10px; height: 215px;">
-                <b><p style="text-align: center; height: 33.3%; line-height: 100px;">Faturamento</p></b>
+            <div id="faturamento-container" class="shadow-sm" style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 10px; margin-right: 10px; margin-bottom: 5px; margin-left: 5px;  border-radius: 10px; height: 215px;">
+                <b><p style="text-align: center; height: 33.3%; line-height: 100px;">Faturamento Mensal</p></b>
                 <b><p id="faturamento-total" style="font-size: 50px; text-align: center; height: 33.3%;">R$0.00</p></b>
                 <p id="faturamento-crescimento" style="text-align: center; height: 33.3%;">+0% em comparação ao mês anterior</p>
             </div>
         </div>
         <div style="display: flex; justify-content: space-between; width: 100%; flex-grow: 1;">
-            <div style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 10px; border: 1px solid black; border-radius: 10px; height: 215px;">
+            <div class="shadow-sm" style="background-color: white; flex-grow: 1; width: 33.3%; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 10px; border-radius: 10px; height: 215px;">
                 <div class="w-full h-full flex flex-col justify-between bg-white">
                     <div class="w-full flex justify-between px-2 py-1">
                         <h2 class="text-semibold text-lg">Total de Ligações</h2>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            <div style="background-color: white; flex-grow: 1; width: 33.3%; margin: 5px 5px; border: 1px solid black; border-radius: 10px; height: 215px; display: flex; justify-content: center;">
+            <div  class="shadow-sm" style="background-color: white; flex-grow: 1; width: 33.3%; margin: 5px 5px; border-radius: 10px; height: 215px; display: flex; justify-content: center;">
                 <canvas id="pieChart1" style="width: 80%; height: 80%;"></canvas>
                 <b><p id="totalProposals" style="line-height: 200px; margin-left: 10px;">0 Propostas</p></b>
                 <select name="" id="periodSelect">
@@ -69,7 +69,7 @@
                     <option value="month">Mensal</option>
                 </select>
             </div>
-            <div style="background-color: white; flex-grow: 1; width: 33.3%; margin: 5px 5px; margin-right: 10px; border: 1px solid black; border-radius: 10px; height: 215px; display: flex; justify-content: center;">
+            <div class="shadow-sm" style="background-color: white; flex-grow: 1; width: 33.3%; margin: 5px 5px; margin-right: 10px; border-radius: 10px; height: 215px; display: flex; justify-content: center;">
                 <canvas id="pieChart2" style="width: 80%; height: 80%;"></canvas>
                 <b><p id="totalCalls" style="line-height: 200px; margin-left: 10px;">0 Ligações</p></b>
                 <select name="" id="periodSelectCalls">
@@ -81,7 +81,7 @@
             </div>
         </div>
         <div style="display: flex; justify-content: space-between; width: 100%; flex-grow: 1;">
-            <div style="background-color: white; flex-grow: 1; margin-top: 5px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; border: 1px solid black; border-radius: 10px; height: 215px;">
+            <div class="shadow-sm" style="background-color: white; flex-grow: 1; margin-top: 5px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; border-radius: 10px; height: 215px;">
                 <div class="container">
                     <div class="task-column" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;" ondrop="drop(event, 'todo-list')" ondragover="allowDrop(event)">
                         <h2>A Fazer</h2>
