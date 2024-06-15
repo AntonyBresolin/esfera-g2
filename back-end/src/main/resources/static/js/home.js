@@ -533,7 +533,7 @@ async function setProposalsByDayOfTheMonth() {
         .then(data => {
             var ctx = document.getElementById('lineChart2').getContext('2d');
             var gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-            gradient.addColorStop(0, 'rgba(139, 0, 139, 0.5)');  
+            gradient.addColorStop(0, 'rgba(139, 0, 139, 0.5)');
             gradient.addColorStop(1, 'rgba(139, 0, 139, 0)');
 
             document.getElementById('crescimento-propostas').innerText = `${data.crescimentoPercentualProposal.toFixed(2)}% em comparação ao mês anterior`;
