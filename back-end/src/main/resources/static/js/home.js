@@ -139,9 +139,10 @@ async function fetchAndUpdateChartCalls() {
             window.pieChartCalls.update();
         } else {
             window.pieChartCalls = new Chart(ctxCalls, {
-                type: 'pie',
+                type: 'doughnut',
                 data: chartDataCalls,
                 options: {
+                    cutoutPercentage: 90,
                     responsive: true,
                     title: {
                         display: true,
@@ -256,7 +257,6 @@ document.addEventListener("DOMContentLoaded", function () {
             status: "todo-list"
         };
 
-        console.log(taskData);
 
         fetch('/task', {
             method: 'POST',
@@ -441,24 +441,34 @@ async function setLeadsByDayOfTheWeak() {
         }
     }).then(response => response.json())
         .then(data => {
+                console.log(data);
+                data.dateLead = data.dateLead.map(dateString => {
+                    const [day, month, year] = dateString.split('/');
+                    return `${day}/${month}`;
+                });
 
-                var ctx = document.getElementById('barChart').getContext('2d');
-                var dataLead = {
+                var sumLeads = data.leadCount.reduce((a, b) => a + b, 0);
+                let barGrap = document.getElementById('itensRowBarGraph');
+                let leadCounterBar = document.getElementById('leadCounterBar');
 
-                    labels: data.dateLead,
-                    datasets: [{
-                        label: 'Total de ligações (Últimos 7 dias)',
-                        data: data.leadCount,
-                        backgroundColor: '#8B008B',
-                        borderColor: 'black',
-                        borderWidth: 1
-                    }]
-                };
+                leadCounterBar.innerHTML = `
+                            <p>${sumLeads}</p>
+                            <p>${(sumLeads/1.25).toFixed(1)}</p>
+                            <p>${(sumLeads/2).toFixed(1)}</p>
+                            <p>${(sumLeads/4).toFixed(1)}</p>
+                            <p>0</p>
+                            <p></p>
+                            `;
 
-                var barChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: dataLead,
-                    options: options
+                data.dateLead.forEach((item, index) => {
+                    barGrap.innerHTML += ` <div class="w-[10%] h-full flex flex-col justify-between">
+                                <div class="w-full h-full bg-[#DCDCDC] rounded-full flex flex-col justify-end">
+                                    <div class="h-[${(data.leadCount[index]/sumLeads)*100}%] bg-[#3D0053] rounded-full flex flex-col justify-end">
+                                        <p class="text-white mb-4 text-bold text-lg">${data.leadCount[index]}</p>
+                                    </div>
+                                </div>
+                                <p class="w-full text-sm">${item}</p>
+                            </div>`;
                 });
             }
         )
@@ -507,7 +517,6 @@ async function setProposalsByDayOfTheMonth() {
         .then(data => {
                 var ctx = document.getElementById('lineChart2').getContext('2d');
                 document.getElementById('crescimento-propostas').innerText = `${data.crescimentoPercentualProposal.toFixed(2)}% em comparação ao mês anterior`;
-                console.log(data)
                 var dataLead = {
 
                     labels: data.dateProposal,
