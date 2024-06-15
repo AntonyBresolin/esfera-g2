@@ -397,7 +397,7 @@ function addTaskToList(task) {
     taskElement.dataset.status = task.status;
 
     const formattedDate = formatDate(task.dueDate);
-    const taskHTML = "<b>" + task.name + "</b><br><span class='task-description'>" + task.description + "</span><br><span class='due-date'>" + formattedDate + "</span>";
+    const taskHTML = "<b class='font-semibold text-lg'>" + task.name + "</b><br><span class='task-description'>" + task.description + "</span><br><span class='due-date'>" + formattedDate + "</span>";
     taskElement.innerHTML = taskHTML;
 
     taskElement.addEventListener("dragstart", drag);
