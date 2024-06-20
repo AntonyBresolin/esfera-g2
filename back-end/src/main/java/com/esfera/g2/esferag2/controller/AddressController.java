@@ -14,8 +14,13 @@ import java.util.List;
 @RequestMapping("/address")
 public class AddressController {
 
+    private final AddressRepository addressRepository;
+
     @Autowired
-    private AddressRepository addressRepository;
+    public AddressController(AddressRepository addressRepository) {
+        this.addressRepository = addressRepository;
+    }
+
 
     @GetMapping
     public List<Address> getAllAddresses() {

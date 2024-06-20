@@ -458,15 +458,15 @@ async function setLeadsByDayOfTheWeak() {
                     return `${day}/${month}`;
                 });
 
-                var sumLeads = data.leadCount.reduce((a, b) => a + b, 0);
+                var biggerValue = Math.max(...data.leadCount) +10;
                 let barGrap = document.getElementById('itensRowBarGraph');
                 let leadCounterBar = document.getElementById('leadCounterBar');
 
                 leadCounterBar.innerHTML = `
-                            <p>${sumLeads}</p>
-                            <p>${(sumLeads/1.25).toFixed(1)}</p>
-                            <p>${(sumLeads/2).toFixed(1)}</p>
-                            <p>${(sumLeads/4).toFixed(1)}</p>
+                            <p>${biggerValue}</p>
+                            <p>${(biggerValue/1.25).toFixed(1)}</p>
+                            <p>${(biggerValue/2).toFixed(1)}</p>
+                            <p>${(biggerValue/4).toFixed(1)}</p>
                             <p>0</p>
                             <p></p>
                             `;
@@ -474,7 +474,7 @@ async function setLeadsByDayOfTheWeak() {
                 data.dateLead.forEach((item, index) => {
                     barGrap.innerHTML += ` <div class="w-[10%] h-full flex flex-col justify-between">
                                 <div class="w-full h-full bg-[#DCDCDC] rounded-full flex flex-col justify-end">
-                                    <div class="h-[${(data.leadCount[index]/sumLeads)*100}%] bg-[#3D0053] rounded-full flex flex-col justify-end">
+                                    <div class="h-[${(data.leadCount[index]/biggerValue)*100}%] bg-[#3D0053] rounded-full flex flex-col justify-end">
                                         <p class="text-white mb-4 text-bold text-lg">${data.leadCount[index]}</p>
                                     </div>
                                 </div>
