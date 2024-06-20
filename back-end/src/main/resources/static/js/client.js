@@ -97,10 +97,10 @@ function listClients(clients) {
       </td>
       <td>
         <div class="flex items-center gap-2">
-          <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
+          <div class="bg-purple-contrast px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-purple-950"
             onClick="handleAddLead(${data.client.cpfCnpj}, ${data.contact[2].data})"
           >
-            <ion-icon name="add" fontSize='' class='text-lg'></ion-icon>
+            <i class="fa-solid fa-phone-volume text-gray-200"></i>
           </div>
           <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
           onClick="handleCloseEditClient(${data.client.idClient})"

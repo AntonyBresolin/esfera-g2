@@ -86,9 +86,9 @@ function listLeads(leads) {
             <td class="px-6 py-3">${data.contact}</td>
             <td class="px-6 py-3">
                 <div class="flex items-center gap-2">
-                    <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
+                    <div class="bg-purple-contrast px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-purple-950"
                         onClick="handleAddProposal(${data.idLead})">
-                        <ion-icon name="add" fontSize='' class='text-lg'></ion-icon>
+                        <i class="fa-regular fa-handshake text-gray-200"></i>
                     </div>
                     <div class="bg-gray-200 px-2 py-2 rounded-full text-black font-bold flex justify-center items-center w-full cursor-pointer hover:bg-gray-300"
                         onClick="handleCloseEditLead(${data.idLead})">
