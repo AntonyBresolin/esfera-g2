@@ -42,6 +42,7 @@ window.onload = async function () {
 }
 
 function handleCloseAddLead() {
+    clearLeadFields();
     let addLead = document.getElementById('cadLead');
     addLead.classList.toggle('hidden');
 }
@@ -187,7 +188,6 @@ async function fetchAddLead() {
     })
         .then(() => {
             alert('Lead cadastrado com sucesso!');
-            clearLeadFields();
             handleCloseAddLead();
             fetchAllLeads(currentPage);
         })

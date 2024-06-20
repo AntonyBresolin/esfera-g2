@@ -10,6 +10,8 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script th:src="@{/js/main.js}" type="text/javascript"></script>
     <script th:src="@{/js/client.js}" type="text/javascript"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body class="bg-[#DCDCDC] flex overflow-y-hidden h-screen">
@@ -78,7 +80,7 @@
         <div onClick="handleCloseAddCliente()"
              class="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-40"></div>
         <form action="" method="post"
-              class="bg-white w-[500px] h-[560px] overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
+              class="bg-white w-[500px]  overflow-auto top-1/2 left-1/2 absolute transform z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg"
               onSubmit="fetchAddClient(event)">
             <div class="sticky top-0">
                 <h1 class="bg-purple-contrast text-white px-4 py-2 font-semibold"> Cadastro de

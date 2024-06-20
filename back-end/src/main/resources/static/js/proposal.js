@@ -41,6 +41,7 @@ window.onload = async function () {
 }
 
 function handleCloseAddProposal() {
+    clearProposalFields();
     let addProposal = document.getElementById('cadProposal');
     addProposal.classList.toggle('hidden');
 }
@@ -200,7 +201,6 @@ async function fetchAddProposal() {
     })
         .then(() => {
             alert('Proposta cadastrada com sucesso!');
-            clearProposalFields();
             handleCloseAddProposal();
             fetchAllProposals(currentPage);
         })

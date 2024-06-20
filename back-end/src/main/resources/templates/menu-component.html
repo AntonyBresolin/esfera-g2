@@ -89,13 +89,13 @@
             <a href="/nav/proposal"
                class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out bg-purple-contrast text-white'
                th:if="${selectedScreen == 'proposal'}">
-                <ion-icon name="stats-chart" fontSize='' class='text-3xl text-amber'></ion-icon>
+                <i class="fa-regular fa-handshake text-3xl text-amber"></i>
                 <span class='ml-3'>Propostas</span>
             </a>
             <a href="/nav/proposal"
                class='w-full flex items-center py-4 px-4 rounded-2xl text-purple-contrast font-bold my-2 cursor-pointer hover:shadow-md duration-300 ease-in-out'
                th:unless="${selectedScreen == 'proposal'}">
-                <ion-icon name="stats-chart" fontSize='' class='text-3xl'></ion-icon>
+                <i class="fa-regular fa-handshake text-3xl"></i>
                 <span class='ml-3'>Propostas</span>
             </a>
             <a href='/nav/configuration'
