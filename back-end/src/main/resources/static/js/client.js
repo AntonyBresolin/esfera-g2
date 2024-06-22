@@ -214,9 +214,11 @@ async function fetchAddClient(event) {
     })
         .then(() => {
             Swal.fire({
-                title: "Good job!",
-                text: "You clicked the button!",
-                icon: "success"
+                title: "Cliente cadastrado com sucesso!",
+                text: "O cliente foi cadastrado com sucesso!",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 3000
             });
             handleCloseAddCliente();
             clearClientCadFields();
