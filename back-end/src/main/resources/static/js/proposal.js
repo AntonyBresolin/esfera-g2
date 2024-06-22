@@ -200,12 +200,22 @@ async function fetchAddProposal() {
         body: formData
     })
         .then(() => {
-            alert('Proposta cadastrada com sucesso!');
+            Swal.fire({
+                icon: 'success',
+                title: 'Proposta cadastrada com sucesso!',
+                showConfirmButton: false,
+                timer: 2000
+            });
             handleCloseAddProposal();
             fetchAllProposals(currentPage);
         })
         .catch((error) => {
-            alert('Erro ao cadastrar proposta!');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao cadastrar proposta!',
+                showConfirmButton: false,
+                timer: 2000
+            });
             console.error('Error:', error);
         });
 }
@@ -236,12 +246,22 @@ event.preventDefault();
         }
     })
         .then(() => {
-            alert('Proposta excluída com sucesso!');
+            Swal.fire({
+                icon: 'success',
+                title: 'Proposta excluída com sucesso!',
+                showConfirmButton: false,
+                timer: 2000
+            });
             fetchAllProposals(currentPage);
             hideDeleteProposalModal()
         })
         .catch((error) => {
-            alert('Erro ao excluir Proposta!');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao excluir proposta!',
+                showConfirmButton: false,
+                timer: 2000
+            });
             console.error('Error:', error);
         });
 }
@@ -374,13 +394,23 @@ async function fetchAddEditProposal(event) {
         body: formData
     })
         .then(() => {
-            alert('Proposta atualizada com sucesso!');
+            Swal.fire({
+                icon: 'success',
+                title: 'Proposta atualizada com sucesso!',
+                showConfirmButton: false,
+                timer: 2000
+            });
             clearProposalEditFields();
             handleCloseEditProposal();
             fetchAllProposals(currentPage);
         })
         .catch((error) => {
-            alert('Erro ao atualizar proposta!');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao atualizar proposta!',
+                showConfirmButton: false,
+                timer: 2000
+            });
             console.error('Error:', error);
         });
 }
@@ -448,6 +478,12 @@ function downloadFile(fileId, proposalId) {
         })
         .catch(error => {
             console.error('Erro ao baixar o arquivo:', error);
-            alert('Ocorreu um erro ao tentar baixar o arquivo. Por favor, tente novamente.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao baixar o arquivo!',
+                text: 'Ocorreu um erro ao tentar baixar o arquivo. Por favor, tente novamente.',
+                showConfirmButton: false,
+                timer: 2000
+            });
         });
 }
