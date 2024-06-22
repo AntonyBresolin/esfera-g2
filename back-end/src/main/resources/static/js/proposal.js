@@ -428,6 +428,14 @@ async function fetchAddEditProposal(event) {
 
 
 function exportProposals() {
+    Swal.fire({
+        title: 'Exportando...',
+        text: 'Por favor, aguarde enquanto exportamos as propostas.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
     fetch('http://localhost:8080/proposal/export/'+localStorage.getItem('userId'))
         .then(response => response.json())
         .then(data => {
@@ -455,8 +463,18 @@ function exportProposals() {
             link.href = window.URL.createObjectURL(blob);
             link.download = 'proposals.csv';
             link.click();
+            Swal.close();
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error)
+            Swal.close();
+            Swal.fire({
+                title: 'Erro!',
+                text: 'Ocorreu um erro ao exportar as propostas.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        });
 }
 function downloadFile(fileId, proposalId) {
     fetch(`http://localhost:8080/proposal/download/${fileId}/${localStorage.getItem('userId')}`)

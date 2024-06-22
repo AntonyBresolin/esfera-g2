@@ -574,6 +574,14 @@ function showDeleteLeadModal(idLead) {
 
 async function exportLeads() {
     try {
+        Swal.fire({
+            title: 'Exportando...',
+            text: 'Por favor, aguarde enquanto exportamos as Ligações.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
         const response = await fetch('http://localhost:8080/lead/export/'+localStorage.getItem('userId'));
         const leads = await response.json();
 
@@ -604,11 +612,26 @@ async function exportLeads() {
             link.download = 'leads.csv';
 
             link.click();
+            Swal.close();
         } else {
             console.log('Não há dados de leads para exportar.');
+            Swal.close();
+            Swal.fire({
+                title: 'Sem dados',
+                text: 'Não há dados de Ligações para exportar.',
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
         }
     } catch (error) {
         console.error('Erro ao exportar leads:', error);
+        Swal.close();
+        Swal.fire({
+            title: 'Erro!',
+            text: 'Ocorreu um erro ao exportar as Ligações.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
     }
 }
 
