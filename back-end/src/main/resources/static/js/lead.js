@@ -187,12 +187,21 @@ async function fetchAddLead() {
         body: JSON.stringify(data)
     })
         .then(() => {
-            alert('Lead cadastrado com sucesso!');
+            Swal.fire({
+                icon: 'success',
+                title: 'Ligação cadastrada com sucesso!',
+                showConfirmButton: false,
+                timer: 2000
+            })
             handleCloseAddLead();
             fetchAllLeads(currentPage);
         })
         .catch((error) => {
-            alert('Erro ao cadastrar lead!');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao cadastrar Ligação!',
+                showConfirmButton: true
+            })
             console.error('Error:', error);
         });
 }
@@ -218,7 +227,12 @@ async function deleteLead() {
                     warningTitle.classList.remove('bg-red-200');
                 }, 3000);
             } else if (response.status === 404) {
-                alert('Lead não encontrado.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro ao excluir ligação!',
+                    text: 'Ligação não encontrado.',
+                    showConfirmButton: true
+                });
             } else {
                 warning.classList.toggle('hidden');
                 warningMessage.textContent = 'Lead excluído com sucesso.';
@@ -474,11 +488,20 @@ async function fetchAddProposal() {
         body: formData
     })
         .then(() => {
-            alert('Proposta cadastrada com sucesso!');
+            Swal.fire({
+                icon: 'success',
+                title: 'Proposta cadastrada com sucesso!',
+                showConfirmButton: false,
+                timer: 2000
+            })
             handleCloseAddProposal();
         })
         .catch((error) => {
-            alert('Erro ao cadastrar proposta!');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao cadastrar proposta!',
+                showConfirmButton: true
+            })
             console.error('Error:', error);
         });
 }
@@ -522,13 +545,22 @@ async function fetchAddEditLead() {
         body: JSON.stringify(data)
     })
         .then((response) => {
-            alert('Lead editado com sucesso!');
+            Swal.fire({
+                icon: 'success',
+                title: 'Ligação editada com sucesso!',
+                showConfirmButton: false,
+                timer: 2000
+            })
             idGeralLead = null;
             handleCloseEditLead();
             fetchAllLeads(0);
         })
         .catch((error) => {
-            alert('Erro ao editar lead!');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao editar Ligação!',
+                showConfirmButton: true
+            })
             console.error('Error:', error);
         });
 }
@@ -542,6 +574,14 @@ function showDeleteLeadModal(idLead) {
 
 async function exportLeads() {
     try {
+        Swal.fire({
+            title: 'Exportando...',
+            text: 'Por favor, aguarde enquanto exportamos as Ligações.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
         const response = await fetch('http://localhost:8080/lead/export/'+localStorage.getItem('userId'));
         const leads = await response.json();
 
@@ -572,11 +612,26 @@ async function exportLeads() {
             link.download = 'leads.csv';
 
             link.click();
+            Swal.close();
         } else {
             console.log('Não há dados de leads para exportar.');
+            Swal.close();
+            Swal.fire({
+                title: 'Sem dados',
+                text: 'Não há dados de Ligações para exportar.',
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
         }
     } catch (error) {
         console.error('Erro ao exportar leads:', error);
+        Swal.close();
+        Swal.fire({
+            title: 'Erro!',
+            text: 'Ocorreu um erro ao exportar as Ligações.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
     }
 }
 

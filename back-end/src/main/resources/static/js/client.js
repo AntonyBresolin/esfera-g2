@@ -195,10 +195,13 @@ async function fetchAddClient(event) {
             country: document.getElementById('country').value
         }
     };
-    console.log(data);
 
     if (!validarDocumento(data.client.cpfCnpj)) {
-        alert('CPF ou CNPJ inválido!');
+        Swal.fire({
+            title: "CPF/CNPJ inválido!",
+            text: "O CPF/CNPJ informado é inválido!",
+            icon: "error"
+        });
         return;
     }
 
@@ -210,13 +213,23 @@ async function fetchAddClient(event) {
         body: JSON.stringify(data)
     })
         .then(() => {
-            alert('Cliente cadastrado com sucesso!');
+            Swal.fire({
+                title: "Cliente cadastrado com sucesso!",
+                text: "O cliente foi cadastrado com sucesso!",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 3000
+            });
             handleCloseAddCliente();
             clearClientCadFields();
             fetchAllClients(currentPage);
         })
         .catch((error) => {
-            alert('Erro ao cadastrar cliente!');
+            Swal.fire({
+                title: "Erro ao cadastrar cliente!",
+                text: "Erro ao cadastrar cliente!",
+                icon: "error"
+            });
             console.error('Error:', error);
         });
 }
@@ -236,7 +249,11 @@ async function fetchImportClientData() {
     const formData = new FormData();
     const fileInput = document.getElementById('fileInput');
     if (!fileInput.files[0]) {
-        alert('Selecione um arquivo para importar!');
+        Swal.fire({
+            title: "Arquivo não selecionado!",
+            text: "Selecione um arquivo para importar!",
+            icon: "error"
+        });
         return;
     }
     let loading = document.getElementById('loadingSpinner');
@@ -250,10 +267,24 @@ async function fetchImportClientData() {
         body: formData
     })
         .then(response =>
-            alert("Dados importados com sucesso!")
+            Swal.fire({
+                title: "Dados importados com sucesso!",
+                text: "Os dados foram importados com sucesso!",
+                icon: "success",
+                background: '#fff',
+                showConfirmButton: false,
+                timer: 3000
+            })
         )
         .catch(error => {
-            alert("Erro ao importar dados!");
+            Swal.fire({
+                title: "Erro ao importar dados!",
+                text: "Erro ao importar dados!",
+                icon: "error",
+                background: '#fff',
+                showConfirmButton: false,
+                timer: 3000
+            });
             console.error('Error:', error)
         })
         .finally(() => {
@@ -301,7 +332,12 @@ async function deleteClient() {
             fetchAllClients(currentPage);
         })
         .catch((error) => {
-            alert('Erro ao excluir cliente!');
+            Swal.fire({
+                title: "Erro ao excluir cliente!",
+                text: "Erro ao excluir cliente!",
+                icon: "error",
+                showOkButton: true,
+            });
             console.error('Error:', error);
         });
     sessionStorage.removeItem('idClientToDel');
@@ -356,7 +392,12 @@ async function deleteSelectedClients() {
         showDeleteClientModal();
         fetchAllClients(currentPage);
     } catch (error) {
-        alert('Erro ao excluir clientes!');
+        Swal.fire({
+            title: "Erro ao excluir clientes!",
+            text: "Erro ao excluir clientes!",
+            icon: "error",
+            showOkButton: true,
+        });
         console.error('Error:', error);
     }
 }
@@ -532,7 +573,6 @@ async function fetchAddLead() {
         }
     };
 
-    console.log(JSON.stringify(data));
 
     await fetch('http://localhost:8080/lead', {
         method: 'POST',
@@ -542,11 +582,25 @@ async function fetchAddLead() {
         body: JSON.stringify(data)
     })
         .then(() => {
-            alert('Lead cadastrado com sucesso!');
+            Swal.fire({
+                title: "Ligação cadastrada com sucesso!",
+                text: "A ligação foi cadastrada com sucesso!",
+                icon: "success",
+                background: '#fff',
+                showConfirmButton: false,
+                timer: 2000
+            });
             handleCloseAddLead();
         })
         .catch((error) => {
-            alert('Erro ao cadastrar lead!');
+            Swal.fire({
+                title: "Erro ao cadastrar ligação!",
+                text: "Erro ao cadastrar ligação!",
+                icon: "error",
+                background: '#fff',
+                showConfirmButton: false,
+                timer: 2000
+            });
             console.error('Error:', error);
         });
 }
@@ -613,13 +667,27 @@ function fetchEditClient(event) {
         body: JSON.stringify(data)
     })
         .then(() => {
-            alert('Cliente atualizado com sucesso!');
+            Swal.fire({
+                title: "Cliente atualizado com sucesso!",
+                text: "O cliente foi atualizado com sucesso!",
+                icon: "success",
+                background: '#fff',
+                showConfirmButton: false,
+                timer: 3000
+            })
             idGeralClient = null;
             handleCloseEditClient();
             fetchAllClients(currentPage);
         })
         .catch((error) => {
-            alert('Erro ao atualizar cliente!');
+            Swal.fire({
+                title: "Erro ao atualizar cliente!",
+                text: "Erro ao atualizar cliente!",
+                icon: "error",
+                background: '#fff',
+                showConfirmButton: false,
+                timer: 3000
+            });
             console.error('Error:', error);
         });
 }
