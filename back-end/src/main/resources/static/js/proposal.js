@@ -48,7 +48,7 @@ function handleCloseAddProposal() {
 
 
 async function fetchAllProposals(page) {
-    await fetch(`http://localhost:8080/proposal/all/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`)
+    await fetch(`/proposal/all/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`)
         .then(response => response.json())
         .then(data => {
             listProposals(data.content);
@@ -59,7 +59,7 @@ async function fetchAllProposals(page) {
 
 async function fetchSearchProposalByClientName(page) {
     const name = document.getElementById('searchProposal').value;
-    await fetch(`http://localhost:8080/proposal/search/${name}/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
+    await fetch(`/proposal/search/${name}/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
         method: 'GET',
     })
         .then(response => response.json())
@@ -195,7 +195,7 @@ async function fetchAddProposal() {
     formData.append('idUser', localStorage.getItem('userId'));
 
 
-    await fetch(`http://localhost:8080/proposal`, {
+    await fetch(`/proposal`, {
         method: 'POST',
         body: formData
     })
@@ -222,7 +222,7 @@ async function fetchAddProposal() {
 
 async function fetchSearchProposalByName() {
     const id = document.getElementById('idLead').value;
-    await fetch(`http://localhost:8080/lead/${id}/${localStorage.getItem('userId')}`, {
+    await fetch(`/lead/${id}/${localStorage.getItem('userId')}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -239,7 +239,7 @@ async function fetchSearchProposalByName() {
 
 async function deleteProposal(id) {
 event.preventDefault();
-    await fetch(`http://localhost:8080/proposal/${sessionStorage.getItem("idProposalToDel")}`, {
+    await fetch(`/proposal/${sessionStorage.getItem("idProposalToDel")}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -307,7 +307,7 @@ function clearProposalEditFields() {
 }
 
 function getElementsEditProposal(id) {
-    fetch(`http://localhost:8080/proposal/${id}/${localStorage.getItem('userId')}`)
+    fetch(`/proposal/${id}/${localStorage.getItem('userId')}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -336,7 +336,7 @@ function getElementsEditProposal(id) {
 async function fetchAllStatusProposals() {
     var selection = document.getElementById("status");
     var selectionEdit = document.getElementById("statusEdit");
-    await fetch('http://localhost:8080/statusProposal')
+    await fetch('/statusProposal')
         .then(response => response.json())
         .then(data => {
             data.forEach(value => {
@@ -389,7 +389,7 @@ async function fetchAddEditProposal(event) {
         formData.append('file', file);
     }
 
-    await fetch(`http://localhost:8080/proposal/${data.idProposal}`, {
+    await fetch(`/proposal/${data.idProposal}`, {
         method: 'PUT',
         body: formData
     })
@@ -436,7 +436,7 @@ function exportProposals() {
             Swal.showLoading();
         }
     });
-    fetch('http://localhost:8080/proposal/export/'+localStorage.getItem('userId'))
+    fetch('/proposal/export/'+localStorage.getItem('userId'))
         .then(response => response.json())
         .then(data => {
             const csvRows = [];
@@ -477,7 +477,7 @@ function exportProposals() {
         });
 }
 function downloadFile(fileId, proposalId) {
-    fetch(`http://localhost:8080/proposal/download/${fileId}/${localStorage.getItem('userId')}`)
+    fetch(`/proposal/download/${fileId}/${localStorage.getItem('userId')}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Erro ao baixar o arquivo');

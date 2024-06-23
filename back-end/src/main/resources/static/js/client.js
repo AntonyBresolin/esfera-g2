@@ -119,7 +119,7 @@ function listClients(clients) {
 }
 
 async function fetchAllClients(page) {
-    await fetch(`http://localhost:8080/client-address-contact/all/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sortBy=${sortBy}`)
+    await fetch(`/client-address-contact/all/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sortBy=${sortBy}`)
         .then(response => response.json())
         .then(data => {
             listClients(data.content);
@@ -205,7 +205,7 @@ async function fetchAddClient(event) {
         return;
     }
 
-    await fetch('http://localhost:8080/client-address-contact/add', {
+    await fetch('/client-address-contact/add', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -262,7 +262,7 @@ async function fetchImportClientData() {
     fileDiv.classList.toggle('hidden');
 
     formData.append('file', fileInput.files[0]);
-    await fetch('http://localhost:8080/client-address-contact/import/'+Number(localStorage.getItem("userId")), {
+    await fetch('/client-address-contact/import/'+Number(localStorage.getItem("userId")), {
         method: 'POST',
         body: formData
     })
@@ -302,7 +302,7 @@ async function deleteClient() {
     let warning = document.getElementById('warnings');
     let warningMessage = document.getElementById('warningMessage');
     let warningTitle = document.getElementById('warningTitle');
-    await fetch(`http://localhost:8080/client-address-contact/delete/${sessionStorage.getItem('idClientToDel')}/${localStorage.getItem('userId')}`, {
+    await fetch(`/client-address-contact/delete/${sessionStorage.getItem('idClientToDel')}/${localStorage.getItem('userId')}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -359,7 +359,7 @@ async function deleteSelectedClients() {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/client-address-contact/delete/${localStorage.getItem('userId')}`, {
+        const response = await fetch(`/client-address-contact/delete/${localStorage.getItem('userId')}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -449,7 +449,7 @@ function clearClientCadFields() {
 }
 
 function getElementsEditClient(idClient) {
-    fetch(`http://localhost:8080/client-address-contact/${idClient}/${localStorage.getItem('userId')}`)
+    fetch(`/client-address-contact/${idClient}/${localStorage.getItem('userId')}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -485,7 +485,7 @@ function getElementsEditClient(idClient) {
 async function fetchSearchClientByCpfCnpj() {
     const cpfCnpj = document.getElementById('cpfCnpjSearchByCPF').value;
 
-    await fetch(`http://localhost:8080/client/cpf/`+cpfCnpj+"/"+localStorage.getItem('userId'), {
+    await fetch(`/client/cpf/`+cpfCnpj+"/"+localStorage.getItem('userId'), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -574,7 +574,7 @@ async function fetchAddLead() {
     };
 
 
-    await fetch('http://localhost:8080/lead', {
+    await fetch('/lead', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -659,7 +659,7 @@ function fetchEditClient(event) {
         }
     };
 
-    fetch(`http://localhost:8080/client-address-contact/update/${idClient}`, {
+    fetch(`/client-address-contact/update/${idClient}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -694,7 +694,7 @@ function fetchEditClient(event) {
 
 async function fetchSearchClientByName(page) {
     const name = document.getElementById('searchClient').value;
-    await fetch(`http://localhost:8080/client-address-contact/name/${name}/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
+    await fetch(`/client-address-contact/name/${name}/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
