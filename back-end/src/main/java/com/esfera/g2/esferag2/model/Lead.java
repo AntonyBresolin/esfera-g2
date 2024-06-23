@@ -35,6 +35,20 @@ public class Lead {
     @JoinColumn(name = "Client_idClient")
     private Client idClient;
 
+    public Lead(Long idLead, String contact, Timestamp date, String duration, String callTime, String description, LeadResult result, Client idClient) {
+        this.idLead = idLead;
+        this.contact = contact;
+        this.date = date;
+        this.duration = duration;
+        this.callTime = callTime;
+        this.description = description;
+        this.result = result;
+        this.idClient = idClient;
+    }
+
+    public Lead() {
+    }
+
     public Long getIdLead() {
         return idLead;
     }
