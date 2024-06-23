@@ -113,7 +113,7 @@ function updateLastLeadView(choice) {
 async function fetchAllLeads(page) {
     updateLastLeadView('all');
     
-    await fetch(`http://localhost:8080/lead/all/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`)
+    await fetch(`/lead/all/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`)
         .then(response => response.json())
         .then(data => {
             listLeads(data.content);
@@ -127,7 +127,7 @@ async function fetchAllLeadsToday(page) {
     
     const userId = localStorage.getItem('userId');
     const currentDate = new Date().toISOString().split('T')[0];
-    const url = `http://localhost:8080/lead/all/today/${userId}?page=${page}&size=${pageSize}&sort=${sortBy}&date=${currentDate}`;
+    const url = `/lead/all/today/${userId}?page=${page}&size=${pageSize}&sort=${sortBy}&date=${currentDate}`;
     
     await fetch(url)
         .then(response => response.json())
@@ -179,7 +179,7 @@ async function fetchAddLead() {
         }
     };
 
-    await fetch('http://localhost:8080/lead', {
+    await fetch('/lead', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -211,7 +211,7 @@ async function deleteLead() {
     let warning = document.getElementById('warnings');
     let warningMessage = document.getElementById('warningMessage');
     let warningTitle = document.getElementById('warningTitle');
-    await fetch(`http://localhost:8080/lead/delete/${sessionStorage.getItem("idLeadToDel")}`, {
+    await fetch(`/lead/delete/${sessionStorage.getItem("idLeadToDel")}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -252,7 +252,7 @@ async function fetchSearchLeadByClientCpfCnpj(page) {
 
     const name = document.getElementById('searchByNamePesquisar').value;
 
-    await fetch(`http://localhost:8080/lead/name/${name}/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`,
+    await fetch(`/lead/name/${name}/${localStorage.getItem('userId')}?page=${page}&size=${pageSize}&sort=${sortBy}`,
         {
             method: 'GET',
         })
@@ -267,7 +267,7 @@ async function fetchSearchLeadByClientCpfCnpj(page) {
 async function fetchSearchClientByCpfCnpj() {
     const cpfCnpj = document.getElementById('cpfCnpjSearchByCPF').value;
 
-    await fetch(`http://localhost:8080/client/cpf/`+cpfCnpj+"/"+localStorage.getItem('userId'), {
+    await fetch(`/client/cpf/`+cpfCnpj+"/"+localStorage.getItem('userId'), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -292,7 +292,7 @@ async function fetchSearchClientByCpfCnpj() {
 
 
 async function changeContactPhone() {
-    await fetch(`http://localhost:8080/contact/clientId/${document.getElementById('clientSelect').value}`)
+    await fetch(`/contact/clientId/${document.getElementById('clientSelect').value}`)
         .then(response => response.json())
         .then(data => {
             document.getElementById('contact').value = data.data;
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 function getElementsEditLead(id) {
-    fetch(`http://localhost:8080/lead/${id}/${localStorage.getItem('userId')}`)
+    fetch(`/lead/${id}/${localStorage.getItem('userId')}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -418,7 +418,7 @@ function handleCloseAddProposal() {
 
 async function fetchAllStatusProposals() {
     var selection = document.getElementById("status");
-    await fetch('http://localhost:8080/statusProposal')
+    await fetch('/statusProposal')
         .then(response => response.json())
         .then(data => {
             data.forEach(value => {
@@ -444,7 +444,7 @@ function prepareAddProposalModal(idLead) {
 
 async function fetchSearchProposalByName() {
     const id = document.getElementById('idLead').value;
-    await fetch(`http://localhost:8080/lead/${id}/${localStorage.getItem('userId')}`, {
+    await fetch(`/lead/${id}/${localStorage.getItem('userId')}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -483,7 +483,7 @@ async function fetchAddProposal() {
     formData.append('idUser', localStorage.getItem('userId'));
 
 
-    await fetch(`http://localhost:8080/proposal`, {
+    await fetch(`/proposal`, {
         method: 'POST',
         body: formData
     })
@@ -509,7 +509,7 @@ async function fetchAddProposal() {
 async function fetchAllStatusLeads() {
     var selection = document.getElementById("result");
     var selectionEdit = document.getElementById("resultEdit");
-    await fetch('http://localhost:8080/LeadResult')
+    await fetch('/LeadResult')
         .then(response => response.json())
         .then(data => {
             data.forEach(value => {
@@ -537,7 +537,7 @@ async function fetchAddEditLead() {
         }
     };
 
-    await fetch('http://localhost:8080/lead/' + id, {
+    await fetch('/lead/' + id, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -582,7 +582,7 @@ async function exportLeads() {
                 Swal.showLoading();
             }
         });
-        const response = await fetch('http://localhost:8080/lead/export/'+localStorage.getItem('userId'));
+        const response = await fetch('/lead/export/'+localStorage.getItem('userId'));
         const leads = await response.json();
 
         if (leads && leads.length > 0) {

@@ -445,7 +445,7 @@ function deleteTask(taskElement) {
 
 
 async function setLeadsByDayOfTheWeak() {
-    await fetch('http://localhost:8080/lead/graph/leadsweek/' + localStorage.getItem('userId'), {
+    await fetch('/lead/graph/leadsweek/' + localStorage.getItem('userId'), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -487,7 +487,7 @@ async function setLeadsByDayOfTheWeak() {
 
 
 async function setLeadsByDayOfTheMonth() {
-    await fetch('http://localhost:8080/lead/graph/leadsmonth/'+localStorage.getItem('userId'), {
+    await fetch('/lead/graph/leadsmonth/'+localStorage.getItem('userId'), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -524,7 +524,7 @@ async function setLeadsByDayOfTheMonth() {
 
 
 async function setProposalsByDayOfTheMonth() {
-    await fetch('http://localhost:8080/proposal/graph/proposalsmonth/'+localStorage.getItem('userId'), {
+    await fetch('/proposal/graph/proposalsmonth/'+localStorage.getItem('userId'), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
