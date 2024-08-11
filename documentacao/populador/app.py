@@ -7,6 +7,7 @@ import os
 import random
 
 conn = mysql.connector.connect(
+    #host="185.173.110.48",
     host="localhost",
     port="3306",
     user="root", # Alterar para o usuário do seu banco de dados
@@ -19,7 +20,7 @@ cursor = conn.cursor()
 user_id = 1 # Alterar para o id do usuário que os registros serão associados
 mult_tentativas = 2 # Valor auxiliar para parar a geração de dados caso ocorra algum erro
 value = 1 # Valor auxiliar para gerar chaves estrangeiras, colocar quantidade de linhas já cadastradas no banco mais 1 (por exemplo, se cada tabela tem 100000 linhas, colocar 100001 para executar denovo e não repetir os valores de chave estrangeira)
-qtd = 10000 # Alterar para a quantidade de registros a serem gerados para cada execução
+qtd = 5000 # Alterar para a quantidade de registros a serem gerados para cada execução
 
 def remover_caracteres_cpf_cnpj(cpf_cnpj):
     cpf_cnpj = cpf_cnpj.replace(".", "")

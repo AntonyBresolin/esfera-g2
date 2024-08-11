@@ -185,15 +185,12 @@ class ProposalControllerTest {
         Long idLead = 1L;
         Long idStatusProposal = 1L;
 
-        // Criação de um lead mockado
         Lead mockLead = new Lead();
         mockLead.setIdLead(idLead);
 
-        // Criação de um status de proposta mockado
         StatusProposal mockStatusProposal = new StatusProposal();
         mockStatusProposal.setIdStatusProposal(idStatusProposal);
 
-        // Criação de uma proposta existente
         Proposal existingProposal = new Proposal();
         existingProposal.setIdProposal(idProposal);
         existingProposal.setIdLead(mockLead);
@@ -203,13 +200,11 @@ class ProposalControllerTest {
         existingProposal.setDescription("old description");
         existingProposal.setProposalDate(Timestamp.valueOf("2024-05-10 00:00:00"));
 
-        // Mockando os repositórios
         when(proposalRepository.findById(idProposal)).thenReturn(Optional.of(existingProposal));
         when(leadRepository.findById(idLead)).thenReturn(Optional.of(mockLead));
         when(statusProposalRepository.findById(idStatusProposal)).thenReturn(Optional.of(mockStatusProposal));
         when(proposalRepository.save(any(Proposal.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Criação da proposta
         Proposal createProposal = proposalController.createProposal(
                 idLead,
                 "2024-05-11",
@@ -224,7 +219,6 @@ class ProposalControllerTest {
         assertEquals(2050.0, createProposal.getValue());
         assertEquals(1000.0, proposalRepository.findById(idProposal).get().getValue());
 
-        // Atualização da proposta
         Proposal response = proposalController.updateProposal(
                 idProposal,
                 idLead,
